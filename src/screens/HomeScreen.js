@@ -13,13 +13,20 @@ const HomeScreen = (props) => {
 
 	let request = async () => {
 		try {
-			const res = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACTIVITY_RECOGNITION, {
-				title: "Cool Photo App Camera ACTIVITY_RECOGNITION",
-				message: "Cool Photo App needs access to your camera so you can take awesome pictures.",
-				buttonNeutral: "Ask Me Later",
-				buttonNegative: "Cancel",
-				buttonPositive: "OK"
-			});
+            // const res = await Pedometer.requestPermissionsAsync();
+            let res = await PermissionsAndroid.check( PermissionsAndroid.PERMISSIONS.ACTIVITY_RECOGNITION );
+            
+            if (res != PermissionsAndroid.RESULTS.GRANTED) {
+                console.warn("No permissions granted yet; requesting ACTIVITY_RECOGNITION...");
+                res = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION, {
+                    title: "Cool Photo App Camera ACTIVITY_RECOGNITION",
+                    message: "Cool Photo App needs access to your camera so you can take awesome pictures.",
+                    buttonNeutral: "Ask Me Later",
+                    buttonNegative: "Cancel",
+                    buttonPositive: "OK"
+                });
+            }
+
 			console.log("Result? " + res);
 		} catch (e) {
 			console.warn(e);

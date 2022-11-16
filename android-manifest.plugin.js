@@ -14,7 +14,7 @@ module.exports = function androiManifestPlugin(config) {
 
 		androidManifest['uses-permission'].push(activityPerm1);
 		androidManifest['uses-permission'].push(activityPerm2);
-
+        
 		return configProps;
 	});
 };
