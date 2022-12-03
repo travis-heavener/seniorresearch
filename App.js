@@ -1,16 +1,24 @@
 import { createAppContainer } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
 
+import { NavigationContainer } from "@react-navigation/native";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+
 import HomeScreen from "./src/screens/HomeScreen.js";
 
-const navigator = createStackNavigator(
-    {
-		HomeScreen: HomeScreen
-	},
-	{
-		initialRouteName: "HomeScreen",
-		defaultNavigationOptions: { title: "App" }
-	}
-);
+const Tab = createMaterialTopTabNavigator();
 
-export default createAppContainer(navigator);
+export default function App() {
+	return (
+		<NavigationContainer>
+			<Tab.Navigator
+				screenOptions={{
+					display: "hidden"
+				}}
+			>
+				<Tab.Screen name="Home" component={HomeScreen} />
+				<Tab.Screen name="Settings" component={HomeScreen} />
+			</Tab.Navigator>
+		</NavigationContainer>
+	);
+}
