@@ -4,6 +4,8 @@ import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { Pedometer } from "expo-sensors";
 import { PermissionsAndroid } from 'react-native';
 
+import MapView from "react-native-maps";
+
 const HomeScreen = (props) => {
 	const [steps, setSteps] = useState(0);
     
@@ -32,10 +34,17 @@ const HomeScreen = (props) => {
 			<TouchableOpacity onPress={start}>
 				<Text>Start Recording</Text>
 			</TouchableOpacity>
+
+            <MapView style={styles.map} />
 		</View>
 	);
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+    map: {
+        width: "100%",
+        height: "100%"
+    }
+});
 
 export default HomeScreen;
