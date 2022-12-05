@@ -11,11 +11,7 @@ const Tab = createMaterialTopTabNavigator();
 export default function App() {
 	return (
 		<NavigationContainer>
-			<Tab.Navigator
-				screenOptions={{
-					display: "hidden"
-				}}
-			>
+			<Tab.Navigator screenOptions={{tabBarStyle: {display: "none"}}}>
 				<Tab.Screen name="Home" component={HomeScreen} />
 				<Tab.Screen name="Settings" component={HomeScreen} />
 			</Tab.Navigator>
