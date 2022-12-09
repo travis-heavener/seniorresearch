@@ -1,3 +1,3 @@
 export const SETTINGS = {
-    useBatterySaver: false // if true, decreases compass updates (5ms --> 200ms)
+    useBatterySaver: false // if true, decreases compass updates (10ms --> 200ms)
 };

@@ -13,7 +13,6 @@ export default function App() {
 		<NavigationContainer>
 			<Tab.Navigator screenOptions={{tabBarStyle: {display: "none"}}}>
 				<Tab.Screen name="Home" component={HomeScreen} />
-				<Tab.Screen name="Settings" component={HomeScreen} />
 			</Tab.Navigator>
 		</NavigationContainer>
 	);

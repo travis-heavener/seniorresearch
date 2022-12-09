@@ -5,7 +5,7 @@ import { SETTINGS } from "../Settings";
 
 // configure magnetometer updates
 import { setUpdateIntervalForType, SensorTypes, magnetometer } from "react-native-sensors";
-setUpdateIntervalForType(SensorTypes.magnetometer, 5 + (195 * SETTINGS.useBatterySaver));
+setUpdateIntervalForType(SensorTypes.magnetometer, 10 + (190 * SETTINGS.useBatterySaver));
 
 // import images
 const MEDIA_ROOT = "../../assets/media/";
@@ -15,16 +15,17 @@ const NEEDLE_SRC = require(MEDIA_ROOT + "needle.png");
 const CompassWidget = (props) => {
     const [degrees, setDegrees] = useState(0);
 
-    const subscription = magnetometer.subscribe(({ x, y }) =>
-        setDegrees(-Math.atan2(y, x) * (180 / Math.PI) + 90)
-    );
+    const subscription = magnetometer.subscribe(({ x, y }) => {
+        let deg = -Math.atan2(y, x) * (180 / Math.PI) + 90;
+        setDegrees(Math.round(deg));
+    });
 
     return (
         // rotating needle
         // <ImageBackground style={styles.wrapperImg} source={WRAPPER_SRC}>
         //     <Image style={[styles.needleImg, {transform: [{rotate: degrees + "deg"}]}]} source={NEEDLE_SRC} />
         // </ImageBackground>
-        
+
         // rotating compass w/ counter-rotating needle
         <ImageBackground style={[styles.wrapperImg, {transform: [{rotate: degrees + "deg"}]}]} source={WRAPPER_SRC}>
             <Image style={[styles.needleImg, {transform: [{rotate: -degrees + "deg"}]}]} source={NEEDLE_SRC} />
