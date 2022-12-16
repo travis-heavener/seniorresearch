@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { View, StyleSheet, Text, TouchableOpacity, Settings } from "react-native";
 
 // Pedometer + necessary Android permissions imports
 import { Pedometer } from "expo-sensors";
@@ -7,23 +7,30 @@ import { PermissionsAndroid } from 'react-native';
 import HomeScreenButton from "../components/HomeScreenButton";
 import CompassWidget from "../components/CompassWidget";
 
+import { SETTINGS, CONTEXT } from "../Settings";
+
 const HomeScreen = (props) => {
 	const [steps, setSteps] = useState(0);
     
     let requestPerms = async () => {
-        let hasPerms = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACTIVITY_RECOGNITION);
-        console.log("Has ACTIVITY_RECOGNITION perms? " + hasPerms);
+        let perms = {};
 
-        if (!hasPerms)
-            hasPerms = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACTIVITY_RECOGNITION);
+        let ctx = CONTEXT.permissions;
+        for (let perm in ctx) {
+            if (!ctx.hasOwnProperty(perm))
+            if (!ctx[perm])
+                ctx[perm] = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS[perm]);
+        }
 
-        return hasPerms;
+        setAllowedPerms( perms );
+        return perms;
     };
 
 	const start = async () => {
-        let hasPerms = await requestPerms();
+        let perms = await requestPerms();
 
-		Pedometer.watchStepCount(res => setSteps(res.steps));
+        if (perms.ACTIVITY_RECOGNITION)
+            Pedometer.watchStepCount(res => setSteps(res.steps));
 	};
 
     // button functions
