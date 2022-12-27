@@ -1,4 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 
 // Pedometer + necessary Android permissions imports
@@ -13,16 +14,19 @@ const HomeScreen = (props) => {
     const [hasStarted, setHasStarted] = useState(false);
     const context = useContext( Context );
 
-	const start = async () => {
-        if (hasStarted) return;
+    // initial, on-load events (empty triggers array to act as componentDidMount)
+    useEffect(() => {
+        ( async () => {
+            if (hasStarted) return;
 
-        let perms = await context.requestPermissions();
+            let perms = await context.requestPermissions();
 
-        if (perms.ACTIVITY_RECOGNITION)
-            Pedometer.watchStepCount(res => setSteps(res.steps));
-        
-        setHasStarted(true);
-	};
+            if (perms.ACTIVITY_RECOGNITION)
+                Pedometer.watchStepCount(res => setSteps(res.steps));
+            
+            setHasStarted(true);
+        } )();
+    });
 
     // button functions
     const leftBtn = () => props.navigation.navigate("Profile");
@@ -34,13 +38,6 @@ const HomeScreen = (props) => {
 			<View style={styles.body}>
                 <View style={styles.compassWrapper}>
                     <CompassWidget />
-                </View>
-
-                <View style={{flex: .9}}>
-                    <Text>Steps: {steps}</Text>
-                    <TouchableOpacity onPress={start}>
-                        <Text>Start Recording</Text>
-                    </TouchableOpacity>
                 </View>
             </View>
 
@@ -61,6 +58,9 @@ const styles = StyleSheet.create({
     body: {
         flex: .85,
         flexDirection: "column"
+    },
+    stepsReadout: {
+
     },
     compassWrapper: {
         flex: .12,
