@@ -1,14 +1,11 @@
-import { React, useState } from "react";
-import { View, StyleSheet, Text, ImageBackground, Image } from "react-native";
+import React, { useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import { StyleSheet, ImageBackground, Image } from "react-native";
 
-import { SETTINGS } from "../Settings";
+import { Settings } from "../Config";
 
 // configure magnetometer updates
-// import { setUpdateIntervalForType, SensorTypes, magnetometer } from "react-native-sensors";
-// setUpdateIntervalForType(SensorTypes.magnetometer, 10 + (190 * SETTINGS.useBatterySaver));
-
-import { Magnetometer } from "expo-sensors";
-Magnetometer.setUpdateInterval(20);
+import { DeviceMotion } from "expo-sensors";
 
 // import images
 const MEDIA_ROOT = "../../assets/media/";
@@ -16,12 +13,19 @@ const WRAPPER_SRC = require(MEDIA_ROOT + "compassWrapper.png");
 const NEEDLE_SRC = require(MEDIA_ROOT + "needle.png");
 
 const CompassWidget = (props) => {
-    const [degrees, setDegrees] = useState(0);
+    DeviceMotion.setUpdateInterval(20 + (80 * Settings.useBatterySaver));
 
-    Magnetometer.addListener(({ x, y }) => {
-        let deg = -Math.atan2(y, x) * (180 / Math.PI) + 90;
-        setDegrees(Math.round(deg));
-    });
+    const [rotation, setRotation] = useState({alpha: 0, beta: 0, gamma: 0});
+
+    useFocusEffect(
+        React.useCallback(() => {
+            let list = DeviceMotion.addListener(({ rotation, interval }) => {
+                setRotation( rotation );
+            });
+
+            return () => list.remove();
+        }, [props])
+    );
 
     return (
         // rotating needle
@@ -30,8 +34,8 @@ const CompassWidget = (props) => {
         // </ImageBackground>
 
         // rotating compass w/ counter-rotating needle
-        <ImageBackground style={[styles.wrapperImg, {transform: [{rotate: degrees + "deg"}]}]} source={WRAPPER_SRC}>
-            <Image style={[styles.needleImg, {transform: [{rotate: -degrees + "deg"}]}]} source={NEEDLE_SRC} />
+        <ImageBackground style={[styles.wrapperImg, {transform: [{rotate: rotation.alpha + "rad"}]}]} source={WRAPPER_SRC}>
+            <Image style={[styles.needleImg, {transform: [{rotate: -rotation.alpha + "rad"}]}]} source={NEEDLE_SRC} />
         </ImageBackground>
     );
 };
