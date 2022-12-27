@@ -19,8 +19,9 @@ const CompassWidget = (props) => {
 
     useFocusEffect(
         React.useCallback(() => {
-            let list = DeviceMotion.addListener(({ rotation, interval }) => {
-                setRotation( rotation );
+            let list = DeviceMotion.addListener(({ rotation }) => {
+                if (rotation != undefined)
+                    setRotation( rotation );
             });
 
             return () => list.remove();
