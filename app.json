@@ -27,7 +27,9 @@
 			"package": "com.theavener.heavenersr",
             "permissions": [
                 "com.google.android.gms.permission.ACTIVITY_RECOGNITION",
-                "android.permission.HIGH_SAMPLING_RATE_SENSORS"
+                "android.permission.HIGH_SAMPLING_RATE_SENSORS",
+                "ACCESS_FINE_LOCATION",
+                "ACCESS_COARSE_LOCATION"
             ]
 		},
 		"web": {
