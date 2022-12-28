@@ -15,6 +15,14 @@ export const Settings = {
 
 export const Themes = {
     base: {
+        home: {
+            backgrounds: {
+                stopped: "#fc9490",
+                slow: "#fcc290",
+                med: "#fcfc90",
+                fast: "#90fc95"
+            }
+        },
         settings: {
             primary: "#32a852",
             primaryAccent: "#299648",
