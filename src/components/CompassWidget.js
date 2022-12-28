@@ -13,7 +13,7 @@ const WRAPPER_SRC = require(MEDIA_ROOT + "compassWrapper.png");
 const NEEDLE_SRC = require(MEDIA_ROOT + "needle.png");
 
 const CompassWidget = (props) => {
-    DeviceMotion.setUpdateInterval(20 + (80 * Settings.useBatterySaver));
+    DeviceMotion.setUpdateInterval(Settings.useBatterySaver ? 100 : 20);
 
     const [rotation, setRotation] = useState({alpha: 0, beta: 0, gamma: 0});
 
