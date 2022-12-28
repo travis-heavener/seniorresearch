@@ -1,6 +1,8 @@
 import React from "react";
 import { PermissionsAndroid } from "react-native";
 
+import * as Location from "expo-location";
+
 /* ======= settings ======= */
 
 export const Settings = {
@@ -8,10 +10,6 @@ export const Settings = {
     useBatterySaver: false // if true, decreases compass updates (20ms --> 100ms)
 };
 
-// export const Settings = React.createContext({
-//     theme: "base", // selected theme
-//     useBatterySaver: false // if true, decreases compass updates (20ms --> 100ms)
-// });
 
 /* ======= themes ======= */
 
@@ -54,5 +52,8 @@ export const Context = React.createContext({
         "ACTIVITY_RECOGNITION": false,
         // for Magnetometer
         // "HIGH_SAMPLING_RATE_SENSORS": false
+        // for Location
+        "ACCESS_FINE_LOCATION": false,
+        "ACCESS_COARSE_LOCATION": false
     }
 });
