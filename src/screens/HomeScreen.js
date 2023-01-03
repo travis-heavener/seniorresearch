@@ -30,6 +30,8 @@ const HomeScreen = (props) => {
 
     // background color
     const [backgroundCol, setBackgroundCol] = useState(styles.top.backgroundColor);
+    const backgroundColRef = React.useRef();
+    backgroundColRef.current = backgroundCol;
 
     const [hasStarted, setHasStarted] = useState(false);
     const context = useContext( Context );
@@ -67,7 +69,7 @@ const HomeScreen = (props) => {
 
                 // let avgAcc = (lastCoords.acc + coords.acc) / 2;
                 // console.log("Displacement: " + dist + " m\tAccuracy: " + avgAcc + " m ");
-
+                
                 let delta = Math.hypot(accel.x, accel.y, accel.z);
                 if (delta > 0.15) // device is modestly accelerating
                     setDistance(distance + dist);
@@ -82,25 +84,47 @@ const HomeScreen = (props) => {
         useCallback(
             () => {
                 let list = DeviceMotion.addListener(data => {
+                    if (data.acceleration == undefined) return;
+
                     setAccel(data.acceleration);
-                    // console.log("X: " + data.acceleration.x.toFixed(3) +
-                    //     "\tY: " + data.acceleration.y.toFixed(3) +
-                    //     "\tZ: " + data.acceleration.z.toFixed(3)
-                    // );
 
                     let accel = data.acceleration;
                     let speed = Math.hypot(accel.x, accel.y, accel.z);
-                    console.log(speed);
                     
                     // change background color
-                    let col = THEME.backgrounds.stopped;
+                    const interpolate = (start, end, step, stepCount) => ({
+                        r: Math.floor( (end.r - start.r) * step / stepCount + start.r ),
+                        g: Math.floor( (end.g - start.g) * step / stepCount + start.g ),
+                        b: Math.floor( (end.b - start.b) * step / stepCount + start.b )
+                    });
 
-                    if (speed >= 4) col = THEME.backgrounds.slow;
-                    if (speed >= 8) col = THEME.backgrounds.med;
-                    if (speed >= 12) col = THEME.backgrounds.fast;
+                    const breakRGB = hex => ({
+                        r: parseInt( hex.substring(1,3), 16 ),
+                        g: parseInt( hex.substring(3,5), 16 ),
+                        b: parseInt( hex.substring(5,7), 16 )
+                    });
+
+                    // let start = breakRGB("#ffffff");
+                    let start = breakRGB( THEME.backgrounds.stopped );
+                    // let end = breakRGB("#000000");
+                    let end = breakRGB( THEME.backgrounds.fast );
+
+                    let maxSpeed = 12;
+                    let scaledSpeed = Math.min(Math.round(speed * 100) / 100, maxSpeed) / maxSpeed;
+                    
+                    let stepCount = 100;
+                    let step = Math.min(Math.round(scaledSpeed * stepCount), stepCount);
+
+                    // clamp so the color doesn't rapidly vary when stopped
+                    if (step <= stepCount * .05 || step >= stepCount * .95) step = Math.round(step / stepCount) * stepCount;
+
+                    let col = interpolate(start, end, step, stepCount);
+                    col.toString = function() {
+                        return "rgb(" + this.r + "," + this.g + "," + this.b + ")";
+                    };
 
                     if (speed > 0)
-                        setBackgroundCol(col);
+                        setBackgroundCol(col.toString());
                 });
                 return () => list.remove();
             }, [props]
