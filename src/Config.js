@@ -17,10 +17,10 @@ export const Themes = {
     base: {
         home: {
             backgrounds: {
-                stopped: "#fc9490",
-                slow: "#fcc290",
-                med: "#fcfc90",
-                fast: "#90fc95"
+                stopped: "rgb(252, 170, 167)",
+                // slow: "#fcc290",
+                // med: "#fcfc90",
+                fast: "rgb(109, 227, 114)"
             }
         },
         settings: {
