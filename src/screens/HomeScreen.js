@@ -17,7 +17,6 @@ const THEME = Themes[ Settings.theme ].home;
 const HomeScreen = (props) => {
     // pedometer
 	const [steps, setSteps] = useState(0); // steps
-    const [stepTime, setStepTime] = useState(Date.now());
 
     // distance tracker
     const [distance, setDistance] = useState(0); // distance, in meters (1609.344 meters in 1 mile)
@@ -32,6 +31,10 @@ const HomeScreen = (props) => {
     const [backgroundCol, setBackgroundCol] = useState(styles.top.backgroundColor);
     const backgroundColRef = React.useRef();
     backgroundColRef.current = backgroundCol;
+
+    const [backgroundDelta, setBackgroundDelta] = useState(Date.now());
+    const backgroundDeltaRef = React.useRef();
+    backgroundDeltaRef.current = backgroundDelta;
 
     const [hasStarted, setHasStarted] = useState(false);
     const context = useContext( Context );
@@ -85,46 +88,73 @@ const HomeScreen = (props) => {
             () => {
                 let list = DeviceMotion.addListener(data => {
                     if (data.acceleration == undefined) return;
-
                     setAccel(data.acceleration);
-
+                    
                     let accel = data.acceleration;
                     let speed = Math.hypot(accel.x, accel.y, accel.z);
                     
-                    // change background color
-                    const interpolate = (start, end, step, stepCount) => ({
-                        r: Math.floor( (end.r - start.r) * step / stepCount + start.r ),
-                        g: Math.floor( (end.g - start.g) * step / stepCount + start.g ),
-                        b: Math.floor( (end.b - start.b) * step / stepCount + start.b )
-                    });
+                    let timeDelta = 500; // 500 ms between refreshes
+                    if (Date.now() - backgroundDeltaRef.current < timeDelta) return;
+                    setBackgroundDelta(Date.now());
 
-                    const breakRGB = hex => ({
-                        r: parseInt( hex.substring(1,3), 16 ),
-                        g: parseInt( hex.substring(3,5), 16 ),
-                        b: parseInt( hex.substring(5,7), 16 )
-                    });
-
-                    // let start = breakRGB("#ffffff");
-                    let start = breakRGB( THEME.backgrounds.stopped );
-                    // let end = breakRGB("#000000");
-                    let end = breakRGB( THEME.backgrounds.fast );
-
-                    let maxSpeed = 12;
-                    let scaledSpeed = Math.min(Math.round(speed * 100) / 100, maxSpeed) / maxSpeed;
-                    
-                    let stepCount = 100;
-                    let step = Math.min(Math.round(scaledSpeed * stepCount), stepCount);
-
-                    // clamp so the color doesn't rapidly vary when stopped
-                    if (step <= stepCount * .05 || step >= stepCount * .95) step = Math.round(step / stepCount) * stepCount;
-
-                    let col = interpolate(start, end, step, stepCount);
-                    col.toString = function() {
-                        return "rgb(" + this.r + "," + this.g + "," + this.b + ")";
+                    // creates an array of colors where 0 is pure start color and length-1 is pure end color
+                    const createGradient = (startCol, endCol, steps) => {
+                        let arr = [];
+                        for (let i = 0; i < steps; i++)
+                            arr.push({
+                                r: Math.floor( (endCol.r - startCol.r) * i / (steps-1) + startCol.r ),
+                                g: Math.floor( (endCol.g - startCol.g) * i / (steps-1) + startCol.g ),
+                                b: Math.floor( (endCol.b - startCol.b) * i / (steps-1) + startCol.b )
+                            });
+                        return arr;
                     };
 
-                    if (speed > 0)
-                        setBackgroundCol(col.toString());
+                    const breakRGB = str => {
+                        // remove non-numeric characters
+                        let split = str.split(",").map((item) => {
+                            let comp = "";
+                            item.split("").forEach(char => {
+                                let code = char.charCodeAt(0);
+                                if (code >= 48 && code <= 57) comp += char;
+                            });
+                            return parseInt(comp);
+                        });
+                        return {r: split[0], g: split[1], b: split[2]};
+                    };
+
+                    // what the color currently is
+                    let current = breakRGB( backgroundColRef.current );
+                    
+                    // determine how fast device is compared to max speed
+                    let maxSpeed = 12, stepCount = 100;
+                    
+                    let step = Math.floor(Math.min(speed, maxSpeed) / maxSpeed * 100);
+                    step = Math.max(Math.min(step, stepCount-1), 0); // clamp step count
+                    
+                    // clamp so the color doesn't rapidly vary when stopped
+                    if (step <= stepCount * .05 || step >= stepCount * .95) step = Math.round(step / stepCount) * stepCount;
+                    
+                    // create gradient
+                    let start = breakRGB( THEME.backgrounds.stopped );
+                    let end = breakRGB( THEME.backgrounds.fast );
+
+                    let initialGrad = createGradient(start, end, stepCount); // start-to-end color gradient
+                    let target = initialGrad[step]; // target color
+                    
+                    // skip making loops if the color doesn't need to change
+                    if (current.r == target.r && current.g == target.g && current.b == target.b) return;
+
+                    // set timeouts
+                    let maxTime = timeDelta / 4, frames = 16, interval = maxTime / frames;
+                    let shiftGrad = createGradient(current, target, frames);
+                    
+                    for (let i = 0; i < frames; i++) {
+                        setTimeout(function() {
+                            // update background color here
+                            let col = shiftGrad[i];
+                            setBackgroundCol( "rgb(" + col.r + "," + col.g + "," + col.b + ")" );
+                        }, i * interval);
+                    }
                 });
                 return () => list.remove();
             }, [props]
@@ -171,7 +201,7 @@ const latLongDist = (lat1, lon1, lat2, lon2) => {  // generally used geo measure
 const styles = StyleSheet.create({
     top: {
         flex: 1,
-        backgroundColor: "#fc9490"
+        backgroundColor: "rgb(252, 170, 167)"
     },
     body: {
         flex: .85,
