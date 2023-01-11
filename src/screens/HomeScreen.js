@@ -74,7 +74,7 @@ const HomeScreen = (props) => {
                 // console.log("Displacement: " + dist + " m\tAccuracy: " + avgAcc + " m ");
                 
                 let delta = Math.hypot(accel.x, accel.y, accel.z);
-                if (delta > 0.15) // device is modestly accelerating
+                if (delta > 0.15) // if device is modestly accelerating, append displacement
                     setDistance(distance + dist);
             }
 
@@ -131,16 +131,13 @@ const HomeScreen = (props) => {
                     let step = Math.floor(Math.min(speed, maxSpeed) / maxSpeed * 100);
                     step = Math.max(Math.min(step, stepCount-1), 0); // clamp step count
                     
-                    // clamp so the color doesn't rapidly vary when stopped
-                    if (step <= stepCount * .05 || step >= stepCount * .95) step = Math.round(step / stepCount) * stepCount;
-                    
                     // create gradient
                     let start = breakRGB( THEME.backgrounds.stopped );
                     let end = breakRGB( THEME.backgrounds.fast );
 
                     let initialGrad = createGradient(start, end, stepCount); // start-to-end color gradient
                     let target = initialGrad[step]; // target color
-                    
+
                     // skip making loops if the color doesn't need to change
                     if (current.r == target.r && current.g == target.g && current.b == target.b) return;
 
