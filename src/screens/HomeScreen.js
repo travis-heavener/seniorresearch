@@ -96,12 +96,12 @@ const HomeScreen = (props) => {
                     if (data.acceleration == undefined || data.rotation == undefined) return;
                     setAccel(data.acceleration);
 
+                    let {beta, gamma, alpha} = data.rotation; // beta -> x, gamma -> y, alpha -> z
+                    
                     let accel = data.acceleration;
                     let delta = (Date.now() - accelDeltaRef.current) / 1000;
 
                     setAccelDelta(Date.now());
-
-                    let {beta, gamma, alpha} = data.rotation; // beta -> x, gamma -> y, alpha -> z
                     
                     // normalize local device coordinate axes to where device is flat and facing north
                     let cg = Math.cos(gamma), ca = Math.cos(alpha), cb = Math.cos(beta); // to optimize calculations a bit
@@ -113,9 +113,8 @@ const HomeScreen = (props) => {
                         [-sg, sb*cg, cb*cg]
                     ];
 
-                    let M = [accel.x, accel.y, accel.z];
-
                     // multiply matrices
+                    let M = [accel.x, accel.y, accel.z];
                     let res = {
                         x: R[0][0]*M[0] + R[0][1]*M[1] + R[0][2]*M[2],
                         y: R[1][0]*M[0] + R[1][1]*M[1] + R[1][2]*M[2],
@@ -123,7 +122,7 @@ const HomeScreen = (props) => {
                     };
 
                     // with this normalized acceleration, calculate velocity
-                    const format = n => Math.sign(n) * Math.floor( Math.abs(n) * 40 ) / 40;
+                    const format = n => Math.sign(n) * Math.floor( Math.abs(n) * 40 ) / 40; // round off a bit
                     const damper = 0.95; // the velocity tends to get too high and not fall -- this aims to fix that
 
                     let vel = {
@@ -133,7 +132,6 @@ const HomeScreen = (props) => {
                     };
 
                     setVelocity(vel);
-
                     let speed = Math.hypot(vel.x, vel.y, vel.z);
 
                     // ----- background color gradient shifting -----
