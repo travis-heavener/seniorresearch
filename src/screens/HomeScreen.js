@@ -3,20 +3,20 @@ import { useFocusEffect } from "@react-navigation/native";
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 
 // Pedometer + necessary Android permissions imports
-import { Pedometer, DeviceMotion } from "expo-sensors";
+import { Pedometer, DeviceMotion, Accelerometer } from "expo-sensors";
+import * as Location from "expo-location";
+
 import HomeScreenButton from "../components/HomeScreenButton";
 import CompassWidget from "../components/CompassWidget";
 
-import * as Location from "expo-location";
-
 import { Settings, Context, Themes } from "../Config";
+import { calculateGradient } from "../GradientManager";
 
 // select theme
 const THEME = Themes[ Settings.theme ].home;
 
 const HomeScreen = (props) => {
-    // pedometer
-	const [steps, setSteps] = useState(0); // steps
+    const [steps, setSteps] = useState(0); // pedometer
 
     // distance tracker
     const [distance, setDistance] = useState(0); // distance, in meters (1609.344 meters in 1 mile)
@@ -24,8 +24,13 @@ const HomeScreen = (props) => {
     const [coords, setCoords] = useState({lat: null, long: null, acc: -1});
     
     // accelerometer
-    const [accel, setAccel] = useState({x: 0, y: 0, z: -1}); // default
-    DeviceMotion.setUpdateInterval(Settings.useBatterySaver ? 100 : 20);
+    const [accel, setAccel] = useState({x: 0, y: 0, z: 0}); // default
+    DeviceMotion.setUpdateInterval( (Settings.useBatterySaver ? 100 : 40) );
+
+    // velocity
+    const [velocity, setVelocity] = useState({x: 0, y: 0, z: 0});
+    const velocityRef = React.useRef();
+    velocityRef.current = velocity;
 
     // background color
     const [backgroundCol, setBackgroundCol] = useState(styles.top.backgroundColor);
@@ -35,6 +40,10 @@ const HomeScreen = (props) => {
     const [backgroundDelta, setBackgroundDelta] = useState(Date.now());
     const backgroundDeltaRef = React.useRef();
     backgroundDeltaRef.current = backgroundDelta;
+
+    const [accelDelta, setAccelDelta] = useState(Date.now());
+    const accelDeltaRef = React.useRef();
+    accelDeltaRef.current = accelDelta;
 
     const [hasStarted, setHasStarted] = useState(false);
     const context = useContext( Context );
@@ -69,9 +78,6 @@ const HomeScreen = (props) => {
         () => {
             if (lastCoords.acc != -1 && lastCoords.lat != coords.lat && lastCoords.long != coords.long) { // we have data!
                 let dist = latLongDist(lastCoords.lat, lastCoords.long, coords.lat, coords.long);
-
-                // let avgAcc = (lastCoords.acc + coords.acc) / 2;
-                // console.log("Displacement: " + dist + " m\tAccuracy: " + avgAcc + " m ");
                 
                 let delta = Math.hypot(accel.x, accel.y, accel.z);
                 if (delta > 0.15) // if device is modestly accelerating, append displacement
@@ -82,76 +88,73 @@ const HomeScreen = (props) => {
         }, [coords]
     );
 
-    // initialize accelerometer readings
+    // initialize devicemotion readings
     useFocusEffect(
         useCallback(
             () => {
                 let list = DeviceMotion.addListener(data => {
-                    if (data.acceleration == undefined) return;
+                    if (data.acceleration == undefined || data.rotation == undefined) return;
                     setAccel(data.acceleration);
-                    
+
                     let accel = data.acceleration;
-                    let speed = Math.hypot(accel.x, accel.y, accel.z);
+                    let delta = (Date.now() - accelDeltaRef.current) / 1000;
+
+                    setAccelDelta(Date.now());
+
+                    let {beta, gamma, alpha} = data.rotation; // beta -> x, gamma -> y, alpha -> z
                     
+                    // normalize local device coordinate axes to where device is flat and facing north
+                    let cg = Math.cos(gamma), ca = Math.cos(alpha), cb = Math.cos(beta); // to optimize calculations a bit
+                    let sg = Math.sin(gamma), sa = Math.sin(alpha), sb = Math.sin(beta); // to optimize calculations a bit
+
+                    let R = [
+                        [cg*sa, sb*sg*sa+cb*ca, cb*sg*sa-sb*ca],
+                        [cg*ca, sb*sg*ca-cb*sa, cb*sg*ca+sb*sa],
+                        [-sg, sb*cg, cb*cg]
+                    ];
+
+                    let M = [accel.x, accel.y, accel.z];
+
+                    // multiply matrices
+                    let res = {
+                        x: R[0][0]*M[0] + R[0][1]*M[1] + R[0][2]*M[2],
+                        y: R[1][0]*M[0] + R[1][1]*M[1] + R[1][2]*M[2],
+                        z: R[2][0]*M[0] + R[2][1]*M[1] + R[2][2]*M[2]
+                    };
+
+                    // with this normalized acceleration, calculate velocity
+                    const format = n => Math.sign(n) * Math.floor( Math.abs(n) * 40 ) / 40;
+                    const damper = 0.95; // the velocity tends to get too high and not fall -- this aims to fix that
+
+                    let vel = {
+                        x: format(velocityRef.current.x*damper + res.x*delta),
+                        y: format(velocityRef.current.y*damper + res.y*delta),
+                        z: format(velocityRef.current.z*damper + res.z*delta)
+                    };
+
+                    setVelocity(vel);
+
+                    let speed = Math.hypot(vel.x, vel.y, vel.z);
+
+                    // ----- background color gradient shifting -----
+
                     let timeDelta = 500; // 500 ms between refreshes
                     if (Date.now() - backgroundDeltaRef.current < timeDelta) return;
                     setBackgroundDelta(Date.now());
 
-                    // creates an array of colors where 0 is pure start color and length-1 is pure end color
-                    const createGradient = (startCol, endCol, steps) => {
-                        let arr = [];
-                        for (let i = 0; i < steps; i++)
-                            arr.push({
-                                r: Math.floor( (endCol.r - startCol.r) * i / (steps-1) + startCol.r ),
-                                g: Math.floor( (endCol.g - startCol.g) * i / (steps-1) + startCol.g ),
-                                b: Math.floor( (endCol.b - startCol.b) * i / (steps-1) + startCol.b )
-                            });
-                        return arr;
-                    };
+                    // calculate gradient
+                    let maxTime = timeDelta / 4, frames = 16, interval = maxTime / frames;
 
-                    const breakRGB = str => {
-                        // remove non-numeric characters
-                        let split = str.split(",").map((item) => {
-                            let comp = "";
-                            item.split("").forEach(char => {
-                                let code = char.charCodeAt(0);
-                                if (code >= 48 && code <= 57) comp += char;
-                            });
-                            return parseInt(comp);
-                        });
-                        return {r: split[0], g: split[1], b: split[2]};
-                    };
-
-                    // what the color currently is
-                    let current = breakRGB( backgroundColRef.current );
-                    
-                    // determine how fast device is compared to max speed
-                    let maxSpeed = 12, stepCount = 100;
-                    
-                    let step = Math.floor(Math.min(speed, maxSpeed) / maxSpeed * 100);
-                    step = Math.max(Math.min(step, stepCount-1), 0); // clamp step count
-                    
-                    // create gradient
-                    let start = breakRGB( THEME.backgrounds.stopped );
-                    let end = breakRGB( THEME.backgrounds.fast );
-
-                    let initialGrad = createGradient(start, end, stepCount); // start-to-end color gradient
-                    let target = initialGrad[step]; // target color
-
-                    // skip making loops if the color doesn't need to change
-                    if (current.r == target.r && current.g == target.g && current.b == target.b) return;
+                    let shiftGrad = calculateGradient(
+                        backgroundColRef.current, THEME.backgrounds.stopped, THEME.backgrounds.fast, speed, frames
+                    );
 
                     // set timeouts
-                    let maxTime = timeDelta / 4, frames = 16, interval = maxTime / frames;
-                    let shiftGrad = createGradient(current, target, frames);
-                    
-                    for (let i = 0; i < frames; i++) {
+                    shiftGrad.forEach( (col, i) => {
                         setTimeout(function() {
-                            // update background color here
-                            let col = shiftGrad[i];
-                            setBackgroundCol( "rgb(" + col.r + "," + col.g + "," + col.b + ")" );
+                            setBackgroundCol( col.toString() );
                         }, i * interval);
-                    }
+                    });
                 });
                 return () => list.remove();
             }, [props]
@@ -173,6 +176,11 @@ const HomeScreen = (props) => {
 
             <Text>Steps: {steps}</Text>
             <Text>Traveled: {distance.toFixed(3)} m</Text>
+            {/* <Text>Vel.X: {Math.round(velocity.x * 10000) / 10000} m/s</Text>
+            <Text>Vel.Y: {Math.round(velocity.y * 10000) / 10000} m/s</Text>
+            <Text>Vel.Z: {Math.round(velocity.z * 10000) / 10000} m/s</Text> */}
+            <Text>Speed: {Math.hypot(velocity.x, velocity.y, velocity.z)} m/s</Text>
+            <Text>Speed: {Math.hypot(velocity.x, velocity.y, velocity.z) * 2.237} mph</Text>
 
             <View style={styles.bottomButtons}>
                 <HomeScreenButton flex={.75} onPress={leftBtn} />
