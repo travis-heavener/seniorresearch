@@ -174,11 +174,6 @@ const HomeScreen = (props) => {
 
             <Text>Steps: {steps}</Text>
             <Text>Traveled: {distance.toFixed(3)} m</Text>
-            {/* <Text>Vel.X: {Math.round(velocity.x * 10000) / 10000} m/s</Text>
-            <Text>Vel.Y: {Math.round(velocity.y * 10000) / 10000} m/s</Text>
-            <Text>Vel.Z: {Math.round(velocity.z * 10000) / 10000} m/s</Text> */}
-            <Text>Speed: {Math.hypot(velocity.x, velocity.y, velocity.z)} m/s</Text>
-            <Text>Speed: {Math.hypot(velocity.x, velocity.y, velocity.z) * 2.237} mph</Text>
 
             <View style={styles.bottomButtons}>
                 <HomeScreenButton flex={.75} onPress={leftBtn} />
