@@ -2,24 +2,26 @@ import React, { useContext } from "react";
 import { View, StyleSheet, Text, TouchableOpacity, Dimensions } from "react-native";
 
 import { Settings, Context, Themes } from "../Config";
-
-// select theme
-const THEME = Themes[ Settings.theme ].settings;
+import { UserDataContext } from "../SessionUserData";
 
 // viewport height function to make life easier
 const vw = w => Dimensions.get("window").width * (w/100);
 const vh = h => Dimensions.get("window").height * (h/100);
 
 const SettingsSwitch = (props) => {
+    const userContext = useContext( UserDataContext );
+    const THEME = Themes[ userContext.selectedTheme ].settings; // select theme
+
     const context = useContext( Context );
+    
     const toggle = () => {
         Settings[ props.tag ] = !Settings[ props.tag ];
         console.log(Settings[props.tag]);
     };
 
     return (
-        <View style={styles.body}>
-            <Text style={styles.desc}>{props.text}</Text>
+        <View style={[styles.body, {borderBottomColor: THEME.primaryAccent}]}>
+            <Text style={[styles.desc, {color: THEME.text}]}>{props.text}</Text>
             <TouchableOpacity style={styles.switch} onPress={toggle}>
                 <View><Text>a</Text></View>
             </TouchableOpacity>
@@ -33,13 +35,13 @@ const styles = StyleSheet.create({
         height: vh(8),
         paddingHorizontal: vw(5),
         flexDirection: "row",
-        borderBottomColor: THEME.primaryAccent,
+        // borderBottomColor: THEME.primaryAccent,
         borderBottomWidth: 2
     },
     desc: {
         flex: 0.8,
         alignSelf: "center",
-        color: THEME.text
+        // color: THEME.text
     },
     switch: {
         flex: 0.2,

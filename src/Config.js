@@ -1,12 +1,9 @@
 import React from "react";
 import { PermissionsAndroid } from "react-native";
 
-import * as Location from "expo-location";
-
 /* ======= settings ======= */
 
 export const Settings = {
-    theme: "base", // selected theme
     useBatterySaver: false // if true, decreases compass updates (20ms --> 100ms)
 };
 
@@ -18,8 +15,6 @@ export const Themes = {
         home: {
             backgrounds: {
                 stopped: "rgb(252, 170, 167)",
-                // slow: "#fcc290",
-                // med: "#fcfc90",
                 fast: "rgb(109, 227, 114)"
             }
         },
@@ -29,6 +24,21 @@ export const Themes = {
             secondary: "#248f41",
             secondaryAccent: "#1f8039",
             text: "#031c0a"
+        }
+    },
+    dark: {
+        home: {
+            backgrounds: {
+                stopped: "rgb(252, 170, 167)",
+                fast: "rgb(109, 227, 114)"
+            }
+        },
+        settings: {
+            primary: "#229842",
+            primaryAccent: "#198638",
+            secondary: "#147f31",
+            secondaryAccent: "#0f7029",
+            text: "white"
         }
     }
 };

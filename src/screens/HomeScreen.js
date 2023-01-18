@@ -12,11 +12,13 @@ import CompassWidget from "../components/CompassWidget";
 import { Settings, Context, Themes } from "../Config";
 import { calculateGradient } from "../GradientManager";
 
-// select theme
-const THEME = Themes[ Settings.theme ].home;
+import { UserDataContext } from "../SessionUserData";
 
 const HomeScreen = (props) => {
     const [steps, setSteps] = useState(0); // pedometer
+
+    const userContext = useContext( UserDataContext );
+    const THEME = Themes[ userContext.selectedTheme ].home; // select theme
 
     // distance tracker
     const [distance, setDistance] = useState(0); // distance, in meters (1609.344 meters in 1 mile)
