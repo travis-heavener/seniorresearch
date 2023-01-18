@@ -79,8 +79,8 @@ const HomeScreen = (props) => {
             if (lastCoords.acc != -1 && lastCoords.lat != coords.lat && lastCoords.long != coords.long) { // we have data!
                 let dist = latLongDist(lastCoords.lat, lastCoords.long, coords.lat, coords.long);
                 
-                let delta = Math.hypot(accel.x, accel.y, accel.z);
-                if (delta > 0.15) // if device is modestly accelerating, append displacement
+                let speed = Math.hypot(accel.x, accel.y, accel.z);
+                if (speed > 1) // if moving at least 1 m/s, append displacement
                     setDistance(distance + dist);
             }
 

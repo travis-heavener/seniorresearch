@@ -36,8 +36,8 @@ export function calculateGradient(currentCol, startCol, endCol, speed, frames) {
         start = breakRGB ( startCol ),
         end = breakRGB ( endCol );
 
-    // determine how fast device is compared to max speed
-    let maxSpeed = 4.5, stepCount = 100;
+    // determine how fast device is compared to max speed (4 m/s)
+    let maxSpeed = 4, stepCount = 100;
     
     let step = Math.floor(Math.min(speed, maxSpeed) / maxSpeed * 100);
     step = Math.max(Math.min(step, stepCount-1), 0); // clamp step count
