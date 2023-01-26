@@ -1,12 +1,33 @@
 import React from "react";
 import { PermissionsAndroid } from "react-native";
 
+import { LocationAccuracy } from "expo-location";
+
 /* ======= settings ======= */
 
 export const Settings = {
-    useBatterySaver: false // if true, decreases compass updates (20ms --> 100ms)
+    // sensor update intervals, in ms
+    sensorUpdateIntervals: {
+        batterySaverOff: {
+            deviceMotion: 10,
+            compassUpdate: 250,
+            GPS: {
+                accuracy: LocationAccuracy.Highest,
+                delta: 1 // meters of variance before calling update
+            }
+        },
+        batterySaverOn: {
+            deviceMotion: 100,
+            compassUpdate: 500,
+            GPS: {
+                accuracy: LocationAccuracy.Low,
+                delta: 2 // meters of variance before calling update
+            }
+        }
+    },
+    BATTERY_SAVER_OFF: "batterySaverOff",
+    BATTERY_SAVER_ON: "batterySaverOn"
 };
-
 
 /* ======= themes ======= */
 
@@ -19,10 +40,10 @@ export const Themes = {
             }
         },
         settings: {
-            primary: "#32a852",
-            primaryAccent: "#299648",
-            secondary: "#248f41",
-            secondaryAccent: "#1f8039",
+            primary: "#f0f0f0",
+            primaryAccent: "#e3e3e3",
+            secondary: "#e4e4e4",
+            secondaryAccent: "#d6d6d6",
             text: "#031c0a"
         }
     },
@@ -34,11 +55,11 @@ export const Themes = {
             }
         },
         settings: {
-            primary: "#229842",
-            primaryAccent: "#198638",
-            secondary: "#147f31",
-            secondaryAccent: "#0f7029",
-            text: "white"
+            primary: "#363636",
+            primaryAccent: "#2a2a2a",
+            secondary: "#2f2f2f",
+            secondaryAccent: "#252525",
+            text: "#f5f5f5"
         }
     }
 };
@@ -49,7 +70,7 @@ const checkPerm = perm => {
     return PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS[perm]);
 };
 
-export const Context = React.createContext({
+export const SettingsContext = React.createContext({
     refreshPermissions: async function() {
         for (let perm in this.permissions) {
             if (this.permissions.hasOwnProperty(perm))

@@ -9,30 +9,14 @@ import * as Location from "expo-location";
 import HomeScreenButton from "../components/HomeScreenButton";
 import CompassWidget from "../components/CompassWidget";
 
-import { Settings, Context, Themes } from "../Config";
+import { Settings, SettingsContext, Themes } from "../Config";
 import { calculateGradient } from "../GradientManager";
 
 import { UserDataContext } from "../SessionUserData";
 
 const HomeScreen = (props) => {
-    const [steps, setSteps] = useState(0); // pedometer
-
     const userContext = useContext( UserDataContext );
     const THEME = Themes[ userContext.selectedTheme ].home; // select theme
-
-    // distance tracker
-    const [distance, setDistance] = useState(0); // distance, in meters (1609.344 meters in 1 mile)
-    const [lastCoords, setLastCoords] = useState({lat: null, long: null, acc: -1});
-    const [coords, setCoords] = useState({lat: null, long: null, acc: -1});
-    
-    // accelerometer
-    const [accel, setAccel] = useState({x: 0, y: 0, z: 0}); // default
-    DeviceMotion.setUpdateInterval( (Settings.useBatterySaver ? 100 : 40) );
-
-    // velocity
-    const [velocity, setVelocity] = useState({x: 0, y: 0, z: 0});
-    const velocityRef = React.useRef();
-    velocityRef.current = velocity;
 
     // background color
     const [backgroundCol, setBackgroundCol] = useState(styles.top.backgroundColor);
@@ -43,12 +27,8 @@ const HomeScreen = (props) => {
     const backgroundDeltaRef = React.useRef();
     backgroundDeltaRef.current = backgroundDelta;
 
-    const [accelDelta, setAccelDelta] = useState(Date.now());
-    const accelDeltaRef = React.useRef();
-    accelDeltaRef.current = accelDelta;
-
     const [hasStarted, setHasStarted] = useState(false);
-    const context = useContext( Context );
+    const context = useContext( SettingsContext );
 
     // initial, on-load events (empty triggers array to act as componentDidMount)
     useEffect(() => {
@@ -59,17 +39,23 @@ const HomeScreen = (props) => {
 
             // start pedometer
             if (perms.ACTIVITY_RECOGNITION)
-                Pedometer.watchStepCount(res => setSteps(res.steps));
+                Pedometer.watchStepCount(res => userContext.metadata.setSteps( res.steps ));
             
             // start location tracking
             if (perms.ACCESS_FINE_LOCATION && perms.ACCESS_COARSE_LOCATION) {
-                let acc = Settings.useBatterySaver ? Location.Accuracy.Low : Location.Accuracy.Highest;
-                let delta = Settings.useBatterySaver ? 2 : 1;
+                const { delta, accuracy } = Settings.sensorUpdateIntervals[ userContext.batterySaverStatus ].GPS;
 
-                Location.watchPositionAsync({accuracy: acc, distanceInterval: delta}, loc => {
-                    setCoords({lat: loc.coords.latitude, long: loc.coords.longitude, acc: loc.coords.accuracy});
+                Location.watchPositionAsync({accuracy: accuracy, distanceInterval: delta}, loc => {
+                    userContext.metadata.GPS.setCurrent(
+                        {lat: loc.coords.latitude, long: loc.coords.longitude, acc: loc.coords.accuracy}
+                    );
                 });
             }
+
+            // accelerometer interval
+            DeviceMotion.setUpdateInterval(
+                Settings.sensorUpdateIntervals[ userContext.batterySaverStatus ].deviceMotion
+            );
 
             setHasStarted(true);
         } )();
@@ -78,32 +64,40 @@ const HomeScreen = (props) => {
     // handle updates to the coordinates of the player's device
     useEffect(
         () => {
-            if (lastCoords.acc != -1 && lastCoords.lat != coords.lat && lastCoords.long != coords.long) { // we have data!
-                let dist = latLongDist(lastCoords.lat, lastCoords.long, coords.lat, coords.long);
-                
-                let speed = Math.hypot(accel.x, accel.y, accel.z);
+            let { last, current } = userContext.metadata.GPS;
+            if (last.acc != -1 && last.lat != current.lat && last.long != current.long) { // we have data!
+                let dist = latLongDist(last.lat, last.long, current.lat, current.long);
+
+                let speed = userContext.metadata.getSpeed();
                 if (speed > 1) // if moving at least 1 m/s, append displacement
-                    setDistance(distance + dist);
+                    // setDistance(distance + dist);
+                    userContext.metadata.addDistance(dist);
             }
 
-            setLastCoords(coords);
-        }, [coords]
+            userContext.metadata.GPS.setLast(current);
+        }, [userContext.metadata.GPS.current]
     );
 
     // initialize devicemotion readings
     useFocusEffect(
         useCallback(
             () => {
+                // reset device accelerometer timestamp delta
+                // reason: background would fade to green as if speed was really fast because timestamp recording would pause
+                userContext.metadata.setAccelDelta(Date.now());
+                
                 let list = DeviceMotion.addListener(data => {
                     if (data.acceleration == undefined || data.rotation == undefined) return;
-                    setAccel(data.acceleration);
+                    userContext.metadata.setAcceleration(data.acceleration);
 
                     let {beta, gamma, alpha} = data.rotation; // beta -> x, gamma -> y, alpha -> z
                     
                     let accel = data.acceleration;
-                    let delta = (Date.now() - accelDeltaRef.current) / 1000;
+                    let { accelDelta } = userContext.metadata;
 
-                    setAccelDelta(Date.now());
+                    let delta = (Date.now() - accelDelta) / 1000;
+                    
+                    userContext.metadata.setAccelDelta(Date.now());
                     
                     // normalize local device coordinate axes to where device is flat and facing north
                     let cg = Math.cos(gamma), ca = Math.cos(alpha), cb = Math.cos(beta); // to optimize calculations a bit
@@ -125,15 +119,16 @@ const HomeScreen = (props) => {
 
                     // with this normalized acceleration, calculate velocity
                     const format = n => Math.sign(n) * Math.floor( Math.abs(n) * 40 ) / 40; // round off a bit
-                    const damper = 0.95; // the velocity tends to get too high and not fall -- this aims to fix that
+                    const damper = delta * 0.6; // the velocity tends to get too high and not fall -- this aims to fix that
 
+                    let current = userContext.metadata.velocity;
                     let vel = {
-                        x: format(velocityRef.current.x*damper + res.x*delta),
-                        y: format(velocityRef.current.y*damper + res.y*delta),
-                        z: format(velocityRef.current.z*damper + res.z*delta)
+                        x: format(current.x*damper + res.x*delta),
+                        y: format(current.y*damper + res.y*delta),
+                        z: format(current.z*damper + res.z*delta)
                     };
 
-                    setVelocity(vel);
+                    userContext.metadata.setVelocity(vel);
                     let speed = Math.hypot(vel.x, vel.y, vel.z);
 
                     // ----- background color gradient shifting -----
@@ -174,8 +169,9 @@ const HomeScreen = (props) => {
                 </View>
             </View>
 
-            <Text>Steps: {steps}</Text>
-            <Text>Traveled: {distance.toFixed(3)} m</Text>
+            <Text>StepsContext: {userContext.metadata.steps}</Text>
+            <Text>Speed: {userContext.metadata.getSpeed().toFixed(3)} m/s</Text>
+            <Text>Traveled: {userContext.metadata.distance.toFixed(3)} m</Text>
 
             <View style={styles.bottomButtons}>
                 <HomeScreenButton flex={.75} onPress={leftBtn} />

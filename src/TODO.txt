@@ -1,0 +1,4 @@
+- Move permissions stuff from Config.js to new PermissionsManager.js
+  - Handle permission rejection
+- Settings wheel icon in user profile
+  - Swipe right for tasks menu, left for profile

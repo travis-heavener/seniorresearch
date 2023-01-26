@@ -1,10 +1,10 @@
-import React, { useContext } from "react";
+import React, { useState, useContext } from "react";
 import { View, StyleSheet, Text, Dimensions } from "react-native";
 
 // Pedometer + necessary Android permissions imports
 import SettingsSwitch from "../components/SettingsSwitch";
 
-import { Settings, Context, Themes } from "../Config";
+import { Themes } from "../Config";
 import { UserDataContext } from "../SessionUserData";
 
 // viewport height function to make life easier
@@ -12,10 +12,19 @@ const vw = w => Dimensions.get("window").width * (w/100);
 const vh = h => Dimensions.get("window").height * (h/100);
 
 const SettingsScreen = (props) => {
-	const context = useContext( Context );
-
     const userContext = useContext( UserDataContext );
     const THEME = Themes[ userContext.selectedTheme ].settings; // select theme
+    
+    // used to refresh the display
+    const [__remountStatus, __setRemountStatus] = useState(false);
+    const forceRemount = () => __setRemountStatus(!__remountStatus);
+
+    const wrapFunc = func => {
+        return () => {
+            func();
+            forceRemount();
+        };
+    };
 
     return (
 		<View style={styles.top}>
@@ -23,7 +32,16 @@ const SettingsScreen = (props) => {
                 <Text style={[styles.headerText, {color: THEME.text}]} adjustsFontSizeToFit>Settings</Text>
             </View>
             <View style={[styles.body, {backgroundColor: THEME.primary}]}>
-                <SettingsSwitch text="Battery Saver" tag="useBatterySaver" />
+                <SettingsSwitch
+                    text="Battery Saver"
+                    activityListener={() => userContext.isBatterySaverOn()}
+                    toggle={wrapFunc( () => userContext.toggleBatterySaver() )}
+                />
+                <SettingsSwitch
+                    text="Use Dark Theme"
+                    activityListener={() => userContext.selectedTheme == "dark"}
+                    toggle={wrapFunc( () => userContext.toggleSelectedTheme() )}
+                />
             </View>
 		</View>
 	);
