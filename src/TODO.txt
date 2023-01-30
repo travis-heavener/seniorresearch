@@ -2,3 +2,9 @@
   - Handle permission rejection
 - Settings wheel icon in user profile
   - Swipe right for tasks menu, left for profile
+- Finish EAS build
+  - Rebuild with new stack navigation instead of material top tabs
+  - Git commit
+  - Update final paper w/ dependency changes + future methodology updates
+    - react-navigation -> @react-navigation/native
+    - react-navigation-stack -> @react-navigation/stack

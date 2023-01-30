@@ -158,7 +158,7 @@ const HomeScreen = (props) => {
 
     // button functions
     const leftBtn = () => props.navigation.navigate("Profile");
-    const centerBtn = () => console.log("Tasks Menu");
+    const centerBtn = () => props.navigation.navigate("Tasks");
     const rightBtn = () => props.navigation.navigate("Settings");
 
 	return (
