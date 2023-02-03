@@ -12,13 +12,6 @@ const SettingsSwitch = (props) => {
     const userContext = useContext( UserDataContext );
     const THEME = Themes[ userContext.selectedTheme ].settings; // select theme
 
-    const [currentStatus, setCurrentStatus] = useState( false ); // default ticked value
-
-    // const toggle = () => {
-    //     props.toggle();
-    //     setCurrentStatus( !currentStatus );
-    // };
-
     return (
         <View style={[styles.body, {borderBottomColor: THEME.primaryAccent}]}>
             <Text style={[styles.desc, {color: THEME.text}]}>{props.text}</Text>
