@@ -14,7 +14,8 @@ export const Settings = {
             GPS: {
                 accuracy: LocationAccuracy.Highest,
                 delta: 1 // meters of variance before calling update
-            }
+            },
+            taskCompletionCheck: 1000 // how often to check for objective completion, in ms
         },
         batterySaverOn: {
             deviceMotion: 100,
@@ -22,7 +23,8 @@ export const Settings = {
             GPS: {
                 accuracy: LocationAccuracy.Low,
                 delta: 2 // meters of variance before calling update
-            }
+            },
+            taskCompletionCheck: 5000 // how often to check for objective completion, in ms
         }
     },
     BATTERY_SAVER_OFF: "batterySaverOff",

@@ -25,6 +25,24 @@ export const UserDataContext = React.createContext({
             setLast: function(n) {  this.last = n;  }
         }
     },
+
+    cardSlots: {
+        daily: null,
+        custom1: null,
+        custom2: null
+    },
+    cardUpdateInterval: null,
+    setCardUpdateInterval: function(n) {
+        if (this.cardUpdateInterval !== null) {
+            console.log("A card interval is already set, clearing current interval");
+            this.clearCardUpdateInterval();
+        }
+        this.cardUpdateInterval = n;
+    },
+    clearCardUpdateInterval: function() {
+        clearInterval(this.cardUpdateInterval);
+        this.cardUpdateInterval = null;
+    },
     
     selectedTheme: "base",
     setSelectedTheme: function(n) {
