@@ -13,7 +13,7 @@ export const Settings = {
             compassUpdate: 250,
             GPS: {
                 accuracy: LocationAccuracy.Highest,
-                delta: 1 // meters of variance before calling update
+                delta: 5 // meters of variance before calling update
             },
             taskCompletionCheck: 1000 // how often to check for objective completion, in ms
         },
@@ -22,7 +22,7 @@ export const Settings = {
             compassUpdate: 500,
             GPS: {
                 accuracy: LocationAccuracy.Low,
-                delta: 2 // meters of variance before calling update
+                delta: 10 // meters of variance before calling update
             },
             taskCompletionCheck: 5000 // how often to check for objective completion, in ms
         }
@@ -47,6 +47,11 @@ export const Themes = {
             secondary: "#e4e4e4",
             secondaryAccent: "#d6d6d6",
             text: "#031c0a"
+        },
+        tasks: {
+            primary: "#f7bcbc",
+            primaryAccent: "#fad9d9",
+            checkedTile: "#7be385"
         }
     },
     dark: {
@@ -62,6 +67,11 @@ export const Themes = {
             secondary: "#2f2f2f",
             secondaryAccent: "#252525",
             text: "#f5f5f5"
+        },
+        tasks: {
+            primary: "#f7bcbc",
+            primaryAccent: "#fad9d9",
+            checkedTile: "#7be385"
         }
     }
 };

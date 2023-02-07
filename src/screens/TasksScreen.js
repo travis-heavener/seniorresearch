@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import { View, StyleSheet, Text } from "react-native";
 
 import { Themes, Settings } from "../Config";
-import { UserDataContext } from "../SessionUserData";
+import { exportUserData, UserDataContext } from "../SessionUserData";
 
 import TasksScreenCard from "../components/TasksScreenCard";
 
@@ -10,11 +10,12 @@ import { createBingoCard, DIFFICULTIES } from "../BingoCardManager";
 
 const TasksScreen = (props) => {
     const userContext = useContext( UserDataContext );
-    const THEME = Themes[ userContext.selectedTheme ].settings; // select theme
-
-    // let card = createBingoCard(DIFFICULTIES.HARD, userContext);
-    // userContext.cardSlots.daily = card;
     
+    const THEME = Themes[ userContext.selectedTheme ].settings; // select theme
+    
+    const [__remountStatus, __setRemountStatus] = useState(false);
+    const forceRemount = () => __setRemountStatus(!__remountStatus);
+
     // set update interval on screen load
     useEffect(
         () => {
@@ -25,6 +26,9 @@ const TasksScreen = (props) => {
                     userContext.cardSlots.daily  ?.runCompletionChecks(userContext);
                     userContext.cardSlots.custom1?.runCompletionChecks(userContext);
                     userContext.cardSlots.custom2?.runCompletionChecks(userContext);
+
+                    // export data
+                    exportUserData(userContext);
                 }, Settings.sensorUpdateIntervals[ userContext.batterySaverStatus ].taskCompletionCheck
             );
 
@@ -35,9 +39,9 @@ const TasksScreen = (props) => {
     return (
 		<View style={styles.body}>
 			<Text>Tasks Screen</Text>
-            <TasksScreenCard cardName="daily" />
-            <TasksScreenCard cardName="custom1" />
-            <TasksScreenCard cardName="custom2" />
+            <TasksScreenCard remount={forceRemount} cardName="daily" />
+            <TasksScreenCard remount={forceRemount} cardName="custom1" />
+            <TasksScreenCard remount={forceRemount} cardName="custom2" />
 		</View>
 	);
 };

@@ -103,7 +103,7 @@ export const loadUserData = async (userContext) => {
 
     // load in data
     data = JSON.parse(data);
-    console.log(data);
+    
     userContext.setBatterySaverStatus(data.batterySaverStatus);
     userContext.setSelectedTheme(data.selectedTheme);
 
@@ -111,22 +111,25 @@ export const loadUserData = async (userContext) => {
     userContext.metadata.setLifetimeDistance(data.metadata.distance);
 
     // load card data
-    if (data.cardsData) {
-        for (let cardName in data.cardsData) {
-            let card = data.cardsData[cardName];
-            
-            let grid = [];
-
-            for (let r = 0; r < 5; r++) {
-                grid.push([]);
-                for (let c = 0; c < 5; c++) {
-                    let objective = createObjectiveFromData(card.grid[r][c], userContext);
-                    grid[r].push( objective );
-                }
-            }
-
-            userContext.cardSlots[cardName] = new BingoCard(grid, card.difficulty);
+    for (let cardName in data.cardsData) {
+        let card = data.cardsData[cardName];
+        
+        if (card == null) {
+            userContext.cardSlots[cardName] = null;
+            continue;
         }
+        
+        let grid = [];
+
+        for (let r = 0; r < 5; r++) {
+            grid.push([]);
+            for (let c = 0; c < 5; c++) {
+                let objective = createObjectiveFromData(card.grid[r][c], userContext);
+                grid[r].push( objective );
+            }
+        }
+
+        userContext.cardSlots[cardName] = new BingoCard(grid, card.difficulty, card.randomSeed);
     }
 };
 
@@ -153,9 +156,10 @@ export const exportUserData = async (userContext) => {
     let cardsData = {};
 
     for (let key in userContext.cardSlots) {
-        if (userContext.cardSlots[key] == null) continue;
-
-        cardsData[key] = userContext.cardSlots[key].exportToDisk(userContext);
+        if (userContext.cardSlots[key] == null)
+            cardsData[key] = null;
+        else
+            cardsData[key] = userContext.cardSlots[key].exportToDisk(userContext);
     }
 
     // merge together data
@@ -182,6 +186,10 @@ export const clearUserData = async (userContext) => {
 
     userContext.setSelectedTheme("base");
     userContext.setBatterySaverStatus(Settings.BATTERY_SAVER_OFF);
+
+    userContext.cardSlots.daily = null;
+    userContext.cardSlots.custom1 = null;
+    userContext.cardSlots.custom2 = null;
 
     console.log("User data cleared!");
 };

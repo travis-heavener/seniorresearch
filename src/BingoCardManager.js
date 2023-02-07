@@ -1,5 +1,5 @@
 import { DistanceObjective, ExploreObjective, FreeObjective, StepsObjective } from "./CardObjectives";
-import { generateUUID } from "./Toolbox";
+import { generateSeed, Random } from "./Toolbox";
 
 export const DIFFICULTIES = {
     EASY: 1,
@@ -8,10 +8,11 @@ export const DIFFICULTIES = {
 };
 
 export class BingoCard {
-    constructor(objectivesArray, difficulty) {
+    constructor(objectivesArray, difficulty, seed) {
         this.grid = objectivesArray;
         this.difficulty = difficulty;
-        this.uuid = generateUUID();
+
+        this.randomSeed = seed;
         
         this.runCompletionChecks = function(userContext) {
             for (let card of this.grid.flat())
@@ -30,8 +31,8 @@ export class BingoCard {
     }
 
     exportToDisk(userContext) {
-        let cardData = {grid: [], difficulty: this.difficulty};
-
+        let cardData = {grid: [], difficulty: this.difficulty, randomSeed: this.randomSeed};
+        
         for (let r = 0; r < 5; r++) {
             cardData.grid.push([]);
 
@@ -42,6 +43,18 @@ export class BingoCard {
         }
 
         return cardData;
+    }
+
+    print() {
+        let str = "BingoCard: [";
+        for (let r = 0; r < 5; r++) {
+            str += "\n\t";
+            for (let c = 0; c < 5; c++) {
+                // str += this.grid[r][c].label + (this.grid[r][c].stepGoal | 0) + (this.grid[r][c].distanceGoal | 0) + ", "
+                str += this.grid[r][c].label + ", "
+            }
+        }
+        str += "\n]";
     }
 
     checkBingos() {
@@ -93,8 +106,15 @@ export class BingoCard {
     }
 }
 
-export const createBingoCard = (difficulty, currentUserContext) => {
+export const createBingoCard = (currentUserContext, difficulty=-1) => {
+    if (difficulty == -1) {
+        let diffIndex = Math.floor(Math.random() * 3);
+        difficulty = [DIFFICULTIES.EASY, DIFFICULTIES.NORMAL, DIFFICULTIES.HARD][diffIndex];
+    }
+    
     // generate seed at a later date to re-roll the same card
+    const seed = generateSeed(),
+        random = new Random(seed);
 
     // different types of objectives (can't encourage speed objectives because player could feel they need to drive)
     // two types of objectives:
@@ -114,7 +134,7 @@ export const createBingoCard = (difficulty, currentUserContext) => {
 
     const genRandom = () => {
         // later rely on seeds, this works for now
-        let index = Math.floor( Math.random() * objMap.length );
+        let index = Math.floor( random.next() * objMap.length );
         return objMap[index];
     };
 
@@ -125,17 +145,19 @@ export const createBingoCard = (difficulty, currentUserContext) => {
         for (let c = 0; c < 5; c++) {
             let label = (r == 2 && c == 2) ? "free" : genRandom();
             
+            let args = [label, difficulty, currentUserContext, random.next];
+
             if (label == "steps") {
-                grid[r].push( new StepsObjective(label, difficulty, currentUserContext) );
+                grid[r].push( new StepsObjective(...args) );
             } else if (label == "distance") {
-                grid[r].push( new DistanceObjective(label, difficulty, currentUserContext) );
+                grid[r].push( new DistanceObjective(...args ) );
             } else if (label == "free") {
-                grid[r].push( new FreeObjective(label, difficulty, currentUserContext) );
+                grid[r].push( new FreeObjective(...args) );
             } else {
-                grid[r].push( new ExploreObjective(label, difficulty, currentUserContext) );
+                grid[r].push( new ExploreObjective(...args) );
             }
         }
     }
 
-    return new BingoCard(grid, difficulty);
+    return new BingoCard(grid, difficulty, seed);
 };

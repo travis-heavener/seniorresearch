@@ -37,20 +37,23 @@ const HomeScreen = (props) => {
 
             let perms = await context.requestPermissions();
 
-            // start pedometer
-            if (perms.ACTIVITY_RECOGNITION)
-                Pedometer.watchStepCount(res => userContext.metadata.setSteps( res.steps ));
+            // // start pedometer
+            // if (perms.ACTIVITY_RECOGNITION) {
+            //     Pedometer.watchStepCount(res => {
+            //         userContext.metadata.setSteps( res.steps )
+            //     });
+            // }
             
             // start location tracking
-            if (perms.ACCESS_FINE_LOCATION && perms.ACCESS_COARSE_LOCATION) {
-                const { delta, accuracy } = Settings.sensorUpdateIntervals[ userContext.batterySaverStatus ].GPS;
+            // if (perms.ACCESS_FINE_LOCATION && perms.ACCESS_COARSE_LOCATION) {
+            //     const { delta, accuracy } = Settings.sensorUpdateIntervals[ userContext.batterySaverStatus ].GPS;
 
-                Location.watchPositionAsync({accuracy: accuracy, distanceInterval: delta}, loc => {
-                    userContext.metadata.GPS.setCurrent(
-                        {lat: loc.coords.latitude, long: loc.coords.longitude, acc: loc.coords.accuracy}
-                    );
-                });
-            }
+            //     Location.watchPositionAsync({accuracy: accuracy, distanceInterval: delta}, loc => {
+            //         userContext.metadata.GPS.setCurrent(
+            //             {lat: loc.coords.latitude, long: loc.coords.longitude, acc: loc.coords.accuracy}
+            //         );
+            //     });
+            // }
 
             // accelerometer interval
             DeviceMotion.setUpdateInterval(
@@ -59,11 +62,6 @@ const HomeScreen = (props) => {
 
             // load user data
             loadUserData(userContext);
-
-            // auto-save interval
-            setInterval(() => {
-                exportUserData(userContext);
-            }, 1000);
             
             setHasStarted(true);
         } )();
@@ -77,7 +75,7 @@ const HomeScreen = (props) => {
                 let dist = latLongDist(last.lat, last.long, current.lat, current.long);
 
                 let speed = userContext.metadata.getSpeed();
-                if (speed > 1) // if moving at least 1 m/s, append displacement
+                // if (speed > 1) // if moving at least 1 m/s, append displacement
                     // setDistance(distance + dist);
                     userContext.metadata.addDistance(dist);
             }
@@ -86,7 +84,46 @@ const HomeScreen = (props) => {
         }, [userContext.metadata.GPS.current]
     );
 
-    // initialize devicemotion readings
+    // initialize pedometer reading (every time the screen is FOCUSED)
+    useFocusEffect(
+        useCallback(
+            () => {
+                loadUserData(userContext); // load stats once page is swiped in
+                
+                let list = Pedometer.watchStepCount(res => {
+                    userContext.metadata.setSteps( res.steps )
+                });
+                return () => {
+                    list.remove();
+                    exportUserData(userContext); // save stats after page is swiped off
+                };
+            }, [props]
+        )
+    );
+
+    // initialize location reading (every time the screen is FOCUSED)
+    useFocusEffect(
+        useCallback(
+            () => {
+                const { delta, accuracy } = Settings.sensorUpdateIntervals[ userContext.batterySaverStatus ].GPS;
+                
+                let subscription;
+                let getListener = async () => {
+                    subscription = await Location.watchPositionAsync({accuracy: accuracy, distanceInterval: delta}, loc => {
+                        userContext.metadata.GPS.setCurrent(
+                            {lat: loc.coords.latitude, long: loc.coords.longitude, acc: loc.coords.accuracy}
+                        );
+                    });
+                };
+                
+                getListener();
+
+                return () => { subscription && subscription.remove() };
+            }, [props, userContext.batterySaverStatus]
+        )
+    );
+
+    // initialize devicemotion readings (every time the screen is FOCUSED)
     useFocusEffect(
         useCallback(
             () => {
@@ -177,9 +214,11 @@ const HomeScreen = (props) => {
                 </View>
             </View>
 
-            <Text>StepsContext: {userContext.metadata.steps}</Text>
+            <Text>Steps: {userContext.metadata.steps}</Text>
+            <Text>Lifetime Steps: {userContext.metadata.lifetimeSteps}</Text>
             <Text>Speed: {userContext.metadata.getSpeed().toFixed(3)} m/s</Text>
             <Text>Traveled: {userContext.metadata.distance.toFixed(3)} m</Text>
+            <Text>Lifetime Traveled: {userContext.metadata.lifetimeDistance.toFixed(3)} m</Text>
 
             <View style={styles.bottomButtons}>
                 <HomeScreenButton flex={.75} onPress={leftBtn} />
