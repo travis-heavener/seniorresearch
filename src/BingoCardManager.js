@@ -1,40 +1,13 @@
+import { DistanceObjective, ExploreObjective, FreeObjective, StepsObjective } from "./CardObjectives";
+import { generateUUID } from "./Toolbox";
+
 export const DIFFICULTIES = {
     EASY: 1,
     NORMAL: 2.5,
     HARD: 5
 };
 
-class CardObjective {
-    constructor(label, difficulty, userContext) {
-        this.label = label;
-        this.difficulty = difficulty;
-
-        this.isCompleted = (label == "free"); // false unless tile is a free space
-
-        if (label == "steps") {
-            // generate step goal
-            let max = 1500, min = 750; // NOTE: this scales based on difficulty (ie. normal -> min: 1875/max: 3750)
-            let stepGoal = difficulty * Math.floor( Math.random() * (max-min) + min );
-            stepGoal = Math.round( stepGoal / 50 ) * 50; // round to nearest 50
-
-            this.startingSteps = userContext.metadata.steps;
-            this.stepGoal = stepGoal;
-
-            // checking for completion
-            this.completionCheck = (userContext) => {
-                if (this.isCompleted) return true;
-
-                this.isCompleted = (userContext.metadata.steps - this.startingSteps) >= this.stepGoal;
-                return this.isCompleted;
-            };
-        } else {
-            // handle player-triggered completion events
-            this.triggerPlayerCompletion = () => this.isCompleted = true;
-        }
-    }
-}
-
-class BingoCard {
+export class BingoCard {
     constructor(objectivesArray, difficulty) {
         this.grid = objectivesArray;
         this.difficulty = difficulty;
@@ -54,6 +27,21 @@ class BingoCard {
             topLeftDownDiag: false,
             topRightDownDiag: false
         };
+    }
+
+    exportToDisk(userContext) {
+        let cardData = {grid: [], difficulty: this.difficulty};
+
+        for (let r = 0; r < 5; r++) {
+            cardData.grid.push([]);
+
+            for (let c = 0; c < 5; c++) {
+                let data = this.grid[r][c].exportToDisk(userContext);
+                cardData.grid[r].push(data);
+            }
+        }
+
+        return cardData;
     }
 
     checkBingos() {
@@ -137,27 +125,17 @@ export const createBingoCard = (difficulty, currentUserContext) => {
         for (let c = 0; c < 5; c++) {
             let label = (r == 2 && c == 2) ? "free" : genRandom();
             
-            grid[r].push( new CardObjective(label, difficulty, currentUserContext) );
+            if (label == "steps") {
+                grid[r].push( new StepsObjective(label, difficulty, currentUserContext) );
+            } else if (label == "distance") {
+                grid[r].push( new DistanceObjective(label, difficulty, currentUserContext) );
+            } else if (label == "free") {
+                grid[r].push( new FreeObjective(label, difficulty, currentUserContext) );
+            } else {
+                grid[r].push( new ExploreObjective(label, difficulty, currentUserContext) );
+            }
         }
     }
 
     return new BingoCard(grid, difficulty);
 };
-
-/* ============ HANDY FUNCTIONS ============ */
-
-function generateUUID() { // Public Domain/MIT
-    var d = new Date().getTime();//Timestamp
-    var d2 = ((typeof performance !== 'undefined') && performance.now && (performance.now()*1000)) || 0;//Time in microseconds since page-load or 0 if unsupported
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-        var r = Math.random() * 16;//random number between 0 and 16
-        if(d > 0){//Use timestamp until depleted
-            r = (d + r)%16 | 0;
-            d = Math.floor(d/16);
-        } else {//Use microseconds since page-load if supported
-            r = (d2 + r)%16 | 0;
-            d2 = Math.floor(d2/16);
-        }
-        return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
-    });
-}

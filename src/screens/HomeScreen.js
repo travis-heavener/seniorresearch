@@ -12,7 +12,7 @@ import CompassWidget from "../components/CompassWidget";
 import { Settings, SettingsContext, Themes } from "../Config";
 import { calculateGradient } from "../GradientManager";
 
-import { UserDataContext } from "../SessionUserData";
+import { exportUserData, loadUserData, UserDataContext } from "../SessionUserData";
 
 const HomeScreen = (props) => {
     const userContext = useContext( UserDataContext );
@@ -57,6 +57,14 @@ const HomeScreen = (props) => {
                 Settings.sensorUpdateIntervals[ userContext.batterySaverStatus ].deviceMotion
             );
 
+            // load user data
+            loadUserData(userContext);
+
+            // auto-save interval
+            setInterval(() => {
+                exportUserData(userContext);
+            }, 1000);
+            
             setHasStarted(true);
         } )();
     });

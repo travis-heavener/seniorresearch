@@ -12,8 +12,8 @@ const TasksScreen = (props) => {
     const userContext = useContext( UserDataContext );
     const THEME = Themes[ userContext.selectedTheme ].settings; // select theme
 
-    let card = createBingoCard(DIFFICULTIES.HARD, userContext);
-    userContext.cardSlots.daily = card;
+    // let card = createBingoCard(DIFFICULTIES.HARD, userContext);
+    // userContext.cardSlots.daily = card;
     
     // set update interval on screen load
     useEffect(
@@ -35,16 +35,16 @@ const TasksScreen = (props) => {
     return (
 		<View style={styles.body}>
 			<Text>Tasks Screen</Text>
-            <TasksScreenCard></TasksScreenCard>
-            <TasksScreenCard></TasksScreenCard>
-            <TasksScreenCard></TasksScreenCard>
+            <TasksScreenCard cardName="daily" />
+            <TasksScreenCard cardName="custom1" />
+            <TasksScreenCard cardName="custom2" />
 		</View>
 	);
 };
 
 const styles = StyleSheet.create({
     body: {
-        
+
     }
 });
 

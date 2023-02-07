@@ -5,8 +5,7 @@ import { Settings, Context, Themes } from "../Config";
 import { UserDataContext } from "../SessionUserData";
 
 // viewport height function to make life easier
-const vw = w => Dimensions.get("window").width * (w/100);
-const vh = h => Dimensions.get("window").height * (h/100);
+import { vh, vw } from "../Toolbox";
 
 const SettingsSwitch = (props) => {
     const userContext = useContext( UserDataContext );

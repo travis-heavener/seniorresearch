@@ -5,11 +5,10 @@ import { View, StyleSheet, Text, Dimensions } from "react-native";
 import SettingsSwitch from "../components/SettingsSwitch";
 
 import { Themes } from "../Config";
-import { UserDataContext } from "../SessionUserData";
+import { clearUserData, UserDataContext } from "../SessionUserData";
 
 // viewport height function to make life easier
-const vw = w => Dimensions.get("window").width * (w/100);
-const vh = h => Dimensions.get("window").height * (h/100);
+import { vh } from "../Toolbox";
 
 const SettingsScreen = (props) => {
     const userContext = useContext( UserDataContext );
@@ -41,6 +40,11 @@ const SettingsScreen = (props) => {
                     text="Use Dark Theme"
                     activityListener={() => userContext.selectedTheme == "dark"}
                     toggle={wrapFunc( () => userContext.toggleSelectedTheme() )}
+                />
+                <SettingsSwitch
+                    text="Reset User Data"
+                    activityListener={() => false}
+                    toggle={wrapFunc( () => clearUserData(userContext) )}
                 />
             </View>
 		</View>
