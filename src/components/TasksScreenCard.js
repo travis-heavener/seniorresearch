@@ -1,11 +1,11 @@
 import React, { useState, useContext } from "react";
 import { View, StyleSheet, Text, TouchableOpacity, Image } from "react-native";
-import { createBingoCard, DIFFICULTIES } from "../BingoCardManager";
-import { Themes } from "../Config";
-import { exportUserData, UserDataContext } from "../UserDataManager";
+import { createBingoCard, DIFFICULTIES } from "../objectives/BingoCardManager";
+import { Themes } from "../config/Config";
+import { exportUserData, UserDataContext } from "../config/UserDataManager";
 
 // viewport height function to make life easier
-import { vw, vh } from "../Toolbox";
+import { vw, vh } from "../config/Toolbox";
 
 // import images
 const MEDIA_ROOT = "../../assets/media/";

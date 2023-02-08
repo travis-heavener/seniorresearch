@@ -33,8 +33,8 @@ const breakRGB = str => {
 
 export function calculateGradient(currentCol, startCol, endCol, speed, frames) {
     let current = breakRGB( currentCol ),
-        start = breakRGB ( startCol ),
-        end = breakRGB ( endCol );
+        start = breakRGB( startCol ),
+        end = breakRGB( endCol );
 
     // determine how fast device is compared to max speed (4 m/s)
     let maxSpeed = 4, stepCount = 100;

@@ -1,11 +1,11 @@
 import React, { useState, useContext } from "react";
 import { View, StyleSheet, Text, TouchableOpacity, Dimensions } from "react-native";
 
-import { Settings, Context, Themes } from "../Config";
-import { UserDataContext } from "../UserDataManager";
+import { Settings, Context, Themes } from "../config/Config";
+import { UserDataContext } from "../config/UserDataManager";
 
 // viewport height function to make life easier
-import { vh, vw } from "../Toolbox";
+import { vh, vw } from "../config/Toolbox";
 
 const SettingsSwitch = (props) => {
     const userContext = useContext( UserDataContext );

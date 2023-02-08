@@ -1,5 +1,5 @@
 import { DistanceObjective, ExploreObjective, FreeObjective, StepsObjective } from "./CardObjectives";
-import { generateSeed, Random } from "./Toolbox";
+import { generateSeed, Random } from "../config/Toolbox";
 
 export const DIFFICULTIES = {
     EASY: 1,

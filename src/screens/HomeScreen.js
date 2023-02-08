@@ -9,11 +9,11 @@ import * as Location from "expo-location";
 import HomeScreenButton from "../components/HomeScreenButton";
 import CompassWidget from "../components/CompassWidget";
 
-import { Settings, SettingsContext, Themes } from "../Config";
-import { calculateGradient } from "../GradientManager";
+import { Settings, SettingsContext, Themes } from "../config/Config";
+import { calculateGradient } from "./GradientManager";
 
-import { exportUserData, loadUserData, UserDataContext } from "../UserDataManager";
-import { latLongDist, oldLatLongDist } from "../Toolbox";
+import { exportUserData, loadUserData, UserDataContext } from "../config/UserDataManager";
+import { latLongDist, oldLatLongDist } from "../config/Toolbox";
 
 const HomeScreen = (props) => {
     const userContext = useContext( UserDataContext );

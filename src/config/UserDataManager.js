@@ -2,7 +2,7 @@ import React from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Settings } from "./Config";
 import { DistanceObjective, ExploreObjective, FreeObjective, StepsObjective } from "./CardObjectives";
-import { BingoCard } from "./BingoCardManager";
+import { BingoCard } from "../objectives/BingoCardManager";
 
 export const UserDataContext = React.createContext({
     metadata: {

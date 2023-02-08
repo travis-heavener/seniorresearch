@@ -1,12 +1,12 @@
 import React, { useState, useContext, useEffect } from "react";
 import { View, StyleSheet, Text } from "react-native";
 
-import { Themes, Settings } from "../Config";
-import { exportUserData, UserDataContext } from "../UserDataManager";
+import { Themes, Settings } from "../config/Config";
+import { exportUserData, UserDataContext } from "../config/UserDataManager";
 
 import TasksScreenCard from "../components/TasksScreenCard";
 
-import { createBingoCard, DIFFICULTIES } from "../BingoCardManager";
+import { createBingoCard, DIFFICULTIES } from "../objectives/BingoCardManager";
 
 const TasksScreen = (props) => {
     const userContext = useContext( UserDataContext );

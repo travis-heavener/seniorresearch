@@ -4,11 +4,11 @@ import { View, StyleSheet, Text, Dimensions } from "react-native";
 // Pedometer + necessary Android permissions imports
 import SettingsSwitch from "../components/SettingsSwitch";
 
-import { Themes } from "../Config";
-import { clearUserData, UserDataContext } from "../UserDataManager";
+import { Themes } from "../config/Config";
+import { clearUserData, UserDataContext } from "../config/UserDataManager";
 
 // viewport height function to make life easier
-import { vh } from "../Toolbox";
+import { vh } from "../config/Toolbox";
 
 const SettingsScreen = (props) => {
     const userContext = useContext( UserDataContext );

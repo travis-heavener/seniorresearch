@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { StyleSheet, ImageBackground, Image, Text } from "react-native";
 
-import { Settings } from "../Config";
+import { Settings } from "../config/Config";
 
 // configure magnetometer updates
 import { DeviceMotion } from "expo-sensors";
-import { UserDataContext } from "../UserDataManager";
+import { UserDataContext } from "../config/UserDataManager";
 
 // import images
 const MEDIA_ROOT = "../../assets/media/";
