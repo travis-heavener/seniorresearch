@@ -1,7 +1,7 @@
 import React from "react";
 import { PermissionsAndroid } from "react-native";
 
-import { LocationAccuracy } from "expo-location";
+import * as Location from "expo-location";
 
 /* ======= settings ======= */
 
@@ -12,8 +12,8 @@ export const Settings = {
             deviceMotion: 10,
             compassUpdate: 250,
             GPS: {
-                accuracy: LocationAccuracy.Highest,
-                delta: 5 // meters of variance before calling update
+                accuracy: Location.LocationAccuracy.High,
+                delta: 10 // meters of variance before calling update
             },
             taskCompletionCheck: 1000 // how often to check for objective completion, in ms
         },
@@ -21,8 +21,8 @@ export const Settings = {
             deviceMotion: 100,
             compassUpdate: 500,
             GPS: {
-                accuracy: LocationAccuracy.Low,
-                delta: 10 // meters of variance before calling update
+                accuracy: Location.LocationAccuracy.Balanced,
+                delta: 20 // meters of variance before calling update
             },
             taskCompletionCheck: 5000 // how often to check for objective completion, in ms
         }
@@ -85,19 +85,30 @@ const checkPerm = perm => {
 export const SettingsContext = React.createContext({
     refreshPermissions: async function() {
         for (let perm in this.permissions) {
-            if (this.permissions.hasOwnProperty(perm))
-                this.permissions[perm] = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS[perm]);
+            if (this.permissions.hasOwnProperty(perm)) {
+                if (perm == "ACCESS_FINE_LOCATION" || perm == "ACCESS_COARSE_LOCATION")
+					this.permissions[perm] = (await Location.getForegroundPermissionsAsync()).status == "granted";
+				else
+					this.permissions[perm] = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS[perm]);
+			}
         }
     },
     requestPermissions: async function() {
-        this.refreshPermissions();
+        await this.refreshPermissions();
 
         for (let perm in this.permissions) {
             if (this.permissions.hasOwnProperty(perm) && !this.permissions[perm])
-                this.permissions[perm] = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS[perm]);
+				if (perm == "ACCESS_FINE_LOCATION" || perm == "ACCESS_COARSE_LOCATION")
+					this.permissions[perm] = (await Location.requestForegroundPermissionsAsync()).status == "granted";
+				else
+					this.permissions[perm] = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS[perm]);
         }
+
+		this.hasRequestedPermissions = true;
+
         return this.permissions;
     },
+	hasRequestedPermissions: false,
     permissions: {
         // for Pedometer
         "ACTIVITY_RECOGNITION": false,

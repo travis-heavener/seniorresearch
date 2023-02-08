@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import { View, StyleSheet, Text, TouchableOpacity, Dimensions } from "react-native";
 
 import { Settings, Context, Themes } from "../Config";
-import { UserDataContext } from "../SessionUserData";
+import { UserDataContext } from "../UserDataManager";
 
 // viewport height function to make life easier
 import { vh, vw } from "../Toolbox";

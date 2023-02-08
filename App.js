@@ -20,41 +20,27 @@ const opts = {
 
 const CreateStack = () => (
     <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen
-            name="Home" component={HomeScreen}
-            options={opts}
-        />
-        <Stack.Screen
-            name="Settings" component={SettingsScreen}
+        <Stack.Screen name="Home" component={HomeScreen} options={opts} />
+        <Stack.Screen name="Settings" component={SettingsScreen}
             options={{
-                ...opts,
-                cardStyleInterpolator: fromHoriz,
-                gestureDirection: "horizontal"
+                ...opts, cardStyleInterpolator: fromHoriz, gestureDirection: "horizontal"
             }}
         />
-        <Stack.Screen
-            name="Profile" component={SettingsScreen}
+        <Stack.Screen name="Profile" component={SettingsScreen}
             options={{
-                ...opts,
-                cardStyleInterpolator: fromHoriz,
-                gestureDirection: "horizontal-inverted"
+                ...opts, cardStyleInterpolator: fromHoriz, gestureDirection: "horizontal-inverted"
             }}
         />
-        <Stack.Screen
-            name="Tasks" component={TasksScreen}
+        <Stack.Screen name="Tasks" component={TasksScreen}
             options={{
-                ...opts,
-                cardStyleInterpolator: fromVert,
-                gestureDirection: "vertical"
+                ...opts, cardStyleInterpolator: fromVert, gestureDirection: "vertical"
             }}
         />
     </Stack.Navigator>
 );
 
-export default function App() {
-    return (
-        <NavigationContainer>
-            <CreateStack />
-        </NavigationContainer>
-    )
-};
+export default () => (
+	<NavigationContainer>
+		<CreateStack />
+	</NavigationContainer>
+);

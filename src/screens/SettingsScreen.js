@@ -5,7 +5,7 @@ import { View, StyleSheet, Text, Dimensions } from "react-native";
 import SettingsSwitch from "../components/SettingsSwitch";
 
 import { Themes } from "../Config";
-import { clearUserData, UserDataContext } from "../SessionUserData";
+import { clearUserData, UserDataContext } from "../UserDataManager";
 
 // viewport height function to make life easier
 import { vh } from "../Toolbox";

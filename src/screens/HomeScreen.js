@@ -12,7 +12,7 @@ import CompassWidget from "../components/CompassWidget";
 import { Settings, SettingsContext, Themes } from "../Config";
 import { calculateGradient } from "../GradientManager";
 
-import { exportUserData, loadUserData, UserDataContext } from "../SessionUserData";
+import { exportUserData, loadUserData, UserDataContext } from "../UserDataManager";
 
 const HomeScreen = (props) => {
     const userContext = useContext( UserDataContext );
@@ -37,15 +37,19 @@ const HomeScreen = (props) => {
 
             let perms = await context.requestPermissions();
 
-            // // start pedometer
-            // if (perms.ACTIVITY_RECOGNITION) {
-            //     Pedometer.watchStepCount(res => {
-            //         userContext.metadata.setSteps( res.steps )
-            //     });
-            // }
+            // start pedometer
+            if (perms.ACTIVITY_RECOGNITION) {
+                Pedometer.watchStepCount(res => {
+                    userContext.metadata.setSteps( res.steps )
+                });
+            } else {
+				console.log("Missing pedometer permissions");
+			}
             
             // start location tracking
-            // if (perms.ACCESS_FINE_LOCATION && perms.ACCESS_COARSE_LOCATION) {
+			// let locPerms = {status: perms.ACCESS_FINE_LOCATION || perms.ACCESS_COARSE_LOCATION};
+
+            // if (locPerms.status == "granted") {
             //     const { delta, accuracy } = Settings.sensorUpdateIntervals[ userContext.batterySaverStatus ].GPS;
 
             //     Location.watchPositionAsync({accuracy: accuracy, distanceInterval: delta}, loc => {
@@ -53,7 +57,9 @@ const HomeScreen = (props) => {
             //             {lat: loc.coords.latitude, long: loc.coords.longitude, acc: loc.coords.accuracy}
             //         );
             //     });
-            // }
+            // } else {
+			// 	console.log("Missing location permissions");
+			// }
 
             // accelerometer interval
             DeviceMotion.setUpdateInterval(
@@ -74,9 +80,11 @@ const HomeScreen = (props) => {
             if (last.acc != -1 && last.lat != current.lat && last.long != current.long) { // we have data!
                 let dist = latLongDist(last.lat, last.long, current.lat, current.long);
 
-                let speed = userContext.metadata.getSpeed();
+                // let speed = userContext.metadata.getSpeed();
                 // if (speed > 1) // if moving at least 1 m/s, append displacement
-                    // setDistance(distance + dist);
+
+				// console.log("Acc/2: " + current.acc / 2 + "\nDistance: " + dist);
+				if (current.acc / 2 <= 1000*dist)
                     userContext.metadata.addDistance(dist);
             }
 
@@ -84,30 +92,21 @@ const HomeScreen = (props) => {
         }, [userContext.metadata.GPS.current]
     );
 
-    // initialize pedometer reading (every time the screen is FOCUSED)
-    useFocusEffect(
-        useCallback(
-            () => {
-                loadUserData(userContext); // load stats once page is swiped in
-                
-                let list = Pedometer.watchStepCount(res => {
-                    userContext.metadata.setSteps( res.steps )
-                });
-                return () => {
-                    list.remove();
-                    exportUserData(userContext); // save stats after page is swiped off
-                };
-            }, [props]
-        )
-    );
-
     // initialize location reading (every time the screen is FOCUSED)
     useFocusEffect(
         useCallback(
             () => {
-                const { delta, accuracy } = Settings.sensorUpdateIntervals[ userContext.batterySaverStatus ].GPS;
-                
-                let subscription;
+				if (!context.hasRequestedPermissions) return () => {}; // prevent trying to listen before permissions granted
+
+				// prevent trying to listen without permissions after requesting
+				if (!context.permissions.ACCESS_COARSE_LOCATION || !context.permissions.ACCESS_FINE_LOCATION) {
+					console.log("Missing location permissions");
+					return () => {};
+				}
+
+				const { delta, accuracy } = Settings.sensorUpdateIntervals[ userContext.batterySaverStatus ].GPS;
+
+				let subscription;
                 let getListener = async () => {
                     subscription = await Location.watchPositionAsync({accuracy: accuracy, distanceInterval: delta}, loc => {
                         userContext.metadata.GPS.setCurrent(
@@ -119,7 +118,7 @@ const HomeScreen = (props) => {
                 getListener();
 
                 return () => { subscription && subscription.remove() };
-            }, [props, userContext.batterySaverStatus]
+            }, [props, userContext.batterySaverStatus, context.hasRequestedPermissions]
         )
     );
 

@@ -6,7 +6,7 @@ import { Settings } from "../Config";
 
 // configure magnetometer updates
 import { DeviceMotion } from "expo-sensors";
-import { UserDataContext } from "../SessionUserData";
+import { UserDataContext } from "../UserDataManager";
 
 // import images
 const MEDIA_ROOT = "../../assets/media/";

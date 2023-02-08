@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import { View, StyleSheet, Text, TouchableOpacity, Image } from "react-native";
 import { createBingoCard, DIFFICULTIES } from "../BingoCardManager";
 import { Themes } from "../Config";
-import { exportUserData, UserDataContext } from "../SessionUserData";
+import { exportUserData, UserDataContext } from "../UserDataManager";
 
 // viewport height function to make life easier
 import { vw, vh } from "../Toolbox";

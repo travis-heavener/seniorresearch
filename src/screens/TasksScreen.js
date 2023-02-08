@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import { View, StyleSheet, Text } from "react-native";
 
 import { Themes, Settings } from "../Config";
-import { exportUserData, UserDataContext } from "../SessionUserData";
+import { exportUserData, UserDataContext } from "../UserDataManager";
 
 import TasksScreenCard from "../components/TasksScreenCard";
 

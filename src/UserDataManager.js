@@ -177,7 +177,11 @@ export const exportUserData = async (userContext) => {
  * Literally deletes all user data, beware
  */
 export const clearUserData = async (userContext) => {
-    await AsyncStorage.removeItem("com.heavener-sr.user-data");
+    try {
+		await AsyncStorage.removeItem("com.heavener-sr.user-data");
+	} catch (e) {
+		console.log(e);
+	}
 
     userContext.metadata.setSteps(0);
     userContext.metadata.setLifetimeSteps(0);
