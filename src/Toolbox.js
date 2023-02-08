@@ -31,7 +31,7 @@ function mulberry32(a) {
 
 export const generateSeed = () => {
     // generate random number from 0 to 999_999, inclusive
-    return Math.floor(Math.random() * 1_000_000);
+    return Math.floor(Math.random() * 1000000); // removed 1_000_000 underscores to fix gradle compiling... annoying!
 };
 
 export class Random {
