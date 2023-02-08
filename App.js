@@ -2,13 +2,13 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 
 // see https://reactnavigation.org/docs/stack-navigator/
-import 'react-native-gesture-handler'; // tl;dr this is important
+import "react-native-gesture-handler"; // tl;dr this is important
 
-import { fromHoriz, fromVert } from "./ScreenGesturesManager.js";
+import { fromHoriz, fromVert } from "./src/ScreenGesturesManager";
 
-import HomeScreen from "./src/screens/HomeScreen.js";
-import SettingsScreen from "./src/screens/SettingsScreen.js";
-import TasksScreen from "./src/screens/TasksScreen.js";
+import HomeScreen from "./src/screens/HomeScreen";
+import SettingsScreen from "./src/screens/SettingsScreen";
+import TasksScreen from "./src/screens/TasksScreen";
 
 const Stack = createStackNavigator();
 
