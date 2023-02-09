@@ -13,7 +13,7 @@ export const Settings = {
             compassUpdate: 250,
             GPS: {
                 accuracy: Location.LocationAccuracy.High,
-                delta: 10 // meters of variance before calling update
+                delta: 20 // meters of variance before calling update
             },
             taskCompletionCheck: 1000 // how often to check for objective completion, in ms
         },
@@ -22,7 +22,7 @@ export const Settings = {
             compassUpdate: 500,
             GPS: {
                 accuracy: Location.LocationAccuracy.Balanced,
-                delta: 20 // meters of variance before calling update
+                delta: 75 // meters of variance before calling update
             },
             taskCompletionCheck: 5000 // how often to check for objective completion, in ms
         }

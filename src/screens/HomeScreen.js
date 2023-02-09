@@ -86,7 +86,7 @@ const HomeScreen = (props) => {
 
 				let { delta } = Settings.sensorUpdateIntervals[ userContext.batterySaverStatus ].GPS;
 
-				console.log("Delta: " + delta + "\t" + "Distance: " + dist);
+				// console.log("Delta: " + delta + "\t" + "Distance: " + dist);
 				if (dist > delta)
                     userContext.metadata.addDistance(dist);
             }
@@ -112,7 +112,7 @@ const HomeScreen = (props) => {
 				let subscription;
                 let getListener = async () => {
                     subscription = await Location.watchPositionAsync({accuracy: accuracy, distanceInterval: delta}, loc => {
-						console.log(loc);
+						// console.log(loc);
                         userContext.metadata.GPS.setCurrent(
                             {lat: loc.coords.latitude, long: loc.coords.longitude, acc: loc.coords.accuracy}
                         );
