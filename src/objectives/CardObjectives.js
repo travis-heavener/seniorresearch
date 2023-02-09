@@ -97,8 +97,7 @@ export class StepsObjective extends CardObjective {
         super(label, difficulty, userContext);
 
         // generate step goal
-        // let max = 1500, min = 750; // NOTE: this scales based on difficulty (ie. normal -> min: 1875/max: 3750)
-        let max = 25, min = 10; // NOTE: this scales based on difficulty (ie. normal -> min: 1875/max: 3750)
+        let max = 1500, min = 750; // NOTE: this scales based on difficulty (ie. normal -> min: 1875/max: 3750)
         let stepGoal = difficulty * Math.floor( random() * (max-min) + min );
         stepGoal = Math.round( stepGoal / 5 ) * 5; // round to nearest 50
 

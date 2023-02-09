@@ -8,7 +8,7 @@ import { Themes } from "../config/Config";
 import { clearUserData, UserDataContext } from "../config/UserDataManager";
 
 // viewport height function to make life easier
-import { vh } from "../config/Toolbox";
+import { vh, vw } from "../config/Toolbox";
 
 const SettingsScreen = (props) => {
     const userContext = useContext( UserDataContext );
@@ -56,23 +56,22 @@ const styles = StyleSheet.create({
         flex: 1
     },
     header: {
-        flex: 0.08,
-        // backgroundColor: THEME.secondary,
-        // borderColor: THEME.secondaryAccent,
+        width: vw(100),
+        height: vh(8),
         borderTopWidth: vh(0.33),
         borderBottomWidth: vh(0.33)
     },
     headerText: {
-        fontSize: 10000, // shrinks to fit anyways
+        textAlign: "center",
+        fontSize: vh(4), // shrinks to fit anyways
         fontWeight: "bold",
-        // color: THEME.text,
-        margin: "3%"
+        marginVertical: vh(1)
     },
     body: {
-        flex: 0.92,
+        width: vw(100),
+        height: vh(92),
         flexDirection: "column",
-        justifyContent: "flex-start",
-        // backgroundColor: THEME.primary
+        justifyContent: "flex-start"
     }
 });
 

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { View, StyleSheet, Text, TouchableOpacity, Image } from "react-native";
 import { createBingoCard, DIFFICULTIES } from "../objectives/BingoCardManager";
 import { Themes } from "../config/Config";
@@ -16,7 +16,28 @@ const TasksScreenCard = (props) => {
     const THEME = Themes[ userContext.selectedTheme ].tasks; // select theme
 
     const [isContentOpen, setContentOpen] = useState(false);
-    const toggleDisplay = () => setContentOpen(!isContentOpen);
+    const toggleDisplay = () => {
+        if (isContentOpen) closeContent();
+        else openContent();
+    };
+
+    const openContent = () => {
+        setContentOpen(true);
+        props.setFocusedCard(props.cardName);
+    };
+
+    const closeContent = () => {
+        setContentOpen(false);
+        props.setFocusedCard(null);
+    };
+
+    useEffect(
+        () => {
+            if (props.focusedCard != props.cardName) {
+                setContentOpen(false);
+            }
+        }, [props.focusedCard]
+    );
 
     if (userContext.cardSlots[props.cardName]) {
         const card = userContext.cardSlots[props.cardName];
@@ -29,7 +50,10 @@ const TasksScreenCard = (props) => {
 
                 for (let obj of card.grid[r]) {
                     row.push( // random key just to ignore the error :)
-                        <View style={[styles.objectiveTile, obj.isCompleted ? {backgroundColor: THEME.checkedTile} : {}]} key={Math.random()}>
+                        <View
+                            style={[styles.objectiveTile, {backgroundColor: (obj.isCompleted ? THEME.checkedTile : THEME.primaryAccent)}]}
+                            key={Math.random()}
+                        >
                             <Text style={styles.objectiveTileText}>{obj.toString()}</Text>
                         </View>
                     );
@@ -56,9 +80,14 @@ const TasksScreenCard = (props) => {
             props.remount();
         };
 
+        const difficultyName = card.difficulty == DIFFICULTIES.HARD ? "hard" : card.difficulty == DIFFICULTIES.NORMAL ? "normal" : "easy"
+
         return (
             <View style={[styles.top, {height: isContentOpen ? vh(45) : vh(8)}]}>
-                <TouchableOpacity onPress={toggleDisplay} activeOpacity={0.9} style={[styles.body, {backgroundColor: THEME.primary}]}>
+                <TouchableOpacity
+                    onPress={toggleDisplay} activeOpacity={0.9}
+                    style={[styles.body, {backgroundColor: THEME.primary}]}
+                >
                     <View style={styles.leftView}>
                         {/* <Text style={styles.titleText}>{ (props.cardName == "daily") ? "Daily" : "Custom" } Card</Text> */}
                         <Text style={styles.titleText}>{ (props.cardName == "daily") ? "Daily" : difficulty } Card</Text>
@@ -71,7 +100,7 @@ const TasksScreenCard = (props) => {
                         <Image style={[styles.rightBtn, {transform: [{rotate: (180 * !isContentOpen) + "deg"}]}]} source={CARET_SRC} />
                     </View>
                 </TouchableOpacity>
-                <View style={[styles.cardDisplay, {backgroundColor: THEME.primaryAccent}, !isContentOpen ? {display: "none"} : {}]}>
+                <View style={[styles.cardDisplay, {backgroundColor: THEME.cards[difficultyName]}, !isContentOpen ? {display: "none"} : {}]}>
                     <View style={styles.cardGrid}>
                         { generateGrid() }
                     </View>
@@ -80,7 +109,9 @@ const TasksScreenCard = (props) => {
         );
     } else {
         const addCard = () => {
-            userContext.cardSlots[props.cardName] = createBingoCard(userContext); // with random difficulty
+            // daily is ALWAYS normal difficulty
+            let difficulty = props.cardName == "daily" ? DIFFICULTIES.NORMAL : undefined; // undefined is overwritten by random in method
+            userContext.cardSlots[props.cardName] = createBingoCard(userContext, difficulty); // with random difficulty
             exportUserData(userContext); // save data
             props.remount();
         };
@@ -108,23 +139,23 @@ const styles = StyleSheet.create({
         width: vw(100),
         height: vh(8),
         paddingHorizontal: "2%",
-        borderColor: "black",
-        borderBottomWidth: 1,
+        borderColor: "#383838",
+        borderBottomWidth: 2,
         backgroundColor: "#f7bcbc",
         flexDirection: "row"
     },
     cardDisplay: {
         flex: 1,
-        borderColor: "black",
         justifyContent: "center",
-        borderBottomWidth: 1
+        borderColor: "#383838",
+        borderBottomWidth: 2
     },
     cardGrid: {
         height: "90%",
         aspectRatio: 1.2,
         alignSelf: "center",
         borderWidth: 1,
-        borderColor: "#000"
+        borderColor: "black"
     },
     objectiveRow: {
         width: "100%",

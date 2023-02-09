@@ -51,7 +51,14 @@ export const Themes = {
         tasks: {
             primary: "#f7bcbc",
             primaryAccent: "#fad9d9",
-            checkedTile: "#7be385"
+            secondary: "#e3a6a6",
+            secondaryAccent: "#d39696",
+            checkedTile: "#7be385",
+            cards: {
+                easy: "#44cc3f",
+                normal: "#d6ae47",
+                hard: "#c45147"
+            }
         }
     },
     dark: {
@@ -71,7 +78,14 @@ export const Themes = {
         tasks: {
             primary: "#f7bcbc",
             primaryAccent: "#fad9d9",
-            checkedTile: "#7be385"
+            secondary: "#e3a6a6",
+            secondaryAccent: "#d39696",
+            checkedTile: "#7be385",
+            cards: {
+                easy: "#44cc3f",
+                normal: "#d6ae47",
+                hard: "#c45147"
+            }
         }
     }
 };
