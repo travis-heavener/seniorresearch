@@ -4,7 +4,7 @@ import { NavigationContainer } from "@react-navigation/native";
 // see https://reactnavigation.org/docs/stack-navigator/
 import "react-native-gesture-handler"; // tl;dr this is important
 
-import { fromHoriz, fromVert } from "./src/ScreenGesturesManager";
+import { fromHoriz, fromVert } from "./src/screens/ScreenGesturesManager";
 
 import HomeScreen from "./src/screens/HomeScreen";
 import SettingsScreen from "./src/screens/SettingsScreen";

@@ -1,7 +1,7 @@
 import React from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Settings } from "./Config";
-import { DistanceObjective, ExploreObjective, FreeObjective, StepsObjective } from "./CardObjectives";
+import { DistanceObjective, ExploreObjective, FreeObjective, StepsObjective } from "../objectives/CardObjectives";
 import { BingoCard } from "../objectives/BingoCardManager";
 
 export const UserDataContext = React.createContext({
