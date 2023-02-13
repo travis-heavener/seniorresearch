@@ -3,17 +3,18 @@ import { useFocusEffect } from "@react-navigation/native";
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 
 // Pedometer + necessary Android permissions imports
-import { Pedometer, DeviceMotion, Accelerometer } from "expo-sensors";
+import { Pedometer, DeviceMotion } from "expo-sensors";
 import * as Location from "expo-location";
 
 import HomeScreenButton from "../components/HomeScreenButton";
 import CompassWidget from "../components/CompassWidget";
+import CardDisplayGrid from "../components/CardDisplayGrid";
 
 import { Settings, SettingsContext, Themes } from "../config/Config";
 import { calculateGradient } from "./GradientManager";
 
-import { exportUserData, loadUserData, UserDataContext } from "../config/UserDataManager";
-import { latLongDist, oldLatLongDist } from "../config/Toolbox";
+import { UserDataContext } from "../config/UserDataManager";
+import { latLongDist } from "../config/Toolbox";
 
 const HomeScreen = (props) => {
     const userContext = useContext( UserDataContext );
@@ -36,6 +37,7 @@ const HomeScreen = (props) => {
         ( async () => {
             if (hasStarted) return;
 
+            // request permissions
             let perms = await context.requestPermissions();
 
             // start pedometer
@@ -46,29 +48,11 @@ const HomeScreen = (props) => {
             } else {
 				console.log("Missing pedometer permissions");
 			}
-            
-            // start location tracking
-			// let locPerms = {status: perms.ACCESS_FINE_LOCATION || perms.ACCESS_COARSE_LOCATION};
-
-            // if (locPerms.status == "granted") {
-            //     const { delta, accuracy } = Settings.sensorUpdateIntervals[ userContext.batterySaverStatus ].GPS;
-
-            //     Location.watchPositionAsync({accuracy: accuracy, distanceInterval: delta}, loc => {
-            //         userContext.metadata.GPS.setCurrent(
-            //             {lat: loc.coords.latitude, long: loc.coords.longitude, acc: loc.coords.accuracy}
-            //         );
-            //     });
-            // } else {
-			// 	console.log("Missing location permissions");
-			// }
 
             // accelerometer interval
             DeviceMotion.setUpdateInterval(
                 Settings.sensorUpdateIntervals[ userContext.batterySaverStatus ].deviceMotion
             );
-
-            // load user data
-            loadUserData(userContext);
             
             setHasStarted(true);
         } )();
@@ -211,17 +195,21 @@ const HomeScreen = (props) => {
 
 	return (
 		<View style={[styles.top, {backgroundColor: backgroundCol}]}>
-			<View style={styles.body}>
+			<View style={styles.header}>
                 <View style={styles.compassWrapper}>
                     <CompassWidget />
                 </View>
             </View>
 
-            <Text>Steps: {userContext.metadata.steps}</Text>
+            <View style={styles.body}>
+                <CardDisplayGrid />
+            </View>
+
+            {/* <Text>Steps: {userContext.metadata.steps}</Text>
             <Text>Lifetime Steps: {userContext.metadata.lifetimeSteps}</Text>
             <Text>Speed: {userContext.metadata.getSpeed().toFixed(3)} m/s</Text>
             <Text>Traveled: {userContext.metadata.distance.toFixed(3)} m</Text>
-            <Text>Lifetime Traveled: {userContext.metadata.lifetimeDistance.toFixed(3)} m</Text>
+            <Text>Lifetime Traveled: {userContext.metadata.lifetimeDistance.toFixed(3)} m</Text> */}
 
             <View style={styles.bottomButtons}>
                 <HomeScreenButton flex={.75} onPress={leftBtn} />
@@ -237,16 +225,21 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: "rgb(252, 170, 167)"
     },
-    body: {
-        flex: .85,
-        flexDirection: "column"
-    },
-    stepsReadout: {
-
+    header: {
+        flex: 0.1,
+        flexDirection: "row",
+        justifyContent: "flex-end"
     },
     compassWrapper: {
-        flex: .12,
-        alignItems: "flex-end"
+        height: "100%",
+        aspectRatio: 1,
+        marginRight: "2.5%"
+    },
+    body: {
+        flex: 0.75,
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center"
     },
     bottomButtons: {
         flex: .15,

@@ -9,6 +9,11 @@ import { fromHoriz, fromVert } from "./src/screens/ScreenGesturesManager";
 import HomeScreen from "./src/screens/HomeScreen";
 import SettingsScreen from "./src/screens/SettingsScreen";
 import TasksScreen from "./src/screens/TasksScreen";
+import { loadUserData, UserDataContext } from "./src/config/UserDataManager";
+
+import React from "react";
+import { Image } from "react-native";
+const LOADING_IMG = require("./assets/splash.png");
 
 const Stack = createStackNavigator();
 
@@ -39,8 +44,32 @@ const CreateStack = () => (
     </Stack.Navigator>
 );
 
-export default () => (
-	<NavigationContainer>
-		<CreateStack />
-	</NavigationContainer>
-);
+const App = () => {
+    // load data
+    const [hasLoaded, setHasLoaded] = React.useState(false);
+    const userContext = React.useContext(UserDataContext);
+
+    // wait for data to load
+    React.useEffect(() => {
+        loadUserData(userContext).then(() => {
+            setHasLoaded(true)
+        });
+    }, []);
+
+    // show loading screen while data waits to be loaded
+    if (hasLoaded) {
+        return (
+            <NavigationContainer>
+                <CreateStack />
+            </NavigationContainer>
+        );
+    } else {
+        return (
+            <NavigationContainer>
+                <Image source={LOADING_IMG} style={{width: "100%", height: "100%", resizeMode: "cover"}} />
+            </NavigationContainer>
+        );
+    }
+};
+
+export default App;

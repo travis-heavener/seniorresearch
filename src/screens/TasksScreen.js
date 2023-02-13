@@ -1,14 +1,13 @@
 import React, { useState, useContext, useEffect } from "react";
-import { View, StyleSheet, Text, ScrollView } from "react-native";
+import { View, StyleSheet, Text } from "react-native";
 
 import { Themes, Settings } from "../config/Config";
 import { exportUserData, UserDataContext } from "../config/UserDataManager";
 
 import TasksScreenCard from "../components/TasksScreenCard";
 
-import { createBingoCard, DIFFICULTIES } from "../objectives/BingoCardManager";
 import { FlatList } from "react-native-gesture-handler";
-import { vh, vw } from "../config/Toolbox";
+import { vw, vh } from "../config/Toolbox";
 
 const TasksScreen = (props) => {
     const userContext = useContext( UserDataContext );

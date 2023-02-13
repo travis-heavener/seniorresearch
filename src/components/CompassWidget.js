@@ -92,13 +92,8 @@ const CompassWidget = (props) => {
 const styles = StyleSheet.create({
     wrapperImg: {
         flex: 1,
-        marginRight: "2.5%",
-        aspectRatio: 1,
         justifyContent: "center",
-        alignItems: "center",
-        // borderColor: "black",
-        // borderWidth: 3,
-        // backgroundColor: "#f7bcbc"
+        alignItems: "center"
     },
     needleImg: {
         width: "75%",
