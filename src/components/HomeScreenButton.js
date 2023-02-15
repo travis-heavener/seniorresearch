@@ -10,7 +10,7 @@ const HomeScreenButton = (props) => {
             onPress={props.onPress}
             activeOpacity={.65}
         >
-            <Text>{props.flex}</Text>
+            <Text style={{textAlign: "center"}}>{props.flex}</Text>
         </TouchableOpacity>
     );
 };
@@ -20,7 +20,8 @@ const styles = StyleSheet.create({
         aspectRatio: 1,
         borderColor: "black",
         borderWidth: 3,
-        backgroundColor: "#f7bcbc"
+        backgroundColor: "#f7bcbc",
+        justifyContent: "center"
     }
 });
 

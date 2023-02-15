@@ -27,7 +27,6 @@ const generateCardGrid = (card, THEME) => {
 
         for (let c = 0; c < 5; c++) {
             let obj = card.grid[r][c];
-
             row.push( // random key just to ignore the error :)
                 <View
                     style={[
@@ -37,7 +36,7 @@ const generateCardGrid = (card, THEME) => {
                     ]}
                     key={Math.random()}
                 >
-                    <Text style={styles.objectiveText}>{obj.toString()}</Text>
+                    <Text numberOfLines={2} adjustsFontSizeToFit style={styles.objectiveText}>{obj.toString()}</Text>
                 </View>
             );
         }
@@ -63,18 +62,18 @@ const styles = StyleSheet.create({
         borderColor: "black"
     },
     row: {
-        flex: 1,
+        flex: 1/5,
         flexDirection: "row"
     },
     objectiveTile: {
-        flex: 1,
+        flex: 1/5,
         borderColor: "black",
         justifyContent: "center",
         borderRightWidth: 2,
         borderBottomWidth: 2
     },
     objectiveText: {
-        fontSize: vh(8)/5.5,
+        fontSize: vh(8)/4.8,
         textAlign: "center"
     }
 });

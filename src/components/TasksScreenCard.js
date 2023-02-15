@@ -59,7 +59,7 @@ const TasksScreenCard = (props) => {
                             ]}
                             key={Math.random()}
                         >
-                            <Text style={styles.objectiveTileText}>{obj.toString()}</Text>
+                            <Text numberOfLines={2} adjustsFontSizeToFit style={styles.objectiveTileText}>{obj.toString()}</Text>
                         </View>
                     );
                 }
@@ -163,11 +163,12 @@ const styles = StyleSheet.create({
         borderColor: "black"
     },
     objectiveRow: {
-        flex: 1,
+        flex: 1/5,
+        alignItems: "stretch",
         flexDirection: "row"
     },
     objectiveTile: {
-        flex: 1,
+        flex: 1/5,
         borderColor: "black",
         justifyContent: "center",
         backgroundColor: "#f7bcbc",
