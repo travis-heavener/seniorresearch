@@ -16,8 +16,8 @@ export const generateUUID = () => { // Public Domain/MIT
     });
 }
 
-export const vw = w => Dimensions.get("window").width * (w/100);
-export const vh = h => Dimensions.get("window").height * (h/100);
+export const vw = (w=100) => Dimensions.get("window").width * (w/100);
+export const vh = (h=100) => Dimensions.get("window").height * (h/100);
 
 // random numbers from seed
 function mulberry32(a) {
