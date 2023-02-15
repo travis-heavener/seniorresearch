@@ -42,30 +42,22 @@ export const Themes = {
             }
         },
         settings: {
-            primary: "#f0f0f0",
-            primaryAccent: "#e3e3e3",
-            secondary: "#e4e4e4",
-            secondaryAccent: "#d6d6d6",
+            primary: "#f0f0f0", primaryAccent: "#e3e3e3",
+            secondary: "#e4e4e4", secondaryAccent: "#d6d6d6",
             text: "#031c0a"
         },
         tasks: {
-            primary: "#f7bcbc",
-            primaryAccent: "#fad9d9",
-            secondary: "#e3a6a6",
-            secondaryAccent: "#d39696",
+            primary: "#f7bcbc", primaryAccent: "#fad9d9",
+            secondary: "#e3a6a6", secondaryAccent: "#d39696",
             checkedTile: "#7be385",
             cards: {
-                easy: "#44cc3f",
-                normal: "#d6ae47",
-                hard: "#c45147"
+                easy: "#44cc3f", normal: "#d6ae47", hard: "#c45147"
             }
         },
         cardDisplay: {
             checkedTile: "#7be385",
             cards: {
-                easy: "#44cc3f",
-                normal: "#d6ae47",
-                hard: "#c45147"
+                easy: "#44cc3f", normal: "#d6ae47", hard: "#c45147"
             }
         }
     },
@@ -77,30 +69,24 @@ export const Themes = {
             }
         },
         settings: {
-            primary: "#363636",
-            primaryAccent: "#2a2a2a",
-            secondary: "#2f2f2f",
-            secondaryAccent: "#252525",
+            primary: "#363636", primaryAccent: "#2a2a2a",
+            secondary: "#2f2f2f", secondaryAccent: "#252525",
             text: "#f5f5f5"
         },
         tasks: {
-            primary: "#f7bcbc",
-            primaryAccent: "#fad9d9",
-            secondary: "#e3a6a6",
-            secondaryAccent: "#d39696",
-            checkedTile: "#7be385",
+            primary: "#f7bcbc", primaryAccent: "#fad9d9",
+            secondary: "#e3a6a6", secondaryAccent: "#d39696",
+            checkedTile: "#46eb57",
+            uncheckedTile: "#f7bcbc",
             cards: {
-                easy: "#44cc3f",
-                normal: "#d6ae47",
-                hard: "#c45147"
+                easy: "#44cc3f", normal: "#d6ae47", hard: "#c45147"
             }
         },
         cardDisplay: {
-            checkedTile: "#7be385",
+            checkedTile: "#46eb57",
+            uncheckedTile: "#f7bcbc",
             cards: {
-                easy: "#44cc3f",
-                normal: "#d6ae47",
-                hard: "#c45147"
+                easy: "#44cc3f", normal: "#d6ae47", hard: "#c45147"
             }
         }
     }
@@ -142,8 +128,10 @@ export const SettingsContext = React.createContext({
     permissions: {
         // for Pedometer
         "ACTIVITY_RECOGNITION": false,
+        
         // for Magnetometer
         // "HIGH_SAMPLING_RATE_SENSORS": false
+
         // for Location
         "ACCESS_FINE_LOCATION": false,
         "ACCESS_COARSE_LOCATION": false

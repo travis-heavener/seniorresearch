@@ -48,10 +48,15 @@ const TasksScreenCard = (props) => {
             const generateRow = r => {
                 let row = [];
 
-                for (let obj of card.grid[r]) {
+                for (let c = 0; c < 5; c++) {
+                    let obj = card.grid[r][c];
                     row.push( // random key just to ignore the error :)
                         <View
-                            style={[styles.objectiveTile, {backgroundColor: (obj.isCompleted ? THEME.checkedTile : THEME.primaryAccent)}]}
+                            style={[
+                                styles.objectiveTile,
+                                {backgroundColor: (obj.isCompleted ? THEME.checkedTile : THEME.uncheckedTile)},
+                                (r == 0) ? {borderTopWidth: 2} : {}, (c == 0) ? {borderLeftWidth: 2} : {}
+                            ]}
                             key={Math.random()}
                         >
                             <Text style={styles.objectiveTileText}>{obj.toString()}</Text>
@@ -80,12 +85,12 @@ const TasksScreenCard = (props) => {
             props.remount();
         };
 
-        const difficultyName = card.difficulty == DIFFICULTIES.HARD ? "hard" : card.difficulty == DIFFICULTIES.NORMAL ? "normal" : "easy"
+        const difficultyName = card.difficulty == DIFFICULTIES.HARD ? "hard" : card.difficulty == DIFFICULTIES.NORMAL ? "normal" : "easy";
 
         return (
-            <View style={[styles.top, {height: isContentOpen ? vh(45) : vh(8)}]}>
+            <View style={[styles.top, {height: isContentOpen ? vh(45) : vh(8)}, {backgroundColor: THEME.cards[difficultyName]}]}>
                 <TouchableOpacity
-                    onPress={toggleDisplay} activeOpacity={0.9}
+                    onPress={toggleDisplay} activeOpacity={1}
                     style={[styles.body, {backgroundColor: THEME.primary}]}
                 >
                     <View style={styles.leftView}>
@@ -153,21 +158,21 @@ const styles = StyleSheet.create({
     cardGrid: {
         height: "90%",
         aspectRatio: 1.2,
+        backgroundColor: "black", // this fixes minor hitches in borders
         alignSelf: "center",
-        borderWidth: 1,
         borderColor: "black"
     },
     objectiveRow: {
-        width: "100%",
-        height: "20%",
+        flex: 1,
         flexDirection: "row"
     },
     objectiveTile: {
-        width: "20%",
-        height: "100%",
+        flex: 1,
         borderColor: "black",
         justifyContent: "center",
-        borderWidth: 1
+        backgroundColor: "#f7bcbc",
+        borderRightWidth: 2,
+        borderBottomWidth: 2
     },
     objectiveTileText: {
         fontSize: vh(8)/5,

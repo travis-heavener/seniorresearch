@@ -18,6 +18,7 @@ import { latLongDist } from "../config/Toolbox";
 
 const HomeScreen = (props) => {
     const userContext = useContext( UserDataContext );
+    const settingsContext = useContext( SettingsContext );
     const THEME = Themes[ userContext.selectedTheme ].home; // select theme
 
     // background color
@@ -30,7 +31,6 @@ const HomeScreen = (props) => {
     backgroundDeltaRef.current = backgroundDelta;
 
     const [hasStarted, setHasStarted] = useState(false);
-    const context = useContext( SettingsContext );
 
     // initial, on-load events (empty triggers array to act as componentDidMount)
     useEffect(() => {
@@ -38,7 +38,7 @@ const HomeScreen = (props) => {
             if (hasStarted) return;
 
             // request permissions
-            let perms = await context.requestPermissions();
+            let perms = await settingsContext.requestPermissions();
 
             // start pedometer
             if (perms.ACTIVITY_RECOGNITION) {
@@ -83,10 +83,10 @@ const HomeScreen = (props) => {
     useFocusEffect(
         useCallback(
             () => {
-				if (!context.hasRequestedPermissions) return () => {}; // prevent trying to listen before permissions granted
+				if (!settingsContext.hasRequestedPermissions) return () => {}; // prevent trying to listen before permissions granted
 
 				// prevent trying to listen without permissions after requesting
-				if (!context.permissions.ACCESS_COARSE_LOCATION || !context.permissions.ACCESS_FINE_LOCATION) {
+				if (!settingsContext.permissions.ACCESS_COARSE_LOCATION || !settingsContext.permissions.ACCESS_FINE_LOCATION) {
 					console.log("Missing location permissions");
 					return () => {};
 				}
@@ -106,7 +106,7 @@ const HomeScreen = (props) => {
                 getListener();
 
                 return () => { subscription && subscription.remove() };
-            }, [props, userContext.batterySaverStatus, context.hasRequestedPermissions]
+            }, [props, userContext.batterySaverStatus, settingsContext.hasRequestedPermissions]
         )
     );
 
