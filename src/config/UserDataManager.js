@@ -39,6 +39,8 @@ export const UserDataContext = React.createContext({
         custom1: null,
         custom2: null
     },
+    selectedCard: null,
+    setSelectedCard: function(n) {  this.selectedCard = n;  },
     cardUpdateInterval: null,
     setCardUpdateInterval: function(n) {
         if (this.cardUpdateInterval !== null) {
@@ -106,6 +108,7 @@ export const loadUserData = async (userContext) => {
     
     userContext.setBatterySaverStatus(data.batterySaverStatus);
     userContext.setSelectedTheme(data.selectedTheme);
+    userContext.setSelectedCard(data.selectedCard);
 
     userContext.metadata.setLifetimeSteps(data.metadata.steps);
     userContext.metadata.setLifetimeDistance(data.metadata.distance);
@@ -135,7 +138,7 @@ export const loadUserData = async (userContext) => {
 
 export const exportUserData = async (userContext) => {
     // ignore certain properties
-    const keysWhitelist = ["metadata", "steps", "distance", "selectedTheme", "batterySaverStatus"];
+    const keysWhitelist = ["metadata", "steps", "distance", "selectedTheme", "selectedCard", "batterySaverStatus"];
 
     // use JSON.stringify(obj, whitelistedKeysArr) as it neglects including functions automatically
     // whitelistedKeysArr takes in keys that are to be included, others are omitted

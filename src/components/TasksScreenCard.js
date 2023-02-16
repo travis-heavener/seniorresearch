@@ -6,6 +6,7 @@ import { exportUserData, UserDataContext } from "../config/UserDataManager";
 
 // viewport height function to make life easier
 import { vw, vh } from "../config/Toolbox";
+import Checkbox from "./Checkbox";
 
 // import images
 const MEDIA_ROOT = "../../assets/media/";
@@ -15,6 +16,7 @@ const TasksScreenCard = (props) => {
     const userContext = useContext( UserDataContext );
     const THEME = Themes[ userContext.selectedTheme ].tasks; // select theme
 
+    const [isSelected, setSelected] = useState(false);
     const [isContentOpen, setContentOpen] = useState(false);
     const toggleDisplay = () => {
         if (isContentOpen) closeContent();
@@ -39,56 +41,65 @@ const TasksScreenCard = (props) => {
         }, [props.focusedCard]
     );
 
+    // uncheck selected box if modified by other card component
+    useEffect(
+        () => setSelected( userContext.selectedCard == props.cardName ),
+        [userContext.selectedCard]
+    );
+
     if (userContext.cardSlots[props.cardName]) {
         const card = userContext.cardSlots[props.cardName];
         const seed = card.randomSeed;
         const difficulty = (card.difficulty == DIFFICULTIES.EASY) ? "Easy" : (card.difficulty == DIFFICULTIES.NORMAL) ? "Normal" : "Hard";
+        const difficultyName = card.difficulty == DIFFICULTIES.HARD ? "hard" : card.difficulty == DIFFICULTIES.NORMAL ? "normal" : "easy";
 
-        const generateGrid = () => {
-            const generateRow = r => {
-                let row = [];
-
-                for (let c = 0; c < 5; c++) {
-                    let obj = card.grid[r][c];
-                    row.push( // random key just to ignore the error :)
-                        <View
-                            style={[
-                                styles.objectiveTile,
-                                {backgroundColor: (obj.isCompleted ? THEME.checkedTile : THEME.uncheckedTile)},
-                                (r == 0) ? {borderTopWidth: 2} : {}, (c == 0) ? {borderLeftWidth: 2} : {}
-                            ]}
-                            key={Math.random()}
-                        >
-                            <Text numberOfLines={2} adjustsFontSizeToFit style={styles.objectiveTileText}>{obj.toString()}</Text>
-                        </View>
-                    );
-                }
-
-                return row;
-            };
-
-            let grid = [];
-            for (let r = 0; r < 5; r++) {
-                grid.push(
-                    <View style={styles.objectiveRow} key={Math.random()}>
-                        { generateRow(r) }
+        const generateRow = r => {
+            let row = [];
+            
+            for (let c = 0; c < 5; c++) {
+                let obj = card.grid[r][c];
+                row.push(
+                    <View
+                        key={Math.random()} // random key just to ignore the error :)
+                        style={[
+                            styles.objectiveTile, // default styling
+                            {backgroundColor: (obj.isCompleted ? THEME.checkedTile : THEME.uncheckedTile)}, // checked color
+                            (r == 0) ? {borderTopWidth: 2} : {}, (c == 0) ? {borderLeftWidth: 2} : {} // borders for top/left
+                        ]}
+                    >
+                        <Text numberOfLines={2} adjustsFontSizeToFit style={styles.objectiveTileText}>{obj.toString()}</Text>
                     </View>
                 );
             }
-            return grid;
+
+            return <View style={styles.objectiveRow} key={Math.random()}>{row}</View>;
         };
+
+        const generateGrid = () => [generateRow(0), generateRow(1), generateRow(2), generateRow(3), generateRow(4)];
 
         const removeCard = () => {
             userContext.cardSlots[props.cardName] = null;
             setContentOpen(false);
+
+            if (userContext.selectedCard == props.cardName)
+                userContext.setSelectedCard(null);
+
             exportUserData(userContext); // save data
             props.remount();
         };
 
-        const difficultyName = card.difficulty == DIFFICULTIES.HARD ? "hard" : card.difficulty == DIFFICULTIES.NORMAL ? "normal" : "easy";
+        const selectCard = () => {
+            if (userContext.selectedCard == props.cardName) {
+                userContext.setSelectedCard(null);
+                setSelected(false);
+            } else {
+                userContext.setSelectedCard(props.cardName);
+                setSelected(true);
+            }
+        };
 
         return (
-            <View style={[styles.top, {height: isContentOpen ? vh(45) : vh(8)}, {backgroundColor: THEME.cards[difficultyName]}]}>
+            <View style={[styles.top, {height: isContentOpen ? vh(50) : vh(8)}, {backgroundColor: THEME.cards[difficultyName]}]}>
                 <TouchableOpacity
                     onPress={toggleDisplay} activeOpacity={1}
                     style={[styles.body, {backgroundColor: THEME.primary}]}
@@ -109,6 +120,11 @@ const TasksScreenCard = (props) => {
                     <View style={styles.cardGrid}>
                         { generateGrid() }
                     </View>
+                    <TouchableOpacity style={styles.selectButton} onPress={selectCard}>
+                        <Text style={styles.selectButtonText}>Select Card</Text>
+                        {/* checkbox here */}
+                        <Checkbox isChecked={ isSelected } />
+                    </TouchableOpacity>
                 </View>
             </View>
         );
@@ -151,12 +167,13 @@ const styles = StyleSheet.create({
     },
     cardDisplay: {
         flex: 1,
-        justifyContent: "center",
+        alignItems: "center",
+        justifyContent: "space-evenly",
         borderColor: "#383838",
         borderBottomWidth: 2
     },
     cardGrid: {
-        height: "90%",
+        height: "81%",
         aspectRatio: 1.2,
         backgroundColor: "black", // this fixes minor hitches in borders
         alignSelf: "center",
@@ -178,6 +195,18 @@ const styles = StyleSheet.create({
     objectiveTileText: {
         fontSize: vh(8)/5,
         textAlign: "center"
+    },
+    selectButton: {
+        height: "10%",
+        justifyContent: "space-evenly",
+        alignItems: "center",
+        flexDirection: "row",
+        paddingHorizontal: "2%",
+        backgroundColor: "red"
+    },
+    selectButtonText: {
+        textAlign: "center",
+        fontSize: vh(2)
     },
     leftView: {
         flex: 0.6,
