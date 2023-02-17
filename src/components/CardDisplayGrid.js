@@ -1,11 +1,14 @@
-import { useContext } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useContext, useState } from "react";
+import { StyleSheet, Text, TouchableOpacity, View, Modal } from "react-native";
 import { Themes } from "../config/Config";
 import { vw, vh } from "../config/Toolbox";
 import { UserDataContext } from "../config/UserDataManager";
 import { DIFFICULTIES } from "../objectives/BingoCardManager";
+import CardSelectModal from "./CardSelectModal";
 
 const CardDisplayGrid = (props) => {
+    const [isModalVisible, setModalVisibility] = useState(false);
+
     const userContext = useContext( UserDataContext );
     const THEME = Themes[ userContext.selectedTheme ].cardDisplay; // select theme
     
@@ -13,12 +16,16 @@ const CardDisplayGrid = (props) => {
     const card = userContext.cardSlots[ cardName ];
 
     // handle null cards with a button to display one
-    const selectCard = () => console.log("asdf");
-    
+    const selectCard = () => {
+        console.log("asdf");
+        setModalVisibility(true);
+    };
+
     if (userContext.selectedCard == null || card == null) {
         return (
             <TouchableOpacity style={styles.nullTop} activeOpacity={2/3} onPress={selectCard}>
                 <Text style={styles.selectCardText}>+</Text>
+                <CardSelectModal isModalVisible={isModalVisible} off={() => setModalVisibility(false)} />
             </TouchableOpacity>
         );
     }
@@ -82,8 +89,8 @@ const styles = StyleSheet.create({
         borderRadius: vw(3.5),
         borderWidth: 2.75,
         borderColor: "black",
-        alignItems: "center",
-        justifyContent: "center"
+        justifyContent: "center",
+        alignItems: "center"
     },
     selectCardText: {
         fontSize: vh(4)

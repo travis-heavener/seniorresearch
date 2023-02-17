@@ -199,7 +199,7 @@ const HomeScreen = (props) => {
 		<View style={[styles.top, {backgroundColor: backgroundCol}]}>
 			<View style={styles.header}>
                 <View style={styles.compassWrapper}>
-                    <CompassWidget />
+                    <CompassWidget navigation={props.navigation} />
                 </View>
             </View>
 

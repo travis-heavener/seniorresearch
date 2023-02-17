@@ -19,7 +19,7 @@ export const Settings = {
         },
         batterySaverOn: {
             deviceMotion: 100,
-            compassUpdate: 1000,
+            compassUpdate: 750,
             GPS: {
                 accuracy: Location.LocationAccuracy.Balanced,
                 delta: 75 // meters of variance before calling update
