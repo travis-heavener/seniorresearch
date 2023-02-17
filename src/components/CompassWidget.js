@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { StyleSheet, ImageBackground, Image, Text } from "react-native";
 
@@ -28,6 +28,7 @@ const CompassWidget = (props) => {
     const timeSinceUpdateRef = React.useRef();
     timeSinceUpdateRef.current = timeSinceUpdate;
 
+    // loads every time screen is focused
     useFocusEffect(
         React.useCallback(() => {
             let list = DeviceMotion.addListener(({ rotation }) => {
@@ -37,7 +38,7 @@ const CompassWidget = (props) => {
                 setTimeSinceUpdate(Date.now());
 
                 const format = n => (n < 0 ? n + 2*Math.PI : n) % (2*Math.PI);
-
+                
                 if (rotation == undefined) {
                     return;
                 } else if (alphaRef.current == null) {
@@ -50,9 +51,11 @@ const CompassWidget = (props) => {
                 }
 
                 // queue rotation
+                const maxTime = rate * 0.75;
+
                 let alpha = format(rotation.alpha);
                 let initial = lastAlphaRef.current;
-                let frames = 20;
+                let frames = 45;
                 
                 let delta = alpha - initial;
                 if (Math.abs(delta) > Math.PI)
@@ -62,7 +65,7 @@ const CompassWidget = (props) => {
                 
                 if (Math.abs(delta) < 0.1) return; // ignore needless calculations
 
-                let interval = (rate * .8) / frames;
+                let interval = maxTime / frames;
                 
                 for (let i = 0; i < frames; i++) {
                     setTimeout(function() {
@@ -73,7 +76,7 @@ const CompassWidget = (props) => {
             });
 
             return () => list.remove();
-        }, [props])
+        }, [props.navigation.isFocused()])
     );
 
     return (
