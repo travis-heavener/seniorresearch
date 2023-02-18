@@ -17,7 +17,6 @@ const CardDisplayGrid = (props) => {
 
     // handle null cards with a button to display one
     const selectCard = () => {
-        console.log("asdf");
         setModalVisibility(true);
     };
 
