@@ -193,8 +193,6 @@ const HomeScreen = (props) => {
     const centerBtn = () => props.navigation.navigate("Tasks");
     const rightBtn = () => props.navigation.navigate("Settings");
 
-    const selectedCard = userContext.selectedCard ?? "daily";
-
 	return (
 		<View style={[styles.top, {backgroundColor: backgroundCol}]}>
 			<View style={styles.header}>
@@ -204,7 +202,7 @@ const HomeScreen = (props) => {
             </View>
 
             <View style={styles.body}>
-                <CardDisplayGrid cardName={selectedCard} />
+                <CardDisplayGrid cardName={userContext.selectedCard} />
             </View>
 
             {/* <Text>Steps: {userContext.metadata.steps}</Text>

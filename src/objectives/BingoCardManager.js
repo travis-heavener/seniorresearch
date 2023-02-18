@@ -104,6 +104,15 @@ export class BingoCard {
 
         return this.bingos;
     }
+
+	getCompletionPercent() {
+		let count = 0, total = this.grid.flat().length;
+		
+		for (let obj of this.grid.flat())
+			count += obj.isCompleted;
+		
+		return count / total * 100;
+	}
 }
 
 export const createBingoCard = (currentUserContext, difficulty=-1) => {

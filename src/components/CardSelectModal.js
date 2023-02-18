@@ -17,7 +17,7 @@ const CardSelectModal = (props) => {
         for (let cardName in userContext.cardSlots) {
             if (userContext.cardSlots[cardName] == null) continue;
             arr.push(
-                <CardSelectItem key={Math.random()} setFocusedCard={n => setFocusedCard(n)} close={close} cardName={cardName} />
+                <CardSelectItem key={Math.random()} close={close} cardName={cardName} />
             );
         }
         return arr;
@@ -32,7 +32,9 @@ const CardSelectModal = (props) => {
         >
             <TouchableOpacity style={styles.background} onPress={close} activeOpacity={1} />
             <View style={styles.top}>
+				<Text style={styles.titleText}>Select a Card</Text>
                 { generateCardSelectors() }
+				
             </View>
         </Modal>
     )
@@ -46,11 +48,18 @@ const styles = StyleSheet.create({
         backgroundColor: "#0006"
     },
     top: {
-        width: vw(75),
+		width: vw(75),
         height: vh(75),
+		alignItems: "center",
         marginHorizontal: vw(25/2),
         marginVertical: vh(25/2)
-    }
+    },
+	titleText: {
+		fontSize: vh(3.75),
+		textAlign: "center",
+		fontWeight: "bold",
+		marginBottom: vh(2)
+	}
 });
 
 export default CardSelectModal;

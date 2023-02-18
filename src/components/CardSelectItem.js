@@ -1,52 +1,68 @@
 import { useContext } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { vh } from "../config/Toolbox";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { vh, vw } from "../config/Toolbox";
 import { UserDataContext } from "../config/UserDataManager";
 import { DIFFICULTIES } from "../objectives/BingoCardManager";
 
 const CardSelectItem = (props) => {
     const userContext = useContext( UserDataContext );
-    const { close, cardName } = props;
+    const { cardName } = props;
+
+	const close = () => {
+		userContext.setSelectedCard(cardName);
+		props.close();
+	};
 
     const card = userContext.cardSlots[cardName];
     const diff = (card.difficulty == DIFFICULTIES.EASY) ? "Easy" : (card.difficulty == DIFFICULTIES.NORMAL) ? "Normal" : "Hard";
-    const title = cardName == ("daily" ? "Daily" : diff) + " Card";
-    return (
-        <View style={styles.top}>
+    const title = (cardName == "daily" ? "Daily" : diff) + " Card";
+    
+	const completionPercent = card.getCompletionPercent();
+
+	return (
+        <TouchableOpacity style={styles.top} activeOpacity={1} onPress={close}>
             <View style={styles.main}>
                 <Text style={styles.titleText}>{ title }</Text>
             </View>
-            <View style={styles.checkbox}>
-                <Text>+</Text>
-            </View>
-        </View>
+			<View style={styles.completionStats}>
+				<Text style={styles.percentText}>{ completionPercent }%</Text>
+			</View>
+        </TouchableOpacity>
     )
 };
 
 const styles = StyleSheet.create({
     top: {
         width: "100%",
-        height: vh(8),
-        marginBottom: vh(2),
+        height: vh(10),
+        marginBottom: vh(1),
         flexDirection: "row",
         justifyContent: "space-between",
-        backgroundColor: "red",
+        backgroundColor: "#f5f5f5c0",
+		borderColor: "black",
+		borderWidth: 2,
         borderRadius: vh(3.125)
     },
     main: {
-        flex: 5,
+        flex: 4,
         justifyContent: "center",
         alignItems: "flex-start",
     },
     titleText: {
-        fontSize: vh(3.5),
+		marginHorizontal: vw(5),
+        fontSize: vh(3.25),
         textAlign: "left",
+		fontStyle: "italic"
     },
-    checkbox: {
+    completionStats: {
         flex: 1,
         justifyContent: "center",
         alignItems: "center"
-    }
+    },
+	percentText: {
+		fontSize: vh(2.5),
+		textAlign: "center"
+	}
 });
 
 export default CardSelectItem;
