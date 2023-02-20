@@ -197,16 +197,18 @@ const styles = StyleSheet.create({
         textAlign: "center"
     },
     selectButton: {
-        height: "10%",
-        justifyContent: "space-evenly",
+        height: "12%",
+        paddingHorizontal: "3%",
         alignItems: "center",
         flexDirection: "row",
-        paddingHorizontal: "2%",
-        backgroundColor: "red"
+		backgroundColor: "#fff7",
+		borderColor: "black",
+		borderWidth: 2,
+		borderRadius: 250
     },
     selectButtonText: {
         textAlign: "center",
-        fontSize: vh(2)
+        fontSize: vh(2.125)
     },
     leftView: {
         flex: 0.6,
