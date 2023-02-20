@@ -1,5 +1,5 @@
-import React, { useState, useContext, useEffect } from "react";
-import { View, StyleSheet, Text, TouchableOpacity, Image } from "react-native";
+import React, { useState, useContext, useEffect, useRef } from "react";
+import { View, StyleSheet, Text, TouchableOpacity, Image, Animated } from "react-native";
 import { createBingoCard, DIFFICULTIES } from "../objectives/BingoCardManager";
 import { Themes } from "../config/Config";
 import { exportUserData, UserDataContext } from "../config/UserDataManager";
@@ -35,6 +35,26 @@ const TasksScreenCard = (props) => {
         props.setFocusedCard(null);
     };
 
+	// Animated.View animated transition
+	// https://reactnative.dev/docs/animated
+	const heightAnim = useRef(new Animated.Value(0)).current;
+	const opacityAnim = useRef(new Animated.Value(0)).current;
+
+	useEffect(
+		() => {
+			Animated.timing(heightAnim, {
+				toValue: vh(8 + 42*(isContentOpen+0)),
+				duration: 250,
+				useNativeDriver: false
+			}).start();
+			Animated.timing(opacityAnim, {
+				toValue: isContentOpen ? 1 : 0,
+				duration: 250,
+				useNativeDriver: false
+			}).start();
+		}, [isContentOpen]
+	);
+
 	// hide card if another card is focused in the menu
     useEffect(
         () => {
@@ -54,7 +74,7 @@ const TasksScreenCard = (props) => {
         const card = userContext.cardSlots[props.cardName];
         const seed = card.randomSeed;
         const difficulty = (card.difficulty == DIFFICULTIES.EASY) ? "Easy" : (card.difficulty == DIFFICULTIES.NORMAL) ? "Normal" : "Hard";
-        const difficultyName = card.difficulty == DIFFICULTIES.HARD ? "hard" : card.difficulty == DIFFICULTIES.NORMAL ? "normal" : "easy";
+        const difficultyName = difficulty.toLowerCase();
 
         const generateRow = r => {
             let row = [];
@@ -70,7 +90,7 @@ const TasksScreenCard = (props) => {
                             (r == 0) ? {borderTopWidth: 2} : {}, (c == 0) ? {borderLeftWidth: 2} : {} // borders for top/left
                         ]}
                     >
-                        <Text numberOfLines={2} adjustsFontSizeToFit style={styles.objectiveTileText}>{obj.toString()}</Text>
+                        <Animated.Text style={styles.objectiveTileText}>{obj.toString()}</Animated.Text>
                     </View>
                 );
             }
@@ -102,7 +122,7 @@ const TasksScreenCard = (props) => {
         };
 
         return (
-            <View style={[styles.top, {height: isContentOpen ? vh(50) : vh(8)}, {backgroundColor: THEME.cards[difficultyName]}]}>
+            <Animated.View style={[styles.top, {backgroundColor: THEME.cards[difficultyName], height: heightAnim}]}>
                 <TouchableOpacity
                     onPress={toggleDisplay} activeOpacity={1}
                     style={[styles.body, {backgroundColor: THEME.primary}]}
@@ -119,7 +139,12 @@ const TasksScreenCard = (props) => {
                         <Image style={[styles.rightBtn, {transform: [{rotate: (180 * !isContentOpen) + "deg"}]}]} source={CARET_SRC} />
                     </View>
                 </TouchableOpacity>
-                <View style={[styles.cardDisplay, {backgroundColor: THEME.cards[difficultyName]}, !isContentOpen ? {display: "none", opacity: 0} : {}]}>
+                <Animated.View style={[
+					styles.cardDisplay,
+					{
+						backgroundColor: THEME.cards[difficultyName], display: (isContentOpen ? "flex" : "none"), opacity: opacityAnim
+					}]}
+				>
                     <View style={styles.cardGrid}>
                         { generateGrid() }
                     </View>
@@ -128,8 +153,8 @@ const TasksScreenCard = (props) => {
                         {/* checkbox here */}
                         <Checkbox isChecked={ isSelected } />
                     </TouchableOpacity>
-                </View>
-            </View>
+                </Animated.View>
+            </Animated.View>
         );
     } else {
         const addCard = () => {
@@ -196,7 +221,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 2
     },
     objectiveTileText: {
-        fontSize: vh(8)/5,
+		fontSize: vh(1.6),
         textAlign: "center"
     },
     selectButton: {
