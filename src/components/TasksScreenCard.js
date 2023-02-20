@@ -19,8 +19,10 @@ const TasksScreenCard = (props) => {
     const [isSelected, setSelected] = useState(false);
     const [isContentOpen, setContentOpen] = useState(false);
     const toggleDisplay = () => {
-        if (isContentOpen) closeContent();
-        else openContent();
+        if (isContentOpen)
+			closeContent();
+        else
+			openContent();
     };
 
     const openContent = () => {
@@ -33,6 +35,7 @@ const TasksScreenCard = (props) => {
         props.setFocusedCard(null);
     };
 
+	// hide card if another card is focused in the menu
     useEffect(
         () => {
             if (props.focusedCard != props.cardName) {
@@ -116,11 +119,11 @@ const TasksScreenCard = (props) => {
                         <Image style={[styles.rightBtn, {transform: [{rotate: (180 * !isContentOpen) + "deg"}]}]} source={CARET_SRC} />
                     </View>
                 </TouchableOpacity>
-                <View style={[styles.cardDisplay, {backgroundColor: THEME.cards[difficultyName]}, !isContentOpen ? {display: "none"} : {}]}>
+                <View style={[styles.cardDisplay, {backgroundColor: THEME.cards[difficultyName]}, !isContentOpen ? {display: "none", opacity: 0} : {}]}>
                     <View style={styles.cardGrid}>
                         { generateGrid() }
                     </View>
-                    <TouchableOpacity style={styles.selectButton} onPress={selectCard}>
+                    <TouchableOpacity style={styles.selectButton} onPress={selectCard} activeOpacity={0.75}>
                         <Text style={styles.selectButtonText}>Select Card</Text>
                         {/* checkbox here */}
                         <Checkbox isChecked={ isSelected } />
