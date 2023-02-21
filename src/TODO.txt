@@ -5,3 +5,8 @@
 - Update final paper w/ dependency changes + future methodology updates
   - react-navigation -> @react-navigation/native
   - react-navigation-stack -> @react-navigation/stack
+- Update theme colors
+  - Use CardDisplay theme for the CardSelectItem mini grid
+- Lower timestamp related to background gradient color changes
+  - ~20 ms for setBackgroundDelta
+  - ~20 ms for setBackgroundCol PER FRAME (very bad)

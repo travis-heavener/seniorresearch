@@ -11,6 +11,7 @@ export const Settings = {
         batterySaverOff: {
             deviceMotion: 10,
             compassUpdate: 250,
+            backgroundColor: 500,
             GPS: {
                 accuracy: Location.LocationAccuracy.High,
                 delta: 20 // meters of variance before calling update
@@ -20,6 +21,7 @@ export const Settings = {
         batterySaverOn: {
             deviceMotion: 100,
             compassUpdate: 750,
+            backgroundColor: 1000,
             GPS: {
                 accuracy: Location.LocationAccuracy.Balanced,
                 delta: 75 // meters of variance before calling update
@@ -55,10 +57,14 @@ export const Themes = {
             }
         },
         cardDisplay: {
-            checkedTile: "#7be385",
+            checkedTile: "#46eb57",
+            uncheckedTile: "#f7bcbc",
             cards: {
                 easy: "#44cc3f", normal: "#d6ae47", hard: "#c45147"
             }
+        },
+        profile: {
+            body: "#f0f0f0"
         }
     },
     dark: {
@@ -88,6 +94,9 @@ export const Themes = {
             cards: {
                 easy: "#44cc3f", normal: "#d6ae47", hard: "#c45147"
             }
+        },
+        profile: {
+            body: "#f0f0f0"
         }
     }
 };

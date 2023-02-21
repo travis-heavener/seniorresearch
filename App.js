@@ -31,11 +31,6 @@ const CreateStack = () => (
                 ...opts, cardStyleInterpolator: fromHoriz, gestureDirection: "horizontal"
             }}
         />
-        <Stack.Screen name="Profile" component={SettingsScreen}
-            options={{
-                ...opts, cardStyleInterpolator: fromHoriz, gestureDirection: "horizontal-inverted"
-            }}
-        />
         <Stack.Screen name="Tasks" component={TasksScreen}
             options={{
                 ...opts, cardStyleInterpolator: fromVert, gestureDirection: "vertical"

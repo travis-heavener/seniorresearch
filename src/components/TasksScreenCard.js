@@ -83,7 +83,7 @@ const TasksScreenCard = (props) => {
                 let obj = card.grid[r][c];
                 row.push(
                     <View
-                        key={Math.random()} // random key just to ignore the error :)
+                        key={c} // random key just to ignore the error :)
                         style={[
                             styles.objectiveTile, // default styling
                             {backgroundColor: (obj.isCompleted ? THEME.checkedTile : THEME.uncheckedTile)}, // checked color
@@ -95,7 +95,7 @@ const TasksScreenCard = (props) => {
                 );
             }
 
-            return <View style={styles.objectiveRow} key={Math.random()}>{row}</View>;
+            return <View style={styles.objectiveRow} key={r}>{row}</View>;
         };
 
         const generateGrid = () => [generateRow(0), generateRow(1), generateRow(2), generateRow(3), generateRow(4)];

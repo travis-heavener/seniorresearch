@@ -6,13 +6,14 @@ import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { Pedometer, DeviceMotion } from "expo-sensors";
 import * as Location from "expo-location";
 
+// components & modals
 import HomeScreenButton from "../components/HomeScreenButton";
 import CompassWidget from "../components/CompassWidget";
 import CardDisplayGrid from "../components/CardDisplayGrid";
+import ProfileScreenModal from "./ProfileScreenModal";
 
 import { Settings, SettingsContext, Themes } from "../config/Config";
 import { calculateGradient } from "./GradientManager";
-
 import { UserDataContext } from "../config/UserDataManager";
 import { latLongDist } from "../config/Toolbox";
 
@@ -30,6 +31,10 @@ const HomeScreen = (props) => {
     const backgroundDeltaRef = React.useRef();
     backgroundDeltaRef.current = backgroundDelta;
 
+    // profile modal visibility
+    const [isProfileVisible, setProfileVisibility] = useState(false);
+    const closeProfileModal = () => setProfileVisibility(false);
+    
     const [hasStarted, setHasStarted] = useState(false);
 
     // initial, on-load events (empty triggers array to act as componentDidMount)
@@ -134,7 +139,7 @@ const HomeScreen = (props) => {
                     // normalize local device coordinate axes to where device is flat and facing north
                     let cg = Math.cos(gamma), ca = Math.cos(alpha), cb = Math.cos(beta); // to optimize calculations a bit
                     let sg = Math.sin(gamma), sa = Math.sin(alpha), sb = Math.sin(beta); // to optimize calculations a bit
-
+                    
                     let R = [
                         [cg*sa, sb*sg*sa+cb*ca, cb*sg*sa-sb*ca],
                         [cg*ca, sb*sg*ca-cb*sa, cb*sg*ca+sb*sa],
@@ -159,16 +164,21 @@ const HomeScreen = (props) => {
                         y: format(current.y*damper + res.y*delta),
                         z: format(current.z*damper + res.z*delta)
                     };
-
+                    
                     userContext.metadata.setVelocity(vel);
                     let speed = Math.hypot(vel.x, vel.y, vel.z);
 
+                    // const startTime = Date.now();
+                    // console.log("Elapsed ms: " + (Date.now()-startTime));
+                    
                     // ----- background color gradient shifting -----
-
-                    let timeDelta = 500; // 500 ms between refreshes
+                    
+                    let timeDelta = Settings.sensorUpdateIntervals[ userContext.batterySaverStatus ].backgroundColor;
                     if (Date.now() - backgroundDeltaRef.current < timeDelta) return;
+                    
+                    // update last background refresh timestamp
                     setBackgroundDelta(Date.now());
-
+                    
                     // calculate gradient
                     let maxTime = timeDelta / 4, frames = 16, interval = maxTime / frames;
 
@@ -179,7 +189,9 @@ const HomeScreen = (props) => {
                     // set timeouts
                     shiftGrad.forEach( (col, i) => {
                         setTimeout(function() {
+                            // const startTime = Date.now();
                             setBackgroundCol( col.toString() );
+                            // console.log("Elapsed ms: " + (Date.now()-startTime));
                         }, i * interval);
                     });
                 });
@@ -189,12 +201,16 @@ const HomeScreen = (props) => {
     );
 
     // button functions
-    const leftBtn = () => props.navigation.navigate("Profile");
+    const leftBtn = () => setProfileVisibility(!isProfileVisible);
     const centerBtn = () => props.navigation.navigate("Tasks");
     const rightBtn = () => props.navigation.navigate("Settings");
 
 	return (
 		<View style={[styles.top, {backgroundColor: backgroundCol}]}>
+            {/* user profile modal instead of screen */}
+
+            <ProfileScreenModal isModalVisible={isProfileVisible} close={closeProfileModal} />
+
 			<View style={styles.header}>
                 <View style={styles.compassWrapper}>
                     <CompassWidget navigation={props.navigation} />
@@ -202,7 +218,7 @@ const HomeScreen = (props) => {
             </View>
 
             <View style={styles.body}>
-                <CardDisplayGrid cardName={userContext.selectedCard} />
+                <CardDisplayGrid />
             </View>
 
             {/* <Text>Steps: {userContext.metadata.steps}</Text>
