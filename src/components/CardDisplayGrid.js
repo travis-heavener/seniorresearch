@@ -1,3 +1,4 @@
+import { useIsFocused } from "@react-navigation/native";
 import { useContext, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View, Modal } from "react-native";
 import { Themes } from "../config/Config";
@@ -11,8 +12,11 @@ const CardDisplayGrid = (props) => {
 
     const userContext = useContext( UserDataContext );
     const THEME = Themes[ userContext.selectedTheme ].cardDisplay; // select theme
-    
-    const { cardName } = props;
+
+    // triggers a re-render every time the screen is refocused
+    useIsFocused();
+
+    const cardName = userContext.selectedCard;
     const card = userContext.cardSlots[ cardName ];
 
     // handle null cards with a button to display one
@@ -20,11 +24,13 @@ const CardDisplayGrid = (props) => {
         setModalVisibility(true);
     };
 
+    const modalOff = () => setModalVisibility(false);
+
     if (userContext.selectedCard == null || card == null) {
         return (
             <TouchableOpacity style={styles.nullTop} activeOpacity={2/3} onPress={selectCard}>
                 <Text style={styles.selectCardText}>+</Text>
-                <CardSelectModal isModalVisible={isModalVisible} off={() => setModalVisibility(false)} />
+                <CardSelectModal isModalVisible={isModalVisible} off={modalOff} />
             </TouchableOpacity>
         );
     }
@@ -56,7 +62,7 @@ const generateRow = (r, card, THEME) => {
         let obj = card.grid[r][c];
         row.push(
             <View
-                key={Math.random()} // random key just to ignore the error :)
+                key={c} // random key just to ignore the error :)
                 style={[
                     styles.tile, // default styling
                     {backgroundColor: (obj.isCompleted ? THEME.checkedTile : THEME.uncheckedTile)}, // checked color
@@ -68,7 +74,7 @@ const generateRow = (r, card, THEME) => {
         );
     }
 
-    return <View style={styles.row} key={Math.random()}>{row}</View>;
+    return <View style={styles.row} key={r}>{row}</View>;
 };
 
 const generateCardGrid = (card, THEME) => [
