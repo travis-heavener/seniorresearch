@@ -5,4 +5,3 @@
 - Update final paper w/ dependency changes + future methodology updates
   - react-navigation -> @react-navigation/native
   - react-navigation-stack -> @react-navigation/stack
-- Update compass to react-native Animated (see TasksScreenCard)
