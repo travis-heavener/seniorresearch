@@ -1,4 +1,3 @@
-import { BlurView } from "@react-native-community/blur";
 import { useContext, useEffect } from "react";
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Themes } from "../config/Config";

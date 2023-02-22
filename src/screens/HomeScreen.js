@@ -1,6 +1,6 @@
-import React, { useState, useContext, useEffect, useCallback } from "react";
+import React, { useState, useContext, useEffect, useCallback, useRef } from "react";
 import { useFocusEffect } from "@react-navigation/native";
-import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { View, StyleSheet, Text, TouchableOpacity, Animated } from "react-native";
 
 // Pedometer + necessary Android permissions imports
 import { Pedometer, DeviceMotion } from "expo-sensors";
@@ -13,7 +13,7 @@ import CardDisplayGrid from "../components/CardDisplayGrid";
 import ProfileScreenModal from "./ProfileScreenModal";
 
 import { Settings, SettingsContext, Themes } from "../config/Config";
-import { calculateGradient } from "./GradientManager";
+import { calculateToColor, generateAnimGradient } from "./GradientManager";
 import { UserDataContext } from "../config/UserDataManager";
 import { latLongDist, vh, vw } from "../config/Toolbox";
 import { BlurView } from "@react-native-community/blur";
@@ -25,12 +25,10 @@ const HomeScreen = (props) => {
 
     // background color
     const [backgroundCol, setBackgroundCol] = useState(styles.top.backgroundColor);
-    const backgroundColRef = React.useRef();
-    backgroundColRef.current = backgroundCol;
+    const backgroundColRef = React.useRef(backgroundCol).current;
 
     const [backgroundDelta, setBackgroundDelta] = useState(Date.now());
-    const backgroundDeltaRef = React.useRef();
-    backgroundDeltaRef.current = backgroundDelta;
+    const backgroundDeltaRef = React.useRef(backgroundDelta).current;
 
     // profile modal visibility
     const [isProfileVisible, setProfileVisibility] = useState(false);
@@ -168,33 +166,28 @@ const HomeScreen = (props) => {
                     
                     userContext.metadata.setVelocity(vel);
                     let speed = Math.hypot(vel.x, vel.y, vel.z);
-
-                    // const startTime = Date.now();
-                    // console.log("Elapsed ms: " + (Date.now()-startTime));
                     
                     // ----- background color gradient shifting -----
                     
                     let timeDelta = Settings.sensorUpdateIntervals[ userContext.batterySaverStatus ].backgroundColor;
-                    if (Date.now() - backgroundDeltaRef.current < timeDelta) return;
-                    
-                    // update last background refresh timestamp
-                    setBackgroundDelta(Date.now());
+                    if (Date.now() - backgroundDeltaRef < timeDelta) return;
                     
                     // calculate gradient
-                    let maxTime = timeDelta / 4, frames = 16, interval = maxTime / frames;
+                    let { targetColor, step } = calculateToColor( backgroundColRef, THEME.backgrounds.stopped, THEME.backgrounds.fast, speed );
 
-                    let shiftGrad = calculateGradient(
-                        backgroundColRef.current, THEME.backgrounds.stopped, THEME.backgrounds.fast, speed, frames
-                    );
+                    // prevent animation from running if it doesn't need to (ie. the color is the same)
+                    if (targetColor == null)
+                        return;
+                    
+                    // start animation
+                    Animated.timing(backgroundAnim, {
+                        toValue: step,
+                        timing: timeDelta / 4,
+                        useNativeDriver: false
+                    }).start();
 
-                    // set timeouts
-                    shiftGrad.forEach( (col, i) => {
-                        setTimeout(function() {
-                            // const startTime = Date.now();
-                            setBackgroundCol( col.toString() );
-                            // console.log("Elapsed ms: " + (Date.now()-startTime));
-                        }, i * interval);
-                    });
+                    setBackgroundCol( targetColor.toString() ); // update last background color
+                    setBackgroundDelta(Date.now()); // update last background refresh timestamp
                 });
                 return () => list.remove();
             }, [props]
@@ -206,8 +199,14 @@ const HomeScreen = (props) => {
     const centerBtn = () => props.navigation.navigate("Tasks");
     const rightBtn = () => props.navigation.navigate("Settings");
 
+    // background animation color
+    const backgroundAnim = useRef(new Animated.Value(0)).current;
+    const backgroundColor = backgroundAnim.interpolate(
+        generateAnimGradient(THEME.backgrounds.stopped, THEME.backgrounds.fast)
+    );
+
 	return (
-		<View style={[styles.top, {backgroundColor: backgroundCol}]}>
+		<Animated.View style={[styles.top, {backgroundColor: backgroundColor}]}>
             {/* user profile modal instead of screen */}
 
             <ProfileScreenModal isModalVisible={isProfileVisible} close={closeProfileModal} />
@@ -237,7 +236,7 @@ const HomeScreen = (props) => {
                 <HomeScreenButton flex={1} onPress={centerBtn} />
                 <HomeScreenButton flex={.75} onPress={rightBtn} />
             </View>
-		</View>
+		</Animated.View>
 	);
 };
 

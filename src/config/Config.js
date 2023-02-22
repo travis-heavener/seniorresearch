@@ -29,6 +29,7 @@ export const Settings = {
             taskCompletionCheck: 5000 // how often to check for objective completion, in ms
         }
     },
+    MAX_GRADIENT_SPEED: 4, // max speed recognized by gradient before it maxes the color
     BATTERY_SAVER_OFF: "batterySaverOff",
     BATTERY_SAVER_ON: "batterySaverOn"
 };
