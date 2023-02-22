@@ -15,7 +15,8 @@ import ProfileScreenModal from "./ProfileScreenModal";
 import { Settings, SettingsContext, Themes } from "../config/Config";
 import { calculateGradient } from "./GradientManager";
 import { UserDataContext } from "../config/UserDataManager";
-import { latLongDist } from "../config/Toolbox";
+import { latLongDist, vh, vw } from "../config/Toolbox";
+import { BlurView } from "@react-native-community/blur";
 
 const HomeScreen = (props) => {
     const userContext = useContext( UserDataContext );
@@ -210,6 +211,10 @@ const HomeScreen = (props) => {
             {/* user profile modal instead of screen */}
 
             <ProfileScreenModal isModalVisible={isProfileVisible} close={closeProfileModal} />
+            {/* background blur -- https://github.com/Kureev/react-native-blur */}
+            <BlurView blurAmount={3} blurType="light" style={[styles.absolute, {display: (isProfileVisible ? "flex" : "none")}]} />
+
+            {/* ------------------ */}
 
 			<View style={styles.header}>
                 <View style={styles.compassWrapper}>
@@ -237,6 +242,12 @@ const HomeScreen = (props) => {
 };
 
 const styles = StyleSheet.create({
+    absolute: {
+        position: "absolute",
+        width: vw(100),
+        height: vh(100),
+        zIndex: 10000
+    },
     top: {
         flex: 1,
         backgroundColor: "rgb(252, 170, 167)"

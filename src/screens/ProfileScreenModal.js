@@ -24,13 +24,10 @@ const ProfileScreenModal = (props) => {
             visible={props.isModalVisible}
             onRequestClose={close}
         >
-            {/* background blur -- https://github.com/Kureev/react-native-blur */}
-            <TouchableOpacity style={styles.background} onPress={close} activeOpacity={1}>
-                <BlurView blurAmount={3} blurType="light" style={styles.blurBackground} />
-            </TouchableOpacity>
+            <TouchableOpacity style={styles.absolute} onPress={close} activeOpacity={1} />
 
             {/* content itself */}
-            <View style={[styles.body, {backgroundColor: "#f0f0f0"}]}>
+            <View style={[styles.body, {backgroundColor: THEME.body}]}>
                 <View style={styles.userInfoView}>
                     <View style={styles.profileImage} />
 
@@ -51,14 +48,10 @@ const styles = StyleSheet.create({
         width: vw(100),
         height: vh(75)
     },
-    background: {
+    absolute: {
         position: "absolute",
         width: vw(100),
         height: vh(100)
-    },
-    blurBackground: {
-        flex: 1,
-        backgroundColor: "#0002"
     },
     userInfoView: {
         width: vw(100),
