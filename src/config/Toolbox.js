@@ -19,6 +19,11 @@ export const generateUUID = () => { // Public Domain/MIT
 export const vw = (w=100) => Dimensions.get("window").width * (w/100);
 export const vh = (h=100) => Dimensions.get("window").height * (h/100);
 
+// fit commas into text
+export const formatCommas = n => {
+    return n.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+};
+
 // random numbers from seed
 function mulberry32(a) {
     return function() {

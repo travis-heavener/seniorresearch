@@ -7,3 +7,5 @@
   - react-navigation-stack -> @react-navigation/stack
 - Update theme colors
   - Use CardDisplay theme for the CardSelectItem mini grid
+- Fix card selection modal entries onPress events
+  - Appears to be only working on background & not the text children

@@ -1,7 +1,7 @@
 import { useContext, useEffect } from "react";
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Themes } from "../config/Config";
-import { vh, vw } from "../config/Toolbox";
+import { formatCommas, vh, vw } from "../config/Toolbox";
 import { UserDataContext } from "../config/UserDataManager";
 
 const ProfileScreenModal = (props) => {
@@ -15,6 +15,34 @@ const ProfileScreenModal = (props) => {
             console.log("asdf");
         }, [props.isModalVisible]
     );
+
+    const generateStat = (name) => {
+        const md = userContext.metadata;
+        let text = "";
+        let val = "";
+
+        if (name == "steps") {
+            val = formatCommas( md.lifetimeSteps + md.steps );
+            text = "Steps";
+        } else if (name == "distance") {
+            val = ((md.lifetimeDistance + md.distance)/1000).toFixed(1);
+            val = formatCommas(val) + "km";
+            text = "Distance Traveled";
+        } else if (name == "cards") {
+            val = "0"; // TODO -- number of cards completed
+            text = "Cards Completed";
+        } else if (name == "bingos") {
+            val = "0"; // TODO -- number of bingos
+            text = "Bingos";
+        }
+
+        return (
+            <View style={styles.singleStatView}>
+                <Text adjustsFontSizeToFit={true} numberOfLines={1} style={styles.statsText}>{text}:</Text>
+                <Text adjustsFontSizeToFit={true} numberOfLines={1} style={styles.statsVariable}>{val}</Text>
+            </View>
+        )
+    };
 
     return (
         <Modal
@@ -35,35 +63,54 @@ const ProfileScreenModal = (props) => {
                         {/* progress bar */}
                     </View>
                 </View>
+                <View style={styles.statsView}>
+                    <Text style={styles.statsHeader}>Lifetime Stats</Text>
+
+                    <View style={styles.statsColumnView}>
+                        <View style={styles.statsColumn}>
+                            { generateStat("steps") }
+                            { generateStat("distance") }
+                        </View>
+                        <View style={styles.statsColumn}>
+                            { generateStat("cards") }
+                            { generateStat("bingos") }
+                        </View>
+                    </View>
+                </View>
             </View>
         </Modal>
     );
 };
 
 const styles = StyleSheet.create({
-    body: {
-        position: "absolute",
-        bottom: 0,
-        width: vw(100),
-        height: vh(75)
-    },
     absolute: {
         position: "absolute",
         width: vw(100),
         height: vh(100)
     },
-    userInfoView: {
+    body: {
+        position: "absolute",
+        bottom: 0,
         width: vw(100),
-        height: vh(16),
+        height: vh(75),
+        flexDirection: "column",
+        justifyContent: "flex-start",
+        alignItems: "stretch",
+        borderColor: "black",
+        borderTopWidth: 2
+    },
+    userInfoView: {
+        flex: 16, // from vh(16)
+        maxHeight: vh(16),
         paddingHorizontal: vw(10),
         flexDirection: "row",
-        backgroundColor: "red"
+        backgroundColor: "#f55"
     },
     profileImage: {
         marginTop: -vh(5),
         height: vh(16),
         aspectRatio: 1,
-        backgroundColor: "blue",
+        backgroundColor: "cornflowerblue",
         borderRadius: vh(16),
         borderColor: "black",
         borderWidth: 2
@@ -72,10 +119,54 @@ const styles = StyleSheet.create({
         flex: 1, // fill remaining space
         marginLeft: "5%",
         marginVertical: "5%",
-        backgroundColor: "yellow"
+        backgroundColor: "#ff5"
     },
     userName: {
         fontSize: vh(3.125)
+    },
+    statsView: {
+        flex: 59, // from vh(59)
+        maxHeight: vh(29), // remaining space below is 30vh
+        backgroundColor: "cornflowerblue"
+    },
+    statsHeader: {
+        textAlign: "center",
+        fontSize: vh(2.75),
+        textDecorationLine: "underline"
+    },
+    statsColumnView: {
+        flex: 1,
+        marginVertical: "3%",
+        flexDirection: "row",
+        justifyContent: "space-evenly",
+        alignItems: "flex-start"
+    },
+    statsColumn: {
+        flex: .425,
+        backgroundColor: "white",
+        borderWidth: 2,
+        borderColor: "black"
+    },
+    singleStatView: {
+        width: "100%",
+        height: vh(4),
+        alignItems: "center",
+        justifyContent: "space-between",
+        flexDirection: "row"
+    },
+    statsText: {
+        flex: 1,
+
+        fontSize: vh(1.75),
+        textAlign: "left"
+    },
+    statsVariable: {
+        maxWidth: "33%",
+        minWidth: "25%",
+
+        fontSize: vh(1.75),
+        fontStyle: "italic",
+        textAlign: "right"
     }
 });
 
