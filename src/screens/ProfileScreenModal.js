@@ -11,11 +11,24 @@ const ProfileScreenModal = (props) => {
 
     const close = () => props.close();
 
+    // on focus events
     useEffect(
         () => {
-            console.log("asdf");
+            console.log("IsModalVisible: " + props.isModalVisible);
+            Animated.timing(slideAnim, {
+                toValue: props.isModalVisible + 0, // cast boolean to number
+                duration: 200,
+                useNativeDriver: false
+            }).start();
         }, [props.isModalVisible]
     );
+
+    // animation
+    const slideAnim = useRef(new Animated.Value(0)).current;
+    const slideStatus = slideAnim.interpolate({
+        inputRange: [0, 1],
+        outputRange: ["-100%", "0%"]
+    });
 
     const generateStat = (name) => {
         const md = userContext.metadata, st = userContext.stats;
@@ -45,23 +58,6 @@ const ProfileScreenModal = (props) => {
         )
     };
 
-    // animation
-    useEffect(
-        () => {
-            Animated.timing(slideAnim, {
-                toValue: props.isModalVisible + 0, // cast boolean to number
-                duration: 200,
-                useNativeDriver: false
-            }).start();
-        }, [props.isModalVisible]
-    );
-
-    const slideAnim = useRef(new Animated.Value(0)).current;
-    const slideStatus = slideAnim.interpolate({
-        inputRange: [0, 1],
-        outputRange: ["-100%", "0%"]
-    });
-
     return (
         <Modal
             animationType="none"
@@ -70,7 +66,7 @@ const ProfileScreenModal = (props) => {
             onRequestClose={close}
         >
             <TouchableOpacity style={styles.absolute} onPress={close} activeOpacity={1} />
-
+            
             {/* content itself */}
             <Animated.View style={[styles.body, {backgroundColor: THEME.body, left: slideStatus}]}>
                 <View style={styles.userInfoView}>
