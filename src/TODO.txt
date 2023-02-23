@@ -1,7 +1,5 @@
 - Move permissions stuff from Config.js to new PermissionsManager.js
   - Handle permission rejection
-- Settings wheel icon in user profile
-  - Swipe right for tasks menu, left for profile
 - Update final paper w/ dependency changes + future methodology updates
   - react-navigation -> @react-navigation/native
   - react-navigation-stack -> @react-navigation/stack
@@ -9,3 +7,6 @@
   - Use CardDisplay theme for the CardSelectItem mini grid
 - Fix card selection modal entries onPress events
   - Appears to be only working on background & not the text children
+- Potentially use GesterRecognizer from react-native-swipe-gestures to handle gesture recognition on the home screen
+  - This can open each individual screen as the swipe gesture already dismisses them
+  - Removes the need for tab navigator

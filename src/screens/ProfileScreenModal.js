@@ -17,8 +17,8 @@ const ProfileScreenModal = (props) => {
             console.log("IsModalVisible: " + props.isModalVisible);
             Animated.timing(slideAnim, {
                 toValue: props.isModalVisible + 0, // cast boolean to number
-                duration: 200,
-                useNativeDriver: false
+                duration: 150,
+                useNativeDriver: true
             }).start();
         }, [props.isModalVisible]
     );
@@ -27,7 +27,7 @@ const ProfileScreenModal = (props) => {
     const slideAnim = useRef(new Animated.Value(0)).current;
     const slideStatus = slideAnim.interpolate({
         inputRange: [0, 1],
-        outputRange: ["-100%", "0%"]
+        outputRange: [-vw(100), 0]
     });
 
     const generateStat = (name) => {
@@ -43,10 +43,10 @@ const ProfileScreenModal = (props) => {
             val = formatCommas(val) + "km";
             text = "Distance Traveled";
         } else if (name == "cards") {
-            val = st.lifetimeCards; // TODO -- number of cards completed
+            val = st.lifetimeCards;
             text = "Cards Completed";
         } else if (name == "bingos") {
-            val = st.lifetimeBingos; // TODO -- number of bingos
+            val = st.lifetimeBingos;
             text = "Bingos";
         }
 
@@ -68,7 +68,7 @@ const ProfileScreenModal = (props) => {
             <TouchableOpacity style={styles.absolute} onPress={close} activeOpacity={1} />
             
             {/* content itself */}
-            <Animated.View style={[styles.body, {backgroundColor: THEME.body, left: slideStatus}]}>
+            <Animated.View style={[styles.body, {backgroundColor: THEME.body, transform: [{translateX: slideStatus}]}]}>
                 <View style={styles.userInfoView}>
                     <View style={styles.profileImage} />
 
