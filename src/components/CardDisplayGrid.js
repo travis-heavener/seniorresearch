@@ -1,6 +1,6 @@
 import { useIsFocused } from "@react-navigation/native";
 import { useContext, useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View, Modal } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Themes } from "../config/Config";
 import { vw, vh } from "../config/Toolbox";
 import { UserDataContext } from "../config/UserDataManager";
