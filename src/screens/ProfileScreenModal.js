@@ -1,5 +1,6 @@
-import { useContext, useEffect } from "react";
-import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
+import { useCallback, useContext, useEffect, useRef } from "react";
+import { Animated, Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Themes } from "../config/Config";
 import { formatCommas, vh, vw } from "../config/Toolbox";
 import { UserDataContext } from "../config/UserDataManager";
@@ -17,22 +18,22 @@ const ProfileScreenModal = (props) => {
     );
 
     const generateStat = (name) => {
-        const md = userContext.metadata;
+        const md = userContext.metadata, st = userContext.stats;
         let text = "";
         let val = "";
 
         if (name == "steps") {
-            val = formatCommas( md.lifetimeSteps + md.steps );
+            val = formatCommas( st.lifetimeSteps + md.steps );
             text = "Steps";
         } else if (name == "distance") {
-            val = ((md.lifetimeDistance + md.distance)/1000).toFixed(1);
+            val = ((st.lifetimeDistance + md.distance)/1000).toFixed(1);
             val = formatCommas(val) + "km";
             text = "Distance Traveled";
         } else if (name == "cards") {
-            val = "0"; // TODO -- number of cards completed
+            val = st.lifetimeCards; // TODO -- number of cards completed
             text = "Cards Completed";
         } else if (name == "bingos") {
-            val = "0"; // TODO -- number of bingos
+            val = st.lifetimeBingos; // TODO -- number of bingos
             text = "Bingos";
         }
 
@@ -44,6 +45,23 @@ const ProfileScreenModal = (props) => {
         )
     };
 
+    // animation
+    useEffect(
+        () => {
+            Animated.timing(slideAnim, {
+                toValue: props.isModalVisible + 0, // cast boolean to number
+                duration: 200,
+                useNativeDriver: false
+            }).start();
+        }, [props.isModalVisible]
+    );
+
+    const slideAnim = useRef(new Animated.Value(0)).current;
+    const slideStatus = slideAnim.interpolate({
+        inputRange: [0, 1],
+        outputRange: ["-100%", "0%"]
+    });
+
     return (
         <Modal
             animationType="none"
@@ -54,7 +72,7 @@ const ProfileScreenModal = (props) => {
             <TouchableOpacity style={styles.absolute} onPress={close} activeOpacity={1} />
 
             {/* content itself */}
-            <View style={[styles.body, {backgroundColor: THEME.body}]}>
+            <Animated.View style={[styles.body, {backgroundColor: THEME.body, left: slideStatus}]}>
                 <View style={styles.userInfoView}>
                     <View style={styles.profileImage} />
 
@@ -77,7 +95,7 @@ const ProfileScreenModal = (props) => {
                         </View>
                     </View>
                 </View>
-            </View>
+            </Animated.View>
         </Modal>
     );
 };
@@ -90,14 +108,16 @@ const styles = StyleSheet.create({
     },
     body: {
         position: "absolute",
-        bottom: 0,
         width: vw(100),
         height: vh(75),
+        bottom: 0,
         flexDirection: "column",
         justifyContent: "flex-start",
         alignItems: "stretch",
         borderColor: "black",
-        borderTopWidth: 2
+        borderTopWidth: 2,
+        borderRightWidth: 2,
+        borderLeftWidth: 2
     },
     userInfoView: {
         flex: 16, // from vh(16)

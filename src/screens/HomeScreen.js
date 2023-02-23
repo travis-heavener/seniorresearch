@@ -182,7 +182,7 @@ const HomeScreen = (props) => {
                     // start animation
                     Animated.timing(backgroundAnim, {
                         toValue: step,
-                        timing: timeDelta / 4,
+                        duration: timeDelta / 4,
                         useNativeDriver: false
                     }).start();
 

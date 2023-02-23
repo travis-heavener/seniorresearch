@@ -6,13 +6,9 @@ import { BingoCard } from "../objectives/BingoCardManager";
 
 export const UserDataContext = React.createContext({
     metadata: {
-        lifetimeSteps: 0,
-        setLifetimeSteps: function(n) { this.lifetimeSteps = n; },
         steps: 0,
         setSteps: function(n) {  this.steps = n;  },
         
-        lifetimeDistance: 0,
-        setLifetimeDistance: function(n) { this.lifetimeDistance = n; },
         distance: 0, // distance, in meters (1609.344 meters in 1 mile)
         setDistance: function(n) {  this.distance = n;  },
         addDistance: function(n) {  this.distance += n;  },
@@ -32,6 +28,18 @@ export const UserDataContext = React.createContext({
             setCurrent: function(n) {  this.current = n;  },
             setLast: function(n) {  this.last = n;  }
         }
+    },
+
+    stats: {
+        userXP: 0,
+        lifetimeBingos: 0,
+        lifetimeCards: 0,
+        
+        lifetimeSteps: 0,
+        setLifetimeSteps: function(n) { this.lifetimeSteps = n; },
+
+        lifetimeDistance: 0,
+        setLifetimeDistance: function(n) { this.lifetimeDistance = n; },
     },
 
     cardSlots: {
@@ -110,8 +118,8 @@ export const loadUserData = async (userContext) => {
     userContext.setSelectedTheme(data.selectedTheme);
     userContext.setSelectedCard(data.selectedCard);
 
-    userContext.metadata.setLifetimeSteps(data.metadata.steps);
-    userContext.metadata.setLifetimeDistance(data.metadata.distance);
+    userContext.stats.setLifetimeSteps(data.metadata.steps);
+    userContext.stats.setLifetimeDistance(data.metadata.distance);
 
     // load card data
     for (let cardName in data.cardsData) {
@@ -138,7 +146,11 @@ export const loadUserData = async (userContext) => {
 
 export const exportUserData = async (userContext) => {
     // ignore certain properties
-    const keysWhitelist = ["metadata", "steps", "distance", "selectedTheme", "selectedCard", "batterySaverStatus"];
+    const keysWhitelist = [
+        "metadata", "steps", "distance",
+        "selectedTheme", "selectedCard", "batterySaverStatus",
+        "stats", "userXP", "lifetimeBingos", "lifetimeCards"
+    ];
 
     // use JSON.stringify(obj, whitelistedKeysArr) as it neglects including functions automatically
     // whitelistedKeysArr takes in keys that are to be included, others are omitted
@@ -152,8 +164,8 @@ export const exportUserData = async (userContext) => {
     let formatted = JSON.parse(JSON.stringify(userContext, keysWhitelist)); // remove unnecessary properties
 
     // lifetime stats update
-    formatted.metadata.steps += userContext.metadata.lifetimeSteps;
-    formatted.metadata.distance += userContext.metadata.lifetimeDistance;
+    formatted.metadata.steps += userContext.stats.lifetimeSteps;
+    formatted.metadata.distance += userContext.stats.lifetimeDistance;
 
     // export bingo cards
     let cardsData = {};
@@ -187,9 +199,9 @@ export const clearUserData = async (userContext) => {
 	}
 
     userContext.metadata.setSteps(0);
-    userContext.metadata.setLifetimeSteps(0);
+    userContext.stats.setLifetimeSteps(0);
     userContext.metadata.setDistance(0);
-    userContext.metadata.setLifetimeDistance(0);
+    userContext.stats.setLifetimeDistance(0);
 
     userContext.setSelectedTheme("base");
     userContext.setBatterySaverStatus(Settings.BATTERY_SAVER_OFF);

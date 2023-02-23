@@ -1,5 +1,5 @@
-import React, { useState, useContext } from "react";
-import { View, StyleSheet, Text, TouchableOpacity, Dimensions } from "react-native";
+import React, { useState, useContext, useRef } from "react";
+import { View, StyleSheet, Text, TouchableOpacity, Dimensions, Animated } from "react-native";
 
 import { Settings, Context, Themes } from "../config/Config";
 import { UserDataContext } from "../config/UserDataManager";
@@ -11,12 +11,27 @@ const SettingsSwitch = (props) => {
     const userContext = useContext( UserDataContext );
     const THEME = Themes[ userContext.selectedTheme ].settings; // select theme
 
+    const toggle = () => {
+        // trigger animation
+        Animated.timing(toggleAnim, {
+            toValue: !props.activityListener() + 0,
+            duration: 250,
+            useNativeDriver: false
+        }).start();
+        
+        props.toggle();
+    };
+
+    // animation (default value moves the switch to the proper position on screen load)
+    const toggleAnim = useRef(new Animated.Value( props.activityListener() + 0 )).current;
+
     return (
         <View style={[styles.body, {borderBottomColor: THEME.primaryAccent}]}>
             <Text style={[styles.desc, {color: THEME.text}]}>{props.text}</Text>
-            <TouchableOpacity style={styles.switch} onPress={props.toggle} activeOpacity={1}>
+            <TouchableOpacity style={styles.switch} onPress={toggle} activeOpacity={1}>
                 <View style={styles.switchBody}>
-                    <View style={[styles.switchBlob, {alignSelf: props.activityListener() ? "flex-end" : "flex-start"}]}></View>
+                    <Animated.View style={{flex: toggleAnim}} />
+                    <View style={styles.switchBlob} />
                 </View>
             </TouchableOpacity>
         </View>
@@ -29,13 +44,11 @@ const styles = StyleSheet.create({
         height: vh(8),
         paddingHorizontal: vw(5),
         flexDirection: "row",
-        // borderBottomColor: THEME.primaryAccent,
         borderBottomWidth: 2
     },
     desc: {
         flex: 0.8,
-        alignSelf: "center",
-        // color: THEME.text
+        alignSelf: "center"
     },
     switch: {
         flex: 0.2,
@@ -48,6 +61,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#f5f5f5",
         borderRadius: 1000,
         borderColor: "#b6b6b6",
+        flexDirection: "row",
         borderWidth: 2.5
     },
     switchBlob: {
