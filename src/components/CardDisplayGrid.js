@@ -3,12 +3,14 @@ import { useContext, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Themes } from "../config/Config";
 import { vw, vh } from "../config/Toolbox";
-import { UserDataContext } from "../config/UserDataManager";
+import { exportUserData, UserDataContext } from "../config/UserDataManager";
 import { DIFFICULTIES } from "../objectives/BingoCardManager";
 import CardSelectModal from "./CardSelectModal";
 
 const CardDisplayGrid = (props) => {
     const [isModalVisible, setModalVisibility] = useState(false);
+	const [__remountStatus, __setRemountStatus] = useState(false);
+	const remount = () => __setRemountStatus(!__remountStatus); // triggers a remount of the grid to re-render components
 
     const userContext = useContext( UserDataContext );
     const THEME = Themes[ userContext.selectedTheme ].cardDisplay; // select theme
@@ -46,7 +48,7 @@ const CardDisplayGrid = (props) => {
                 <Text style={styles.title}>{ title }</Text>
             </View>
             <View style={styles.grid}>
-                { generateCardGrid(userContext.cardSlots[cardName], THEME) }
+                { generateCardGrid(userContext.cardSlots[cardName], userContext, remount) }
             </View>
         </View>
     );
@@ -55,34 +57,50 @@ const CardDisplayGrid = (props) => {
 export default CardDisplayGrid;
 
 // generate the grid of cards
-const generateRow = (r, card, THEME) => {
+const generateRow = (r, card, userContext, remount) => {
+	const THEME = Themes[ userContext.selectedTheme ].cardDisplay; // select theme
+	
     let row = [];
     
     for (let c = 0; c < 5; c++) {
-        let obj = card.grid[r][c];
+        const obj = card.grid[r][c];
+		const onPress = () => {
+			// if this is a card to be checked by the user, prompt them to check it with a modal
+			if (obj.triggerPlayerCompletion) {
+				// confirmation modal
+				// if confirmed (not accidental press)
+				obj.triggerPlayerCompletion();
+				// re-render the grid so that the tile is re-checked
+				remount();
+				// export data because saving data is important
+				exportUserData(userContext);
+			}
+		};
         row.push(
-            <View
+            <TouchableOpacity
                 key={c} // random key just to ignore the error :)
                 style={[
                     styles.tile, // default styling
                     {backgroundColor: (obj.isCompleted ? THEME.checkedTile : THEME.uncheckedTile)}, // checked color
                     (r == 0) ? {borderTopWidth: 2} : {}, (c == 0) ? {borderLeftWidth: 2} : {} // borders for top/left
                 ]}
+				onPress={onPress}
+				activeOpacity={1}
             >
                 <Text numberOfLines={2} adjustsFontSizeToFit style={styles.tileText}>{obj.toString()}</Text>
-            </View>
+            </TouchableOpacity>
         );
     }
 
     return <View style={styles.row} key={r}>{row}</View>;
 };
 
-const generateCardGrid = (card, THEME) => [
-    generateRow(0, card, THEME),
-    generateRow(1, card, THEME),
-    generateRow(2, card, THEME),
-    generateRow(3, card, THEME),
-    generateRow(4, card, THEME)
+const generateCardGrid = (card, userContext, remount) => [
+	generateRow(0, card, userContext, remount),
+    generateRow(1, card, userContext, remount),
+    generateRow(2, card, userContext, remount),
+    generateRow(3, card, userContext, remount),
+    generateRow(4, card, userContext, remount)
 ];
 
 const styles = StyleSheet.create({

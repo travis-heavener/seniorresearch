@@ -5,8 +5,8 @@
   - react-navigation-stack -> @react-navigation/stack
 - Update theme colors
   - Use CardDisplay theme for the CardSelectItem mini grid
-- Fix card selection modal entries onPress events
-  - Appears to be only working on background & not the text children
 - Potentially use GesterRecognizer from react-native-swipe-gestures to handle gesture recognition on the home screen
   - This can open each individual screen as the swipe gesture already dismisses them
   - Removes the need for tab navigator
+- Make data exporting/saving **better**
+  - Every time a setting changes

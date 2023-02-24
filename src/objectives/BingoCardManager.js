@@ -38,6 +38,7 @@ export class BingoCard {
 
             for (let c = 0; c < 5; c++) {
                 let data = this.grid[r][c].exportToDisk(userContext);
+				console.log(data.isCompleted);
                 cardData.grid[r].push(data);
             }
         }
@@ -111,7 +112,7 @@ export class BingoCard {
 		for (let obj of this.grid.flat())
 			count += obj.isCompleted;
 		
-		return count / total * 100;
+		return Math.round(count / total * 100);
 	}
 }
 

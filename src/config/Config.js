@@ -16,7 +16,7 @@ export const Settings = {
                 accuracy: Location.LocationAccuracy.High,
                 delta: 20 // meters of variance before calling update
             },
-            taskCompletionCheck: 1000 // how often to check for objective completion, in ms
+            taskCompletionCheck: 2000 // how often to check for objective completion, in ms
         },
         batterySaverOn: {
             deviceMotion: 100,

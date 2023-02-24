@@ -14,7 +14,7 @@ import ProfileScreenModal from "./ProfileScreenModal";
 
 import { Settings, SettingsContext, Themes } from "../config/Config";
 import { calculateToColor, generateAnimGradient } from "./GradientManager";
-import { UserDataContext } from "../config/UserDataManager";
+import { exportUserData, UserDataContext } from "../config/UserDataManager";
 import { latLongDist, vh, vw } from "../config/Toolbox";
 import { BlurView } from "@react-native-community/blur";
 
@@ -88,7 +88,7 @@ const HomeScreen = (props) => {
         useCallback(
             () => {
 				if (!settingsContext.hasRequestedPermissions) return () => {}; // prevent trying to listen before permissions granted
-
+				
 				// prevent trying to listen without permissions after requesting
 				if (!settingsContext.permissions.ACCESS_COARSE_LOCATION || !settingsContext.permissions.ACCESS_FINE_LOCATION) {
 					console.log("Missing location permissions");
@@ -193,6 +193,12 @@ const HomeScreen = (props) => {
             }, [props]
         )
     );
+
+	useFocusEffect(
+		useCallback(() => {
+			exportUserData(userContext); // save every time the screen is focused
+		}, [props])
+	);
 
     // button functions
     const leftBtn = () => setProfileVisibility(!isProfileVisible);

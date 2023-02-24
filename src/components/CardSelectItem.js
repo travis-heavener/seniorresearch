@@ -22,10 +22,10 @@ const CardSelectItem = (props) => {
 	return (
         <TouchableOpacity style={styles.top} activeOpacity={1} onPress={close}>
             <View style={styles.main}>
-                <Text style={styles.titleText} onPress={close}>{ title }</Text>
+                <Text style={styles.titleText}>{ title }</Text>
             </View>
 			<View style={styles.completionStats}>
-				<Text style={styles.percentText} onPress={close}>{ completionPercent }%</Text>
+				<Text style={styles.percentText}>{ completionPercent }%</Text>
 			</View>
         </TouchableOpacity>
     )

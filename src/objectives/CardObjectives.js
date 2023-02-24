@@ -143,9 +143,26 @@ export class ExploreObjective extends CardObjective {
     constructor(label, difficulty, userContext, random=Math.random) {
         super(label, difficulty, userContext);
 
+		this.completionCheck = () => this.isCompleted;
+
         // handle player-triggered completion events
         this.triggerPlayerCompletion = () => this.isCompleted = true; // when triggered, objective is checked
     }
+
+	exportToDisk(userContext) {
+		return {
+            ...super.exportToDisk(), // run superclass method
+
+            // class specifics
+            isCompleted: this.isCompleted
+        };
+	}
+
+	loadFromDisk(data) {
+		super.loadFromDisk(data);
+		console.log(data);
+		this.isCompleted = data.isCompleted;
+	}
 
     toString() {
         return "???";
