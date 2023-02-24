@@ -1,6 +1,7 @@
 import { useFocusEffect } from "@react-navigation/native";
 import { useCallback, useContext, useEffect, useRef } from "react";
 import { Animated, Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import GestureRecognizer from "react-native-swipe-gestures";
 import { Themes } from "../config/Config";
 import { formatCommas, vh, vw } from "../config/Toolbox";
 import { UserDataContext } from "../config/UserDataManager";
@@ -67,6 +68,9 @@ const ProfileScreenModal = (props) => {
         >
             <TouchableOpacity style={styles.absolute} onPress={close} activeOpacity={1} />
             
+            {/* <GestureRecognizer onSwipeLeft={() => console.log("Left")} style={{flex: 1/5, backgroundColor: "yellow"}}>
+                <Text style={{flex: 1, backgroundColor: "#f008"}}>text</Text>
+            </GestureRecognizer> */}
             {/* content itself */}
             <Animated.View style={[styles.body, {backgroundColor: THEME.body, transform: [{translateX: slideStatus}]}]}>
                 <View style={styles.userInfoView}>
@@ -92,7 +96,7 @@ const ProfileScreenModal = (props) => {
                     </View>
                 </View>
             </Animated.View>
-        </Modal>
+    </Modal>
     );
 };
 
