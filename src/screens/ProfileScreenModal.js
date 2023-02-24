@@ -1,10 +1,11 @@
-import { useFocusEffect } from "@react-navigation/native";
 import { useCallback, useContext, useEffect, useRef } from "react";
-import { Animated, Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Animated, Easing, Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import GestureRecognizer from "react-native-swipe-gestures";
 import { Themes } from "../config/Config";
 import { formatCommas, vh, vw } from "../config/Toolbox";
 import { UserDataContext } from "../config/UserDataManager";
+
+import { GestureHandlerRootView, Swipeable } from "react-native-gesture-handler";
 
 const ProfileScreenModal = (props) => {
     const userContext = useContext( UserDataContext );
@@ -15,14 +16,25 @@ const ProfileScreenModal = (props) => {
     // on focus events
     useEffect(
         () => {
-            console.log("IsModalVisible: " + props.isModalVisible);
+            // console.log("IsModalVisible: " + props.isModalVisible);
             Animated.timing(slideAnim, {
                 toValue: props.isModalVisible + 0, // cast boolean to number
-                duration: 150,
+                duration: 175,
+				easing: Easing.out( Easing.sin ),
                 useNativeDriver: true
             }).start();
         }, [props.isModalVisible]
     );
+
+	const queueClose = (ms) => {
+		Animated.timing(slideAnim, {
+			toValue: 0,
+			duration: ms,
+			easing: Easing.out( Easing.sin ),
+			useNativeDriver: true
+		}).start();
+		setTimeout(close, ms); // queue the close after the animation
+	};
 
     // animation
     const slideAnim = useRef(new Animated.Value(0)).current;
@@ -60,17 +72,20 @@ const ProfileScreenModal = (props) => {
     };
 
     return (
-        <Modal
-            animationType="none"
-            transparent={true}
-            visible={props.isModalVisible}
-            onRequestClose={close}
-        >
+	<GestureRecognizer onSwipe={(name, state) => {
+		// this basically allows swipes less than 45 degrees in either direction of left swipe directions
+		// because diagonal swipes aren't supported. this works beacuse algebra. cool.
+		if (Math.abs(state.dy / state.dx) < 1 && state.dx < 0)
+			queueClose(90);
+	}} onSwipeLeft={() => queueClose(90)}>
+			<Modal
+				animationType="none"
+				transparent={true}
+				visible={props.isModalVisible}
+				onRequestClose={close}
+			>
             <TouchableOpacity style={styles.absolute} onPress={close} activeOpacity={1} />
             
-            {/* <GestureRecognizer onSwipeLeft={() => console.log("Left")} style={{flex: 1/5, backgroundColor: "yellow"}}>
-                <Text style={{flex: 1, backgroundColor: "#f008"}}>text</Text>
-            </GestureRecognizer> */}
             {/* content itself */}
             <Animated.View style={[styles.body, {backgroundColor: THEME.body, transform: [{translateX: slideStatus}]}]}>
                 <View style={styles.userInfoView}>
@@ -96,7 +111,8 @@ const ProfileScreenModal = (props) => {
                     </View>
                 </View>
             </Animated.View>
-    </Modal>
+		</Modal>
+	</GestureRecognizer>
     );
 };
 
