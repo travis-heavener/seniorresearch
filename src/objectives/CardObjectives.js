@@ -147,6 +147,30 @@ export class ExploreObjective extends CardObjective {
 
         // handle player-triggered completion events
         this.triggerPlayerCompletion = () => this.isCompleted = true; // when triggered, objective is checked
+
+        // declare objectives
+        const randomObjPool = [
+            { name: "tree", variants: ["tall", "short"] },
+            { name: "bush" },
+            { name: "flower bed" },
+            { name: "school bus" },
+            { name: "public bus" },
+            { name: "taxi" },
+            { name: "car", variants: ["red", "green", "yellow", "blue", "gray", "white", "black"] },
+            { name: "bicycle" },
+            { name: "motorcycle" },
+            { name: "skateboard" },
+            { name: "scooter" },
+            { name: "sign", variants: ["stop", "yield", "crosswalk", "railroad", "school zone"] }
+        ];
+
+        // pick random
+        const randomFromArr = arr => arr[ Math.floor(arr.length * random()) ];
+
+        const randomType = randomFromArr( randomObjPool );
+        const randomVariant = randomType.variants ? randomFromArr( randomType.variants ) : null;
+
+        this.displayText = (randomVariant ? randomVariant + " " : "") + randomType.name;
     }
 
 	exportToDisk(userContext) {
@@ -154,17 +178,20 @@ export class ExploreObjective extends CardObjective {
             ...super.exportToDisk(), // run superclass method
 
             // class specifics
-            isCompleted: this.isCompleted
+            isCompleted: this.isCompleted,
+            displayText: this.displayText
         };
 	}
 
 	loadFromDisk(data) {
-		super.loadFromDisk(data);
-		console.log(data);
+        super.loadFromDisk(data);
 		this.isCompleted = data.isCompleted;
+        this.displayText = data.displayText;
 	}
 
     toString() {
-        return "???";
+        // 2-28-23 @ 12:14 PM -- fun one-liner I wrote and I'm strangely proud of :)
+        const toTitleCase = str => str.split(" ").map(frag => frag[0].toUpperCase() + frag.substring(1)).join(" ");
+        return toTitleCase( this.displayText );
     }
 }

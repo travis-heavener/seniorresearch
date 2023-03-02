@@ -6,28 +6,32 @@ import { vw, vh } from "../config/Toolbox";
 import { exportUserData, UserDataContext } from "../config/UserDataManager";
 import { DIFFICULTIES } from "../objectives/BingoCardManager";
 import CardSelectModal from "./CardSelectModal";
+import ObjectiveConfirmModal from "./ObjectiveConfirmModal";
 
 const CardDisplayGrid = (props) => {
     const [isModalVisible, setModalVisibility] = useState(false);
 	const [__remountStatus, __setRemountStatus] = useState(false);
 	const remount = () => __setRemountStatus(!__remountStatus); // triggers a remount of the grid to re-render components
 
+    // card objective modal
+    const [objModalData, setObjModalData] = useState({isModalVisible: false, reject: null, confirm: null, obj: null});
+    const closeObjModal = () => setObjModalData({isModalVisible: false, reject: null, confirm: null, obj: null});
+
     const userContext = useContext( UserDataContext );
     const THEME = Themes[ userContext.selectedTheme ].cardDisplay; // select theme
-
-    // triggers a re-render every time the screen is refocused
+    
+    // triggers a remount every time the screen is refocused
     useIsFocused();
 
+    // card selection modal
+    const selectCard = () => setModalVisibility(true);
+    const modalOff = () => setModalVisibility(false);
+    
+    // get card data
     const cardName = userContext.selectedCard;
     const card = userContext.cardSlots[ cardName ];
 
     // handle null cards with a button to display one
-    const selectCard = () => {
-        setModalVisibility(true);
-    };
-
-    const modalOff = () => setModalVisibility(false);
-
     if (userContext.selectedCard == null || card == null) {
         return (
             <TouchableOpacity style={styles.nullTop} activeOpacity={2/3} onPress={selectCard}>
@@ -36,72 +40,77 @@ const CardDisplayGrid = (props) => {
             </TouchableOpacity>
         );
     }
+    
+    const diffName = card.difficulty == DIFFICULTIES.HARD ? "Hard" : card.difficulty == DIFFICULTIES.NORMAL ? "Normal" : "Easy";
+    const diffColor = THEME.cards[diffName.toLowerCase()];
+    const title = (cardName == "daily" ? "Daily" : diffName) + " Card";
 
-    const difficultyName = card.difficulty == DIFFICULTIES.HARD ? "Hard" : card.difficulty == DIFFICULTIES.NORMAL ? "Normal" : "Easy";
-    const difficultyColor = THEME.cards[difficultyName.toLowerCase()];
-    const title = (cardName == "daily" ? "Daily" : difficultyName) + " Card";
+    // card grid generation
+    // generate the grid of cards
+    const generateRow = (r, card) => {
+        let row = [];
+        
+        for (let c = 0; c < 5; c++) {
+            const obj = card.grid[r][c];
+            const onPress = () => {
+                // if this is a card to be checked by the user, prompt them to check it with a modal
+                if (obj.triggerPlayerCompletion) {
+                    setObjModalData({
+                        isModalVisible: true,
+                        obj: obj,
+                        confirm: () => {
+                            obj.triggerPlayerCompletion();
+                            closeObjModal(); // close the modal
+                            remount(); // remount the component
+                            // TODO -- check for bingo completions
+                            exportUserData(userContext); // export data because saving data is important
+                        },
+                        reject: () => closeObjModal() // just close the modal
+                    });
+                }
+            };
+
+            row.push(
+                <TouchableOpacity
+                    onPress={onPress} activeOpacity={1} key={c} // random key just to ignore the error :)
+                    style={[
+                        styles.tile, // default styling
+                        {backgroundColor: (obj.isCompleted ? THEME.checkedTile : THEME.uncheckedTile)}, // checked color
+                        (r == 0) ? {borderTopWidth: 2} : {}, (c == 0) ? {borderLeftWidth: 2} : {} // borders for top/left
+                    ]}
+                >
+                    <Text numberOfLines={1} adjustsFontSizeToFit style={styles.tileText}>{obj.toString()}</Text>
+                </TouchableOpacity>
+            );
+        }
+
+        return <View style={styles.row} key={r}>{row}</View>;
+    };
+
+    const generateCardGrid = (card) => [
+        generateRow(0, card),
+        generateRow(1, card),
+        generateRow(2, card),
+        generateRow(3, card),
+        generateRow(4, card)
+    ];
 
     return (
         <View style={styles.top}>
+            <ObjectiveConfirmModal {...objModalData} />
+
             <View style={styles.titleWrapper}>
-                <View style={[styles.difficultyIndicator, {backgroundColor: difficultyColor}]}></View>
+                <View style={[styles.difficultyIndicator, {backgroundColor: diffColor}]}></View>
                 <Text style={styles.title}>{ title }</Text>
             </View>
             <View style={styles.grid}>
-                { generateCardGrid(userContext.cardSlots[cardName], userContext, remount) }
+                { generateCardGrid(userContext.cardSlots[cardName]) }
             </View>
         </View>
     );
 };
 
 export default CardDisplayGrid;
-
-// generate the grid of cards
-const generateRow = (r, card, userContext, remount) => {
-	const THEME = Themes[ userContext.selectedTheme ].cardDisplay; // select theme
-	
-    let row = [];
-    
-    for (let c = 0; c < 5; c++) {
-        const obj = card.grid[r][c];
-		const onPress = () => {
-			// if this is a card to be checked by the user, prompt them to check it with a modal
-			if (obj.triggerPlayerCompletion) {
-				// confirmation modal
-				// if confirmed (not accidental press)
-				obj.triggerPlayerCompletion();
-				// re-render the grid so that the tile is re-checked
-				remount();
-				// export data because saving data is important
-				exportUserData(userContext);
-			}
-		};
-        row.push(
-            <TouchableOpacity
-                key={c} // random key just to ignore the error :)
-                style={[
-                    styles.tile, // default styling
-                    {backgroundColor: (obj.isCompleted ? THEME.checkedTile : THEME.uncheckedTile)}, // checked color
-                    (r == 0) ? {borderTopWidth: 2} : {}, (c == 0) ? {borderLeftWidth: 2} : {} // borders for top/left
-                ]}
-				onPress={onPress}
-				activeOpacity={1}
-            >
-                <Text numberOfLines={2} adjustsFontSizeToFit style={styles.tileText}>{obj.toString()}</Text>
-            </TouchableOpacity>
-        );
-    }
-
-    return <View style={styles.row} key={r}>{row}</View>;
-};
-
-const generateCardGrid = (card, userContext, remount) => [
-	generateRow(0, card, userContext, remount),
-    generateRow(1, card, userContext, remount),
-    generateRow(2, card, userContext, remount),
-    generateRow(3, card, userContext, remount),
-    generateRow(4, card, userContext, remount)
-];
 
 const styles = StyleSheet.create({
     nullTop: {
@@ -157,7 +166,8 @@ const styles = StyleSheet.create({
         borderBottomWidth: 2
     },
     tileText: {
-        fontSize: vh(5/3),
+        marginHorizontal: "3%",
+        // fontSize: vh(5/3),
         textAlign: "center"
     }
 });

@@ -10,3 +10,13 @@
   - Removes the need for tab navigator
 - Make data exporting/saving **better**
   - Every time a setting changes
+- Slow down sensor polling rates while profile modal is open????
+  - You can literally see the compass moving around while the content itself is blurred
+- Card display objective modals
+  - For ALL objectives
+    - Show progress for non-player completables
+    - Confirm/reject for player completables
+  - Pass both the confirmation and rejection functions to the modal
+    - The modal itself can then call the functions to update the objective
+    - This removes the need to use async functions in the generation of each TouchableOpacity
+- Check that the bingo player-completed objectives are being set by the same random so that they're always the same with the seed

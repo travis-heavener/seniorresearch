@@ -69,10 +69,10 @@ const CompassWidget = (props) => {
     );
 
 	const rotateAnim = useRef(new Animated.Value(0)).current;
-
+    
 	// basically this formats the input angle to a range of strings the rotation can use
 	const alpha = rotateAnim.interpolate({
-		inputRange: [0, 360],
+        inputRange: [0, 360],
 		outputRange: ["0deg", "360deg"]
 	});
 

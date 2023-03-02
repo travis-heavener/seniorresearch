@@ -38,7 +38,6 @@ export class BingoCard {
 
             for (let c = 0; c < 5; c++) {
                 let data = this.grid[r][c].exportToDisk(userContext);
-				console.log(data.isCompleted);
                 cardData.grid[r].push(data);
             }
         }

@@ -17,18 +17,12 @@ import { calculateToColor, generateAnimGradient } from "./GradientManager";
 import { exportUserData, UserDataContext } from "../config/UserDataManager";
 import { latLongDist, vh, vw } from "../config/Toolbox";
 import { BlurView } from "@react-native-community/blur";
+import BackgroundGradient from "../components/BackgroundGradient";
 
 const HomeScreen = (props) => {
     const userContext = useContext( UserDataContext );
     const settingsContext = useContext( SettingsContext );
     const THEME = Themes[ userContext.selectedTheme ].home; // select theme
-
-    // background color
-    const [backgroundCol, setBackgroundCol] = useState(styles.top.backgroundColor);
-    const backgroundColRef = React.useRef(backgroundCol).current;
-
-    const [backgroundDelta, setBackgroundDelta] = useState(Date.now());
-    const backgroundDeltaRef = React.useRef(backgroundDelta).current;
 
     // profile modal visibility
     const [isProfileVisible, setProfileVisibility] = useState(false);
@@ -83,12 +77,13 @@ const HomeScreen = (props) => {
         }, [userContext.metadata.GPS.current]
     );
 
-    // initialize location reading (every time the screen is FOCUSED)
+    // initialize location reading (every time the screen is FOCUSED & has permissions)
     useFocusEffect(
         useCallback(
             () => {
 				if (!settingsContext.hasRequestedPermissions) return () => {}; // prevent trying to listen before permissions granted
-				
+                // console.log("Location");
+
 				// prevent trying to listen without permissions after requesting
 				if (!settingsContext.permissions.ACCESS_COARSE_LOCATION || !settingsContext.permissions.ACCESS_FINE_LOCATION) {
 					console.log("Missing location permissions");
@@ -118,6 +113,9 @@ const HomeScreen = (props) => {
     useFocusEffect(
         useCallback(
             () => {
+                // save data everytime screen focuses
+                exportUserData(userContext);
+
                 // reset device accelerometer timestamp delta
                 // reason: background would fade to green as if speed was really fast because timestamp recording would pause
                 userContext.metadata.setAccelDelta(Date.now());
@@ -126,7 +124,7 @@ const HomeScreen = (props) => {
                     if (data.acceleration == undefined || data.rotation == undefined) return;
                     userContext.metadata.setAcceleration(data.acceleration);
 
-                    let {beta, gamma, alpha} = data.rotation; // beta -> x, gamma -> y, alpha -> z
+                    let { beta, gamma, alpha } = data.rotation; // beta -> x, gamma -> y, alpha -> z
                     
                     let accel = data.acceleration;
                     let { accelDelta } = userContext.metadata;
@@ -165,54 +163,20 @@ const HomeScreen = (props) => {
                     };
                     
                     userContext.metadata.setVelocity(vel);
-                    let speed = Math.hypot(vel.x, vel.y, vel.z);
-                    
-                    // ----- background color gradient shifting -----
-                    
-                    let timeDelta = Settings.sensorUpdateIntervals[ userContext.batterySaverStatus ].backgroundColor;
-                    if (Date.now() - backgroundDeltaRef < timeDelta) return;
-                    
-                    // calculate gradient
-                    let { targetColor, step } = calculateToColor( backgroundColRef, THEME.backgrounds.stopped, THEME.backgrounds.fast, speed );
-
-                    // prevent animation from running if it doesn't need to (ie. the color is the same)
-                    if (targetColor == null)
-                        return;
-                    
-                    // start animation
-                    Animated.timing(backgroundAnim, {
-                        toValue: step,
-                        duration: timeDelta / 4,
-                        useNativeDriver: false
-                    }).start();
-
-                    setBackgroundCol( targetColor.toString() ); // update last background color
-                    setBackgroundDelta(Date.now()); // update last background refresh timestamp
                 });
                 return () => list.remove();
             }, [props]
         )
     );
 
-	useFocusEffect(
-		useCallback(() => {
-			exportUserData(userContext); // save every time the screen is focused
-		}, [props])
-	);
-
     // button functions
     const leftBtn = () => setProfileVisibility(!isProfileVisible);
     const centerBtn = () => props.navigation.navigate("Tasks");
     const rightBtn = () => props.navigation.navigate("Settings");
 
-    // background animation color
-    const backgroundAnim = useRef(new Animated.Value(0)).current;
-    const backgroundColor = backgroundAnim.interpolate(
-        generateAnimGradient(THEME.backgrounds.stopped, THEME.backgrounds.fast)
-    );
-
 	return (
-		<Animated.View style={[styles.top, {backgroundColor: backgroundColor}]}>
+		<View style={styles.top}>
+            <BackgroundGradient />
             {/* user profile modal instead of screen */}
 
             <ProfileScreenModal isModalVisible={isProfileVisible} close={closeProfileModal} />
@@ -242,7 +206,7 @@ const HomeScreen = (props) => {
                 <HomeScreenButton flex={1} onPress={centerBtn} />
                 <HomeScreenButton flex={.75} onPress={rightBtn} />
             </View>
-		</Animated.View>
+		</View>
 	);
 };
 
@@ -254,8 +218,7 @@ const styles = StyleSheet.create({
         zIndex: 10000
     },
     top: {
-        flex: 1,
-        backgroundColor: "rgb(252, 170, 167)"
+        flex: 1
     },
     header: {
         flex: 0.1,

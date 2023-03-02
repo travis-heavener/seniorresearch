@@ -58,7 +58,7 @@ export function calculateGradient(currentCol, startCol, endCol, speed, frames) {
 };
 
 export function calculateToColor(current, start, end, speed) {
-    current = breakRGB(current);
+    // current = breakRGB(current);
     // determine how fast device is compared to max speed (4 m/s)
     let maxSpeed = Settings.MAX_GRADIENT_SPEED, stepCount = 100;
     
