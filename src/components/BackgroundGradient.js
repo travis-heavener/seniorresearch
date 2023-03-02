@@ -4,7 +4,7 @@ import { Animated, StyleSheet } from "react-native";
 import { Settings, Themes } from "../config/Config";
 import { vh, vw } from "../config/Toolbox";
 import { UserDataContext } from "../config/UserDataManager";
-import { calculateToColor, generateAnimGradient } from "../screens/GradientManager";
+import { calculateToColor, generateAnimGradient } from "./GradientManager";
 
 const BackgroundGradient = (props) => {
     const userContext = useContext( UserDataContext );

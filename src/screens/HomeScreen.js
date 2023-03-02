@@ -13,7 +13,7 @@ import CardDisplayGrid from "../components/CardDisplayGrid";
 import ProfileScreenModal from "./ProfileScreenModal";
 
 import { Settings, SettingsContext, Themes } from "../config/Config";
-import { calculateToColor, generateAnimGradient } from "./GradientManager";
+import { calculateToColor, generateAnimGradient } from "../components/GradientManager";
 import { exportUserData, UserDataContext } from "../config/UserDataManager";
 import { latLongDist, vh, vw } from "../config/Toolbox";
 import { BlurView } from "@react-native-community/blur";
