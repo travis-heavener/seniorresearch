@@ -46,6 +46,9 @@ export class Random {
     }
 }
 
+// 2-28-23 @ 12:14 PM -- fun one-liner I wrote and I'm strangely proud of :)
+export const toTitleCase = str => str.split(" ").map(frag => frag[0].toUpperCase() + frag.substring(1)).join(" ");
+
 /* ********** GPS ********** */
 
 function degreesToRadians(degrees) {

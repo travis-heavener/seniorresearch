@@ -1,3 +1,5 @@
+import { toTitleCase } from "../config/Toolbox";
+
 export class CardObjective {
     constructor(label, difficulty, userContext) {
         this.label = label;
@@ -190,8 +192,6 @@ export class ExploreObjective extends CardObjective {
 	}
 
     toString() {
-        // 2-28-23 @ 12:14 PM -- fun one-liner I wrote and I'm strangely proud of :)
-        const toTitleCase = str => str.split(" ").map(frag => frag[0].toUpperCase() + frag.substring(1)).join(" ");
         return toTitleCase( this.displayText );
     }
 }

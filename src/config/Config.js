@@ -11,7 +11,7 @@ export const Settings = {
         batterySaverOff: {
             deviceMotion: 10,
             compassUpdate: 250,
-            backgroundColor: 500,
+            backgroundColor: 250,
             GPS: {
                 accuracy: Location.LocationAccuracy.High,
                 delta: 20 // meters of variance before calling update
@@ -21,7 +21,7 @@ export const Settings = {
         batterySaverOn: {
             deviceMotion: 100,
             compassUpdate: 750,
-            backgroundColor: 1000,
+            backgroundColor: 500,
             GPS: {
                 accuracy: Location.LocationAccuracy.Balanced,
                 delta: 75 // meters of variance before calling update
@@ -29,7 +29,7 @@ export const Settings = {
             taskCompletionCheck: 5000 // how often to check for objective completion, in ms
         }
     },
-    MAX_GRADIENT_SPEED: 4, // max speed recognized by gradient before it maxes the color
+    MAX_GRADIENT_SPEED: 3, // max speed recognized by gradient before it maxes the color
     BATTERY_SAVER_OFF: "batterySaverOff",
     BATTERY_SAVER_ON: "batterySaverOn"
 };

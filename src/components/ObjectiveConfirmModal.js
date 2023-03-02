@@ -1,8 +1,7 @@
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { vh, vw } from "../config/Toolbox";
+import { toTitleCase, vh, vw } from "../config/Toolbox";
 
 const ObjectiveConfirmModal = (props) => {
-    // console.log(props.obj?.displayText);
     const confirm = () => {
         if (props.reject == null)
             console.warn("Modal confirmation func is null.")
@@ -17,7 +16,8 @@ const ObjectiveConfirmModal = (props) => {
             props.reject();
     };
 
-    const objText = props.obj?.displayText ?? "Text";
+    let objText = props.obj?.toString() ?? "Text"; // the "toString" has the toTitleCase called within (see CardObjective.js)
+    if (props.obj?.triggerPlayerCompletion) objText = "Find a " + objText;
 
     return (
         <Modal
@@ -29,7 +29,7 @@ const ObjectiveConfirmModal = (props) => {
             <TouchableOpacity style={styles.absolute} onPress={reject} activeOpacity={1} />
             
             <View style={styles.top}>
-                <Text style={styles.titleText}>Are you sure you'd like to complete</Text>
+                <Text style={styles.titleText}>Objective:</Text>
                 <Text style={styles.objText}>{ objText }</Text>
             </View>
         </Modal>
@@ -52,9 +52,11 @@ const styles = StyleSheet.create({
         backgroundColor: "red"
     },
     titleText: {
-        fontSize: vh(3)
+        fontSize: vh(3),
+        textAlign: "center"
     },
     objText: {
-        fontSize: vh(2)
+        fontSize: vh(2),
+        textAlign: "center"
     }
 });
