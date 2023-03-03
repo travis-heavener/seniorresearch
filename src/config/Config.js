@@ -63,7 +63,10 @@ export const Themes = {
             uncheckedTile: "#f7bcbc",
             cards: {
                 easy: "#44cc3f", normal: "#d6ae47", hard: "#c45147"
-            }
+            },
+            modalBorder: "#333",
+            modalBackground: "#eee",
+            modalText: "#222"
         },
         profile: {
             body: "#f0f0f0"
@@ -95,7 +98,10 @@ export const Themes = {
             uncheckedTile: "#f7bcbc",
             cards: {
                 easy: "#44cc3f", normal: "#d6ae47", hard: "#c45147"
-            }
+            },
+            modalBorder: "#111",
+            modalBackground: "#333",
+            modalText: "#f5f5f5"
         },
         profile: {
             body: "#f0f0f0"

@@ -43,14 +43,15 @@ const TasksScreenCard = (props) => {
 	useEffect(
 		() => {
 			Animated.timing(heightAnim, {
-				toValue: vh(8 + 42*(isContentOpen+0)),
+				toValue: isContentOpen ? 0 : -vh(8),
 				duration: 250,
-				useNativeDriver: false
+				useNativeDriver: true
 			}).start();
 			Animated.timing(opacityAnim, {
 				toValue: isContentOpen ? 1 : 0,
-				duration: 250,
-				useNativeDriver: false
+				// this weird lil circle appeared at the top left corner of each card, this fixes it by making it disappear immediately
+                duration: 0,
+				useNativeDriver: true
 			}).start();
 		}, [isContentOpen]
 	);
@@ -58,16 +59,19 @@ const TasksScreenCard = (props) => {
 	// hide card if another card is focused in the menu
     useEffect(
         () => {
-            if (props.focusedCard != props.cardName) {
+            if (props.focusedCard != props.cardName && isContentOpen)
                 setContentOpen(false);
-            }
         }, [props.focusedCard]
     );
 
     // uncheck selected box if modified by other card component
     useEffect(
-        () => setSelected( userContext.selectedCard == props.cardName ),
-        [userContext.selectedCard]
+        () => {
+            if (userContext.selectedCard == props.cardName && !isSelected)
+                setSelected( true );
+            else if (userContext.selectedCard !== props.cardName && isSelected)
+                setSelected( false );
+        }, [userContext.selectedCard]
     );
 
     if (userContext.cardSlots[props.cardName]) {
@@ -120,9 +124,9 @@ const TasksScreenCard = (props) => {
                 setSelected(true);
             }
         };
-
+        
         return (
-            <Animated.View style={[styles.top, {backgroundColor: THEME.cards[difficultyName], height: heightAnim}]}>
+            <Animated.View style={[styles.top, {height: vh(8 + 42*(isContentOpen+0))}]}>
                 <TouchableOpacity
                     onPress={toggleDisplay} activeOpacity={1}
                     style={[styles.body, {backgroundColor: THEME.primary}]}
@@ -142,7 +146,9 @@ const TasksScreenCard = (props) => {
                 <Animated.View style={[
 					styles.cardDisplay,
 					{
-						backgroundColor: THEME.cards[difficultyName], display: (isContentOpen ? "flex" : "none"), opacity: opacityAnim
+						backgroundColor: THEME.cards[difficultyName], display: (isContentOpen ? "flex" : "none"),
+                        opacity: opacityAnim, // isContentOpen+0, <-- this works in place of opacityAnim as well (hides weird circle)
+                        transform: [ { translateY: heightAnim } ], zIndex: -100
 					}]}
 				>
                     <View style={styles.cardGrid}>
@@ -182,7 +188,8 @@ const TasksScreenCard = (props) => {
 
 const styles = StyleSheet.create({
     top: {
-        width: vw(100)
+        width: vw(100),
+        zIndex: 1000
     },
     body: {
         width: vw(100),
@@ -195,6 +202,7 @@ const styles = StyleSheet.create({
     },
     cardDisplay: {
         flex: 1,
+        marginTop: -1, // this just fixes some weird antialiasing issue with the border width of components above this
         alignItems: "center",
         justifyContent: "space-evenly",
         borderColor: "#383838",

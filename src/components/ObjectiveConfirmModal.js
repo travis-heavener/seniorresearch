@@ -1,7 +1,13 @@
+import { useContext } from "react";
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { toTitleCase, vh, vw } from "../config/Toolbox";
+import { Themes } from "../config/Config";
+import { vh, vw } from "../config/Toolbox";
+import { UserDataContext } from "../config/UserDataManager";
 
 const ObjectiveConfirmModal = (props) => {
+    const userContext = useContext( UserDataContext );
+    const THEME = Themes[ userContext.selectedTheme ].cardDisplay;
+
     const confirm = () => {
         if (props.reject == null)
             console.warn("Modal confirmation func is null.")
@@ -28,9 +34,9 @@ const ObjectiveConfirmModal = (props) => {
         >
             <TouchableOpacity style={styles.absolute} onPress={reject} activeOpacity={1} />
             
-            <View style={styles.top}>
-                <Text style={styles.titleText}>Objective:</Text>
-                <Text style={styles.objText}>{ objText }</Text>
+            <View style={[styles.top, {borderColor: THEME.modalBorder, backgroundColor: THEME.modalBackground}]}>
+                <Text style={[styles.titleText, {color: THEME.modalText}]}>Objective:</Text>
+                <Text style={[styles.objText, {color: THEME.modalText}]}>{ objText }</Text>
             </View>
         </Modal>
     )
@@ -49,7 +55,9 @@ const styles = StyleSheet.create({
         flex: 1,
         marginHorizontal: vw(20),
         marginVertical: vh(33),
-        backgroundColor: "red"
+        backgroundColor: "red",
+        borderWidth: 3,
+        borderRadius: vw(10)
     },
     titleText: {
         fontSize: vh(3),

@@ -160,14 +160,15 @@ const styles = StyleSheet.create({
     },
     tile: {
         flex: 1/5,
-        borderColor: "black",
         justifyContent: "center",
+        borderColor: "black",
         borderRightWidth: 2,
         borderBottomWidth: 2
     },
     tileText: {
+        textAlignVertical: "center",
         marginHorizontal: "3%",
-        // fontSize: vh(5/3),
+        fontSize: vh(5/3),
         textAlign: "center"
     }
 });
