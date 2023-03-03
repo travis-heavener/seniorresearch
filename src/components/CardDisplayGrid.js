@@ -1,5 +1,5 @@
-import { useIsFocused } from "@react-navigation/native";
-import { useContext, useState } from "react";
+import { useFocusEffect, useIsFocused } from "@react-navigation/native";
+import { useCallback, useContext, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Themes } from "../config/Config";
 import { vw, vh } from "../config/Toolbox";
@@ -63,7 +63,7 @@ const CardDisplayGrid = (props) => {
                             obj.triggerPlayerCompletion();
                             closeObjModal(); // close the modal
                             remount(); // remount the component
-                            // TODO -- check for bingo completions
+                            card.runCompletionChecks(userContext); // check for bingo completions
                             exportUserData(userContext); // export data because saving data is important
                         },
                         reject: () => closeObjModal() // just close the modal

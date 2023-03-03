@@ -8,7 +8,7 @@ const CardSelectModal = (props) => {
     const userContext = useContext( UserDataContext );
 
     const close = () => {
-        console.log("Close requested");
+        // console.log("Close requested");
         props.off();
     };
 

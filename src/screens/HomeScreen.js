@@ -13,7 +13,6 @@ import CardDisplayGrid from "../components/CardDisplayGrid";
 import ProfileScreenModal from "./ProfileScreenModal";
 
 import { Settings, SettingsContext, Themes } from "../config/Config";
-import { calculateToColor, generateAnimGradient } from "../components/GradientManager";
 import { exportUserData, UserDataContext } from "../config/UserDataManager";
 import { latLongDist, vh, vw } from "../config/Toolbox";
 import { BlurView } from "@react-native-community/blur";
@@ -82,7 +81,6 @@ const HomeScreen = (props) => {
         useCallback(
             () => {
 				if (!settingsContext.hasRequestedPermissions) return () => {}; // prevent trying to listen before permissions granted
-                // console.log("Location");
 
 				// prevent trying to listen without permissions after requesting
 				if (!settingsContext.permissions.ACCESS_COARSE_LOCATION || !settingsContext.permissions.ACCESS_FINE_LOCATION) {
@@ -104,7 +102,27 @@ const HomeScreen = (props) => {
                 
                 getListener();
 
-                return () => { subscription && subscription.remove() };
+                // initialize card update interval & autosave interval
+                userContext.setCardUpdateInterval(
+                    setInterval(
+                        function() {
+                            // check cards
+                            userContext.cardSlots.daily  ?.runCompletionChecks(userContext);
+                            userContext.cardSlots.custom1?.runCompletionChecks(userContext);
+                            userContext.cardSlots.custom2?.runCompletionChecks(userContext);
+    
+                            // export data
+                            exportUserData(userContext);
+                        }, Settings.sensorUpdateIntervals[ userContext.batterySaverStatus ].taskCompletionCheck
+                    )
+                );
+
+                const removeListeners = () => {
+                    subscription.remove(); // remove GPS listener
+                    userContext.clearCardUpdateInterval(); // remove card update interval
+                };
+
+                return () => { subscription && removeListeners() };
             }, [props, userContext.batterySaverStatus, settingsContext.hasRequestedPermissions]
         )
     );

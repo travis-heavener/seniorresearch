@@ -18,26 +18,6 @@ const TasksScreen = (props) => {
     const forceRemount = () => __setRemountStatus(!__remountStatus);
 
     const [focusedCard, setFocusedCard] = useState(null);
-
-    // set update interval on screen load
-    useEffect(
-        () => {
-            userContext.clearCardUpdateInterval();
-
-            let interval = setInterval(
-                function() {
-                    userContext.cardSlots.daily  ?.runCompletionChecks(userContext);
-                    userContext.cardSlots.custom1?.runCompletionChecks(userContext);
-                    userContext.cardSlots.custom2?.runCompletionChecks(userContext);
-
-                    // export data
-                    exportUserData(userContext);
-                }, Settings.sensorUpdateIntervals[ userContext.batterySaverStatus ].taskCompletionCheck
-            );
-
-            userContext.setCardUpdateInterval(interval);
-        }
-    );
     
     return (
 		<View style={[styles.body, {backgroundColor: THEME.primaryAccent}]}>

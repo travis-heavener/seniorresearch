@@ -110,6 +110,7 @@ export const loadUserData = async (userContext) => {
         console.log("No user data saved to disk.");
         return;
     }
+    // else console.log("Loading user data...");
 
     // load in data
     data = JSON.parse(data);
@@ -145,6 +146,7 @@ export const loadUserData = async (userContext) => {
 };
 
 export const exportUserData = async (userContext) => {
+    // console.log("Saving user data...");
     // ignore certain properties
     const keysWhitelist = [
         "metadata", "steps", "distance",
