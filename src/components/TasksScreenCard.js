@@ -168,7 +168,7 @@ const TasksScreenCard = (props) => {
             let difficulty = props.cardName == "daily" ? DIFFICULTIES.NORMAL : undefined; // undefined is overwritten by random in method
             userContext.cardSlots[props.cardName] = createBingoCard(userContext, difficulty); // with random difficulty
             exportUserData(userContext); // save data
-            props.remount();
+            props.remount(); // force a parent screen remount
         };
 
         return (

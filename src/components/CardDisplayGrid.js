@@ -7,6 +7,7 @@ import { exportUserData, UserDataContext } from "../config/UserDataManager";
 import { DIFFICULTIES } from "../objectives/BingoCardManager";
 import CardSelectModal from "./CardSelectModal";
 import ObjectiveConfirmModal from "./ObjectiveConfirmModal";
+import ScalingText from "./ScalingText";
 
 const CardDisplayGrid = (props) => {
     const [isModalVisible, setModalVisibility] = useState(false);
@@ -79,7 +80,8 @@ const CardDisplayGrid = (props) => {
                         (r == 0) ? {borderTopWidth: 2} : {}, (c == 0) ? {borderLeftWidth: 2} : {} // borders for top/left
                     ]}
                 >
-                    <Text numberOfLines={1} adjustsFontSizeToFit style={styles.tileText}>{obj.toString()}</Text>
+                    {/* <Text numberOfLines={1} adjustsFontSizeToFit={true} style={styles.tileText}>{obj.toString()}</Text> */}
+                    <ScalingText maxLineLength={12}>{ obj.toString() }</ScalingText>
                 </TouchableOpacity>
             );
         }
@@ -164,11 +166,5 @@ const styles = StyleSheet.create({
         borderColor: "black",
         borderRightWidth: 2,
         borderBottomWidth: 2
-    },
-    tileText: {
-        textAlignVertical: "center",
-        marginHorizontal: "3%",
-        fontSize: vh(5/3),
-        textAlign: "center"
     }
 });
