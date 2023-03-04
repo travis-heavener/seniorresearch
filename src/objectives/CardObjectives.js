@@ -71,11 +71,11 @@ export class DistanceObjective extends CardObjective {
     }
 
     getRemaining(userContext) {
-        return this.distanceGoal - this.savedDistanceRemaining + userContext.metadata.distance;
+        return this.distanceGoal - this.savedDistanceRemaining - this.startingDistance + userContext.metadata.distance;
     }
 
     getStatusString(userContext) {
-        return (this.getRemaining(userContext)*1000).toFixed(2) + " km";
+        return (this.getRemaining(userContext)/1000).toFixed(2) + " km";
     }
 
     exportToDisk(userContext) {
@@ -126,7 +126,7 @@ export class StepsObjective extends CardObjective {
     }
 
     getRemaining(userContext) {
-        return this.stepGoal - this.savedStepsRemaining + userContext.metadata.steps;
+        return this.stepGoal - this.savedStepsRemaining - this.startingSteps + userContext.metadata.steps;
     }
 
     getStatusString(userContext) {
