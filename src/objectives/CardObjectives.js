@@ -56,7 +56,7 @@ export class DistanceObjective extends CardObjective {
         let distanceGoal = difficulty * Math.floor( random() * (max-min) + min );
         distanceGoal = Math.round( distanceGoal / 50 ) * 50; // round to nearest 50
 
-        this.startingDistance = userContext.metadata.distance;
+        this.startingDistance = userContext.metadata.distance; // starting distance as of this app load, not from local storage
         this.distanceGoal = distanceGoal;
         this.savedDistanceRemaining = distanceGoal; // overwritten by loadFromDisk, if applicable
         
@@ -68,6 +68,14 @@ export class DistanceObjective extends CardObjective {
             this.isCompleted = (userContext.metadata.distance - this.startingDistance) >= this.savedDistanceRemaining;
             return this.isCompleted;
         };
+    }
+
+    getRemaining(userContext) {
+        return this.distanceGoal - this.savedDistanceRemaining + userContext.metadata.distance;
+    }
+
+    getStatusString(userContext) {
+        return (this.getRemaining(userContext)*1000).toFixed(2) + " km";
     }
 
     exportToDisk(userContext) {
@@ -115,6 +123,14 @@ export class StepsObjective extends CardObjective {
             this.isCompleted = (userContext.metadata.steps - this.startingSteps) >= this.savedStepsRemaining;
             return this.isCompleted;
         };
+    }
+
+    getRemaining(userContext) {
+        return this.stepGoal - this.savedStepsRemaining + userContext.metadata.steps;
+    }
+
+    getStatusString(userContext) {
+        return this.getRemaining(userContext) + " steps";
     }
 
     exportToDisk(userContext) {

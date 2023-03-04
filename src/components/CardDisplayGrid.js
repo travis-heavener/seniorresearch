@@ -1,6 +1,6 @@
 import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 import { useCallback, useContext, useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Themes } from "../config/Config";
 import { vw, vh } from "../config/Toolbox";
 import { exportUserData, UserDataContext } from "../config/UserDataManager";
@@ -53,27 +53,22 @@ const CardDisplayGrid = (props) => {
         
         for (let c = 0; c < 5; c++) {
             const obj = card.grid[r][c];
-            const onPress = () => {
-                // if this is a card to be checked by the user, prompt them to check it with a modal
-                if (obj.triggerPlayerCompletion) {
-                    setObjModalData({
-                        isModalVisible: true,
-                        obj: obj,
-                        confirm: () => {
-                            obj.triggerPlayerCompletion();
-                            closeObjModal(); // close the modal
-                            remount(); // remount the component
-                            card.runCompletionChecks(userContext); // check for bingo completions
-                            exportUserData(userContext); // export data because saving data is important
-                        },
-                        reject: () => closeObjModal() // just close the modal
-                    });
-                }
-            };
+            const onPress = obj.constructor.name == "FreeObjective" ? () => {} : () => setObjModalData({
+                isModalVisible: true,
+                obj: obj,
+                confirm: () => {
+                    if (obj.triggerPlayerCompletion) obj.triggerPlayerCompletion(); // trigger player completion, if available
+                    card.runCompletionChecks(userContext); // check for bingo completions
+                    exportUserData(userContext); // export data because saving data is important
+                    closeObjModal(); // close the modal
+                    remount(); // remount the component
+                },
+                reject: () => closeObjModal() // just close the modal
+            });
 
             row.push(
-                <TouchableOpacity
-                    onPress={onPress} activeOpacity={1} key={c} // random key just to ignore the error :)
+                <Pressable
+                    onPress={onPress} key={c}
                     style={[
                         styles.tile, // default styling
                         {backgroundColor: (obj.isCompleted ? THEME.checkedTile : THEME.uncheckedTile)}, // checked color
@@ -82,7 +77,7 @@ const CardDisplayGrid = (props) => {
                 >
                     {/* <Text numberOfLines={1} adjustsFontSizeToFit={true} style={styles.tileText}>{obj.toString()}</Text> */}
                     <ScalingText maxLineLength={12}>{ obj.toString() }</ScalingText>
-                </TouchableOpacity>
+                </Pressable>
             );
         }
 

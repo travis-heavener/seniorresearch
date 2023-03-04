@@ -110,7 +110,7 @@ const HomeScreen = (props) => {
                             userContext.cardSlots.daily  ?.runCompletionChecks(userContext);
                             userContext.cardSlots.custom1?.runCompletionChecks(userContext);
                             userContext.cardSlots.custom2?.runCompletionChecks(userContext);
-    
+                            
                             // export data
                             exportUserData(userContext);
                         }, Settings.sensorUpdateIntervals[ userContext.batterySaverStatus ].taskCompletionCheck

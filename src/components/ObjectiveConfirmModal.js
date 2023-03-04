@@ -1,8 +1,9 @@
 import { useContext } from "react";
-import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Modal, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Themes } from "../config/Config";
 import { vh, vw } from "../config/Toolbox";
 import { UserDataContext } from "../config/UserDataManager";
+import ProgressBar from "./ProgressBar";
 
 const ObjectiveConfirmModal = (props) => {
     const userContext = useContext( UserDataContext );
@@ -23,16 +24,19 @@ const ObjectiveConfirmModal = (props) => {
     };
 
     let objText = props.obj?.toString() ?? "Text"; // the "toString" has the toTitleCase called within (see CardObjective.js)
-    if (props.obj?.triggerPlayerCompletion) objText = "Find a(n) " + objText;
+    if (props.obj?.constructor.name == "ExploreObjective")
+        objText = "Find a(n) " + objText;
+    else
+        objText = "Walk " + objText;
+
+    // for progress bar
+    const progressMax = props.obj?.distanceGoal ?? props.obj?.stepGoal;
+    const progressCurrent = props.obj?.getRemaining ? props.obj?.getRemaining(userContext) : null;
+    const progressReadout = props.obj?.getStatusString ? props.obj?.getStatusString(userContext) : null;
 
     return (
-        <Modal
-            animationType="none"
-            onRequestClose={reject}
-            transparent={true}
-            visible={props.isModalVisible}
-        >
-            <TouchableOpacity style={styles.absolute} onPress={reject} activeOpacity={1} />
+        <Modal animationType="none" onRequestClose={reject} transparent={true} visible={props.isModalVisible}>
+            <Pressable style={styles.absolute} onPress={reject} />
             
             <View style={styles.top}>
                 <View style={[styles.body, {borderColor: THEME.modalBorder, backgroundColor: THEME.modalBackground}]}>
@@ -40,19 +44,27 @@ const ObjectiveConfirmModal = (props) => {
                     <Text style={[styles.objText, {color: THEME.modalText}]}>{ objText }</Text>
                 </View>
                 <View style={[styles.buttonContainer, {borderColor: THEME.modalBorder}]}>
-                    {( !props.obj?.isCompleted && props.obj?.triggerPlayerCompletion ) ? (
-                        <TouchableOpacity onPress={confirm} activeOpacity={0.95}
-                            style={[styles.button, {borderColor: THEME.modalBorder, backgroundColor: THEME.modalConfirm}]}
-                        >
-                            <Text adjustsFontSizeToFit={true} style={styles.buttonText}>Mark Done</Text>
-                        </TouchableOpacity>
-                    ) : null}
-                    <TouchableOpacity
-                        onPress={reject} activeOpacity={0.95}
-                        style={[styles.button, {borderColor: THEME.modalBorder, backgroundColor: THEME.modalReject}]}
-                    >
-                        <Text adjustsFontSizeToFit={true} style={[styles.buttonText, {color: THEME.modalText}]}>Close</Text>
-                    </TouchableOpacity>
+                    {
+                        props.obj?.triggerPlayerCompletion ? ([
+                            <TouchableOpacity key={1} onPress={confirm} activeOpacity={0.95} disabled={props.obj?.isCompleted} 
+                                style={[styles.button, {borderColor: THEME.modalBorder,
+                                    backgroundColor: ( props.obj?.isCompleted ) ? "#888" : THEME.modalConfirm}]}
+                            >
+                                <Text adjustsFontSizeToFit={true} style={styles.buttonText}>Mark Done</Text>
+                            </TouchableOpacity>,
+                            <TouchableOpacity key={2} onPress={reject} activeOpacity={0.95}
+                                style={[styles.button, {borderColor: THEME.modalBorder, backgroundColor: THEME.modalReject}]}
+                            >
+                                <Text adjustsFontSizeToFit={true} style={[styles.buttonText, {color: THEME.modalText}]}>Close</Text>
+                            </TouchableOpacity>
+                        ]) : (
+                            // progress bar
+                            <ProgressBar
+                                width={vw(55)} height="60%" readout={progressReadout}
+                                max={progressMax} min={0} current={progressCurrent}
+                            />
+                        )
+                    }
                 </View>
             </View>
         </Modal>
