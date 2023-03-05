@@ -13,8 +13,9 @@ export const Settings = {
             compassUpdate: 250,
             backgroundColor: 250,
             GPS: {
-                accuracy: Location.LocationAccuracy.High,
-                delta: 20 // meters of variance before calling update
+                accuracy: Location.LocationAccuracy.BestForNavigation,
+                delta: 5, // meters of variance before calling update
+				minTimeElapsed: 2000 // minimum time elapsed before making another call
             },
             taskCompletionCheck: 2000 // how often to check for objective completion, in ms
         },
@@ -23,12 +24,14 @@ export const Settings = {
             compassUpdate: 750,
             backgroundColor: 500,
             GPS: {
-                accuracy: Location.LocationAccuracy.Balanced,
-                delta: 75 // meters of variance before calling update
+                accuracy: Location.LocationAccuracy.High,
+                delta: 7.5, // meters of variance before calling update
+				minTimeElapsed: 5000 // minimum time elapsed before making another call
             },
             taskCompletionCheck: 5000 // how often to check for objective completion, in ms
         }
     },
+	LOCATION_NOISE_THRESH: 25, // in meters, widest accuracy radius of geolocation calls, limits noise
     MAX_GRADIENT_SPEED: 3, // max speed recognized by gradient before it maxes the color
     BATTERY_SAVER_OFF: "batterySaverOff",
     BATTERY_SAVER_ON: "batterySaverOn"

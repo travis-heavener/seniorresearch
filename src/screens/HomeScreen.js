@@ -55,27 +55,6 @@ const HomeScreen = (props) => {
         } )();
     });
 
-    // handle updates to the coordinates of the player's device
-    useEffect(
-        () => {
-            let { last, current } = userContext.metadata.GPS;
-            if (last.acc != -1 && last.lat != current.lat && last.long != current.long) { // we have data!
-                let dist = latLongDist(last.lat, last.long, current.lat, current.long);
-
-                // let speed = userContext.metadata.getSpeed();
-                // if (speed > 1) // if moving at least 1 m/s, append displacement
-
-				let { delta } = Settings.sensorUpdateIntervals[ userContext.batterySaverStatus ].GPS;
-
-				// console.log("Delta: " + delta + "\t" + "Distance: " + dist);
-				if (dist > delta)
-                    userContext.metadata.addDistance(dist);
-            }
-
-            userContext.metadata.GPS.setLast(current);
-        }, [userContext.metadata.GPS.current]
-    );
-
     // initialize location reading (every time the screen is FOCUSED & has permissions)
     useFocusEffect(
         useCallback(
@@ -88,15 +67,34 @@ const HomeScreen = (props) => {
 					return () => {};
 				}
 
-				const { delta, accuracy } = Settings.sensorUpdateIntervals[ userContext.batterySaverStatus ].GPS;
+				const { delta, accuracy, minTimeElapsed } = Settings.sensorUpdateIntervals[ userContext.batterySaverStatus ].GPS;
+				const thresh = Settings.LOCATION_NOISE_THRESH;
 
 				let subscription;
                 let getListener = async () => {
-                    subscription = await Location.watchPositionAsync({accuracy: accuracy, distanceInterval: delta}, loc => {
-						// console.log(loc);
-                        userContext.metadata.GPS.setCurrent(
-                            {lat: loc.coords.latitude, long: loc.coords.longitude, acc: loc.coords.accuracy}
-                        );
+                    subscription = await Location.watchPositionAsync({accuracy: accuracy, distanceInterval: delta, timeInterval: minTimeElapsed}, loc => {
+                        // determine if new position is noisy
+						if (loc.coords.accuracy > thresh) return; // console.log(loc.coords.accuracy);
+						
+						// if this is the first non-noisy reading, append it and stop further calculation
+						let current = {lat: loc.coords.latitude, long: loc.coords.longitude, acc: loc.coords.accuracy};
+						let last = userContext.metadata.GPS.current; // this hasn't been updated, so treat the 'current' as last
+
+						if (userContext.metadata.GPS.last.acc == -1) {
+							userContext.metadata.GPS.updatePos(current);
+							return;
+						}
+
+						// if there is a previous coordinate, then we have some math do to !
+						let dist = latLongDist(last.lat, last.long, current.lat, current.long);
+
+						// console.log("Delta: " + delta + "\t Distance: " + dist.toFixed(3) + "\t Acc: " + current.acc.toFixed(3));
+						// console.warn("Delta: " + delta + "\t Distance: " + dist.toFixed(3) + "\t Acc: " + current.acc.toFixed(3));
+						// if (dist > delta)
+							userContext.metadata.addDistance(dist);
+
+						// overwrite last pos and set current
+						userContext.metadata.GPS.updatePos(current);
                     });
                 };
                 

@@ -25,6 +25,11 @@ export const UserDataContext = React.createContext({
         GPS: {
             current: {lat: null, long: null, acc: -1},
             last: {lat: null, long: null, acc: -1},
+			updatePos: function(current) {
+				this.last = this.current;
+				this.current = current;
+				return { last: this.last, current: this.current }
+			},
             setCurrent: function(n) {  this.current = n;  },
             setLast: function(n) {  this.last = n;  }
         }
