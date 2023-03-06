@@ -16,4 +16,3 @@
 - Advanced battery saver??
   - Control various settings for each battery-saver-controlled part
     - Ex. battery saver setting for geolocation, pedometer/devicemotion, etc.
-- On confirm modal, update task progression every second?

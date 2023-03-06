@@ -1,9 +1,12 @@
 import { useFocusEffect } from "@react-navigation/native";
-import {useCallback, useEffect, useRef, useState } from "react";
+import {useCallback, useContext, useEffect, useRef, useState } from "react";
 import { StyleSheet, Text, View } from "react-native"
+import { Settings } from "../config/Config";
 import { vh, vw } from "../config/Toolbox";
+import { UserDataContext } from "../config/UserDataManager";
 
 const ProgressBar = (props) => {
+	const userContext = useContext( UserDataContext );
 	const [progress, setProgress] = useState({
 		current: props.getCurrent(),
 		readout: props.getReadout()
@@ -18,12 +21,13 @@ const ProgressBar = (props) => {
 			if (int != null)
 				clearInterval( int );
 			
+			const timeout = Settings.sensorUpdateIntervals[ userContext.batterySaverStatus ].taskCompletionCheck;
 			const interval = setInterval(() => {
 				setProgress({
 					current: props.getCurrent(),
 					readout: props.getReadout()
 				});
-			}, 1000);
+			}, timeout);
 			setInt( interval );
 			
 			return () => {
