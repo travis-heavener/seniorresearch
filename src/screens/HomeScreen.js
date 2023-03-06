@@ -90,8 +90,7 @@ const HomeScreen = (props) => {
 
 						// console.log("Delta: " + delta + "\t Distance: " + dist.toFixed(3) + "\t Acc: " + current.acc.toFixed(3));
 						// console.warn("Delta: " + delta + "\t Distance: " + dist.toFixed(3) + "\t Acc: " + current.acc.toFixed(3));
-						// if (dist > delta)
-							userContext.metadata.addDistance(dist);
+						userContext.metadata.addDistance(dist);
 
 						// overwrite last pos and set current
 						userContext.metadata.GPS.updatePos(current);
@@ -108,7 +107,7 @@ const HomeScreen = (props) => {
                             userContext.cardSlots.daily  ?.runCompletionChecks(userContext);
                             userContext.cardSlots.custom1?.runCompletionChecks(userContext);
                             userContext.cardSlots.custom2?.runCompletionChecks(userContext);
-                            
+
                             // export data
                             exportUserData(userContext);
                         }, Settings.sensorUpdateIntervals[ userContext.batterySaverStatus ].taskCompletionCheck

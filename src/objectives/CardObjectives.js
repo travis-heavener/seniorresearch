@@ -70,12 +70,12 @@ export class DistanceObjective extends CardObjective {
         };
     }
 
-    getRemaining(userContext) {
+    getStatus(userContext) {
         return this.distanceGoal - this.savedDistanceRemaining - this.startingDistance + userContext.metadata.distance;
     }
 
     getStatusString(userContext) {
-        return (this.getRemaining(userContext)/1000).toFixed(2) + " km";
+        return (this.getStatus(userContext)/1000).toFixed(2) + " km";
     }
 
     exportToDisk(userContext) {
@@ -84,7 +84,7 @@ export class DistanceObjective extends CardObjective {
 
             // class specifics
             distanceGoal: this.distanceGoal,
-            distanceRemaining: this.distanceGoal - (userContext.metadata.distance - this.startingDistance),
+            distanceRemaining: this.savedDistanceRemaining - (userContext.metadata.distance - this.startingDistance),
             isCompleted: this.completionCheck(userContext)
         };
     }
@@ -125,12 +125,12 @@ export class StepsObjective extends CardObjective {
         };
     }
 
-    getRemaining(userContext) {
+    getStatus(userContext) {
         return this.stepGoal - this.savedStepsRemaining - this.startingSteps + userContext.metadata.steps;
     }
 
     getStatusString(userContext) {
-        return this.getRemaining(userContext) + " steps";
+        return this.getStatus(userContext) + " steps";
     }
 
     exportToDisk(userContext) {

@@ -1,18 +1,46 @@
+import { useFocusEffect } from "@react-navigation/native";
+import {useCallback, useEffect, useRef, useState } from "react";
 import { StyleSheet, Text, View } from "react-native"
 import { vh, vw } from "../config/Toolbox";
 
 const ProgressBar = (props) => {
-    const {max, min, current} = props;
-    let percentage = current / (max - min) * 100; // 0 being at min & 100 being at max
+	const [progress, setProgress] = useState({
+		current: props.getCurrent(),
+		readout: props.getReadout()
+	});
+
+	const [int, setInt] = useState(null);
+	const intRef = useRef();
+	intRef.current = int;
+	
+	useEffect(
+		() => {
+			if (int != null)
+				clearInterval( int );
+			
+			const interval = setInterval(() => {
+				setProgress({
+					current: props.getCurrent(),
+					readout: props.getReadout()
+				});
+			}, 1000);
+			setInt( interval );
+			
+			return () => {
+				clearInterval( intRef.current );
+				setInt( null );
+			}
+		}, [props]
+	);
+
+    const {max, min} = props;
+    let percentage = progress.current / (max - min) * 100; // 0 being at min & 100 being at max
     percentage = Math.max(0, Math.min(percentage, 100)); // clamp between 0 and 100
 
     return (
         <View style={[styles.top, {width: props.width, height: props.height}]}>
             <View style={[styles.blob, {transform: [{translateX: -(100-percentage)/100*props.width}]}]}>
-                {
-                    (props.readout) ?
-                        <Text numberOfLines={1} adjustsFontSizeToFit={true} style={styles.readout}>{ props.readout }</Text> : null
-                }
+                <Text numberOfLines={1} adjustsFontSizeToFit={true} style={styles.readout}>{ progress.readout }</Text>
             </View>
         </View>
     )

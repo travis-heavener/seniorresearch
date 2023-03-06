@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Modal, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Themes } from "../config/Config";
 import { vh, vw } from "../config/Toolbox";
@@ -8,6 +8,9 @@ import ProgressBar from "./ProgressBar";
 const ObjectiveConfirmModal = (props) => {
     const userContext = useContext( UserDataContext );
     const THEME = Themes[ userContext.selectedTheme ].cardDisplay;
+
+	// prevent showing anything if there isn't an objective
+	if (!props.isModalVisible) return null;
 
     const confirm = () => {
         if (props.reject == null)
@@ -23,16 +26,17 @@ const ObjectiveConfirmModal = (props) => {
             props.reject();
     };
 
-    let objText = props.obj?.toString() ?? "Text"; // the "toString" has the toTitleCase called within (see CardObjective.js)
-    if (props.obj?.constructor.name == "ExploreObjective")
+    let objText = props.obj.toString() ?? "Text"; // the "toString" has the toTitleCase called within (see CardObjective.js)
+    if (props.obj.constructor.name == "ExploreObjective")
         objText = "Find a(n) " + objText;
     else
         objText = "Walk " + objText;
 
     // for progress bar
-    const progressMax = props.obj?.distanceGoal ?? props.obj?.stepGoal;
-    const progressCurrent = props.obj?.getRemaining ? props.obj?.getRemaining(userContext) : null;
-    const progressReadout = props.obj?.getStatusString ? props.obj?.getStatusString(userContext) : null;
+    const progressMax = props.obj.distanceGoal ?? props.obj.stepGoal;
+
+	const getProgressCurrent = () => props.obj.getStatus ? props.obj.getStatus(userContext) : null;
+	const getProgressReadout = () => props.obj.getStatusString ? props.obj.getStatusString(userContext) : null;
 
     return (
         <Modal animationType="none" onRequestClose={reject} transparent={true} visible={props.isModalVisible}>
@@ -45,10 +49,11 @@ const ObjectiveConfirmModal = (props) => {
                 </View>
                 <View style={[styles.buttonContainer, {borderColor: THEME.modalBorder}]}>
                     {
-                        props.obj?.triggerPlayerCompletion ? ([
+                        props.obj.triggerPlayerCompletion ? ([
+							// confirm & reject buttons
                             <TouchableOpacity key={1} onPress={confirm} activeOpacity={0.95} disabled={props.obj?.isCompleted} 
                                 style={[styles.button, {borderColor: THEME.modalBorder,
-                                    backgroundColor: ( props.obj?.isCompleted ) ? "#888" : THEME.modalConfirm}]}
+                                    backgroundColor: ( props.obj.isCompleted ) ? "#888" : THEME.modalConfirm}]}
                             >
                                 <Text adjustsFontSizeToFit={true} style={styles.buttonText}>Mark Done</Text>
                             </TouchableOpacity>,
@@ -60,8 +65,8 @@ const ObjectiveConfirmModal = (props) => {
                         ]) : (
                             // progress bar
                             <ProgressBar
-                                width={vw(55)} height="60%" readout={progressReadout}
-                                max={progressMax} min={0} current={progressCurrent}
+                                width={vw(55)} height="60%" getReadout={getProgressReadout}
+                                max={progressMax} min={0} getCurrent={getProgressCurrent}
                             />
                         )
                     }

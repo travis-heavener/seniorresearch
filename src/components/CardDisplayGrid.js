@@ -1,5 +1,5 @@
-import { useFocusEffect, useIsFocused } from "@react-navigation/native";
-import { useCallback, useContext, useState } from "react";
+import { useIsFocused } from "@react-navigation/native";
+import { useContext, useState } from "react";
 import { Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Themes } from "../config/Config";
 import { vw, vh } from "../config/Toolbox";
