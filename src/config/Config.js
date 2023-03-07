@@ -132,7 +132,7 @@ const checkPerm = perm => {
     return PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS[perm]);
 };
 
-export const SettingsContext = React.createContext({
+export const PermsContext = React.createContext({
     refreshPermissions: async function() {
         for (let perm in this.permissions) {
             if (this.permissions.hasOwnProperty(perm)) {

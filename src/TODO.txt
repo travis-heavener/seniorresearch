@@ -16,3 +16,4 @@
 - Advanced battery saver??
   - Control various settings for each battery-saver-controlled part
     - Ex. battery saver setting for geolocation, pedometer/devicemotion, etc.
+- Fix user profile progress bar not updating (maybe see how the card display grid remounts????)

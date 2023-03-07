@@ -12,7 +12,7 @@ import CompassWidget from "../components/CompassWidget";
 import CardDisplayGrid from "../components/CardDisplayGrid";
 import ProfileScreenModal from "./ProfileScreenModal";
 
-import { Settings, SettingsContext, Themes } from "../config/Config";
+import { Settings, PermsContext, Themes } from "../config/Config";
 import { exportUserData, UserDataContext } from "../config/UserDataManager";
 import { latLongDist, vh, vw } from "../config/Toolbox";
 import { BlurView } from "@react-native-community/blur";
@@ -20,12 +20,16 @@ import BackgroundGradient from "../components/BackgroundGradient";
 
 const HomeScreen = (props) => {
     const userContext = useContext( UserDataContext );
-    const settingsContext = useContext( SettingsContext );
+    const permsContext = useContext( PermsContext );
     const THEME = Themes[ userContext.selectedTheme ].home; // select theme
 
     // profile modal visibility
     const [isProfileVisible, setProfileVisibility] = useState(false);
     const closeProfileModal = () => setProfileVisibility(false);
+
+    // remount (USE SPARINGLY)
+    const [__remountStatus, __setRemountStatus] = useState(0);
+    const remount = () => __setRemountStatus(Math.random());
     
     const [hasStarted, setHasStarted] = useState(false);
 
@@ -35,7 +39,7 @@ const HomeScreen = (props) => {
             if (hasStarted) return;
 
             // request permissions
-            let perms = await settingsContext.requestPermissions();
+            let perms = await permsContext.requestPermissions();
 
             // start pedometer
             if (perms.ACTIVITY_RECOGNITION) {
@@ -59,10 +63,10 @@ const HomeScreen = (props) => {
     useFocusEffect(
         useCallback(
             () => {
-				if (!settingsContext.hasRequestedPermissions) return () => {}; // prevent trying to listen before permissions granted
+				if (!permsContext.hasRequestedPermissions) return () => {}; // prevent trying to listen before permissions granted
 
 				// prevent trying to listen without permissions after requesting
-				if (!settingsContext.permissions.ACCESS_COARSE_LOCATION || !settingsContext.permissions.ACCESS_FINE_LOCATION) {
+				if (!permsContext.permissions.ACCESS_COARSE_LOCATION || !permsContext.permissions.ACCESS_FINE_LOCATION) {
 					console.log("Missing location permissions");
 					return () => {};
 				}
@@ -104,16 +108,16 @@ const HomeScreen = (props) => {
                     setInterval(
                         function() {
                             // check cards
-                            userContext.cardSlots.daily  ?.runCompletionChecks(userContext);
-                            userContext.cardSlots.custom1?.runCompletionChecks(userContext);
-                            userContext.cardSlots.custom2?.runCompletionChecks(userContext);
-                            
-                            // re-render card display
-                            // console.log("re-render")
+                            for (let card of Object.values(userContext.cardSlots))
+                                if (card) // if not null, run checks
+                                    card.runCompletionChecks(userContext);
 
                             // for lazy developers ONLY
                             userContext.metadata.addDistance(250);
                             userContext.metadata.setSteps(userContext.metadata.steps + 1000);
+
+                            // re-render card display
+                            remount();
 
                             // export data
                             exportUserData(userContext);
@@ -127,10 +131,10 @@ const HomeScreen = (props) => {
                 };
 
                 return () => { subscription && removeListeners() };
-            }, [props, userContext.batterySaverStatus, settingsContext.hasRequestedPermissions]
+            }, [props, userContext.batterySaverStatus, permsContext.hasRequestedPermissions]
         )
     );
-
+    
     // initialize devicemotion readings (every time the screen is FOCUSED)
     useFocusEffect(
         useCallback(
@@ -214,7 +218,7 @@ const HomeScreen = (props) => {
             </View>
 
             <View style={styles.body}>
-                <CardDisplayGrid />
+                <CardDisplayGrid remountStatus={__remountStatus} />
             </View>
 
             {/* <Text>Steps: {userContext.metadata.steps}</Text>

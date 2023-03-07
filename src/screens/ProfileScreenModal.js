@@ -76,7 +76,7 @@ const ProfileScreenModal = (props) => {
 
     // xp stuff
     const getCurrentXP = () => userContext.stats.xp;
-    const getReadoutXP = () => (Settings.XP_CONSTANTS.calculateLevelMax( userContext.stats.level ) - userContext.stats.xp) + " XP";
+    const getReadoutXP = () => (Settings.XP_CONSTANTS.calculateLevelMax( userContext.stats.level ) - userContext.stats.xp) + " XP left";
 
     console.log(userContext.stats.xp, userContext.stats.level);
 
@@ -101,7 +101,7 @@ const ProfileScreenModal = (props) => {
                     <View style={styles.profileImage} />
 
                     <View style={styles.userInfoText}>
-                        <Text style={styles.userName}>(99) My Name</Text>
+                        <Text style={styles.userName}>({ userContext.stats.level }) My Name</Text>
                         {/* progress bar */}
                         <ProgressBar
                             width={vw(43)} height="50%"

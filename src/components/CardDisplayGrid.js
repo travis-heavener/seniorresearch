@@ -1,5 +1,5 @@
 import { useIsFocused } from "@react-navigation/native";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Themes } from "../config/Config";
 import { vw, vh } from "../config/Toolbox";
@@ -23,6 +23,9 @@ const CardDisplayGrid = (props) => {
     
     // triggers a remount every time the screen is refocused
     useIsFocused();
+
+    // triggers a remount every time it's told by props
+    useEffect(remount, [props.remountStatus]);
 
     // card selection modal
     const selectCard = () => setModalVisibility(true);
