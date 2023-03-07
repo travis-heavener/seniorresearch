@@ -1,11 +1,14 @@
 import { useCallback, useContext, useEffect, useRef } from "react";
 import { Animated, Easing, Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import GestureRecognizer from "react-native-swipe-gestures";
-import { Themes } from "../config/Config";
+import { Settings, Themes } from "../config/Config";
 import { formatCommas, vh, vw } from "../config/Toolbox";
 import { UserDataContext } from "../config/UserDataManager";
 
 import { GestureHandlerRootView, Swipeable } from "react-native-gesture-handler";
+import ProgressBar from "../components/ProgressBar";
+
+const CLOSE_TIMEOUT = 90; // 90 ms for closing animation
 
 const ProfileScreenModal = (props) => {
     const userContext = useContext( UserDataContext );
@@ -26,14 +29,14 @@ const ProfileScreenModal = (props) => {
         }, [props.isModalVisible]
     );
 
-	const queueClose = (ms) => {
+	const queueClose = () => {
 		Animated.timing(slideAnim, {
 			toValue: 0,
-			duration: ms,
+			duration: CLOSE_TIMEOUT,
 			easing: Easing.out( Easing.sin ),
 			useNativeDriver: true
 		}).start();
-		setTimeout(close, ms); // queue the close after the animation
+		setTimeout(close, CLOSE_TIMEOUT); // queue the close after the animation
 	};
 
     // animation
@@ -71,13 +74,19 @@ const ProfileScreenModal = (props) => {
         )
     };
 
+    // xp stuff
+    const getCurrentXP = () => userContext.stats.xp;
+    const getReadoutXP = () => (Settings.XP_CONSTANTS.calculateLevelMax( userContext.stats.level ) - userContext.stats.xp) + " XP";
+
+    console.log(userContext.stats.xp, userContext.stats.level);
+
     return (
 	<GestureRecognizer onSwipe={(name, state) => {
 		// this basically allows swipes less than 45 degrees in either direction of left swipe directions
 		// because diagonal swipes aren't supported. this works beacuse algebra. cool.
 		if (Math.abs(state.dy / state.dx) < 1 && state.dx < 0)
-			queueClose(90);
-	}} onSwipeLeft={() => queueClose(90)}>
+			queueClose();
+	}} onSwipeLeft={() => queueClose()}>
 			<Modal
 				animationType="none"
 				transparent={true}
@@ -94,6 +103,11 @@ const ProfileScreenModal = (props) => {
                     <View style={styles.userInfoText}>
                         <Text style={styles.userName}>(99) My Name</Text>
                         {/* progress bar */}
+                        <ProgressBar
+                            width={vw(43)} height="50%"
+                            min={0} max={Settings.XP_CONSTANTS.calculateLevelMax(userContext.stats.level)}
+                            getCurrent={getCurrentXP} getReadout={getReadoutXP}
+                        />
                     </View>
                 </View>
                 <View style={styles.statsView}>

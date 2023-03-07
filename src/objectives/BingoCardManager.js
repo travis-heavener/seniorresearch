@@ -1,5 +1,6 @@
 import { DistanceObjective, ExploreObjective, FreeObjective, StepsObjective } from "./CardObjectives";
 import { generateSeed, Random } from "../config/Toolbox";
+import { Settings } from "../config/Config";
 
 export const DIFFICULTIES = {
     EASY: 1,
@@ -8,30 +9,75 @@ export const DIFFICULTIES = {
 };
 
 export class BingoCard {
-    constructor(objectivesArray, difficulty, seed) {
+    constructor(objectivesArray, difficulty, seed, hasAwardedCompletion=false) {
         this.grid = objectivesArray;
         this.difficulty = difficulty;
+
+        this.hasAwardedCompletion = hasAwardedCompletion; // true once board is completed and has awarded the user
 
         this.randomSeed = seed;
         
         this.runCompletionChecks = function(userContext) {
+            const { XP_CONSTANTS } = Settings;
+            const savedBingos = JSON.parse( JSON.stringify( this.__bingos ) );
+
+            // check cards for completion
             for (let card of this.grid.flat())
                 if (card.completionCheck)
                     card.completionCheck(userContext);
             
-            this.checkBingos(); // record which rows/cols/diags have bingos
+            const newBingos = this.checkBingos(); // record which rows/cols/diags have bingos
+
+            // handle if a new bingo appears
+            const handleNewBingo = () => {
+                // award xp
+                userContext.stats.addXP( !this.hasFirstBingo ? XP_CONSTANTS.firstBingo : XP_CONSTANTS.genericBingo );
+                
+                // save to user stats
+                // handle if card is completed
+                if ( this.checkIsCompleted() && !this.hasAwardedCompletion ) {
+                    userContext.stats.addXP( XP_CONSTANTS.completion );
+                    this.hasAwardedCompletion = true;
+                    console.log("Board completion!");
+                }
+
+                // make sure this card knows there's been a bingo
+                this.hasFirstBingo = true;
+            };
+
+            for (let r = 0; r < 5; r++)
+                if (savedBingos.rows[r] != newBingos.rows[r] && newBingos.rows[r]) // new row bingo
+                    handleNewBingo();
+            
+            for (let c = 0; c < 5; c++)
+                if (savedBingos.cols[c] != newBingos.cols[c] && newBingos.cols[c]) // new column bingo
+                    handleNewBingo();
+
+            // new top left down diagonal bingo
+            if (savedBingos.topLeftDownDiag != newBingos.topLeftDownDiag && newBingos.topLeftDownDiag)
+                handleNewBingo();
+            
+            // new top right down diagonal bingo
+            if (savedBingos.topRightDownDiag != newBingos.topRightDownDiag && newBingos.topRightDownDiag)
+                handleNewBingo();
         }
 
-        this.bingos = {
+        this.__bingos = {
             rows: [false, false, false, false, false],
             cols: [false, false, false, false, false],
             topLeftDownDiag: false,
-            topRightDownDiag: false
+            topRightDownDiag: false,
+            hasFirstBingo: false // true once one bingo has been completed
         };
     }
 
     exportToDisk(userContext) {
-        let cardData = {grid: [], difficulty: this.difficulty, randomSeed: this.randomSeed};
+        let cardData = {
+            grid: [],
+            difficulty: this.difficulty,
+            randomSeed: this.randomSeed,
+            hasAwardedCompletion: this.hasAwardedCompletion
+        };
         
         for (let r = 0; r < 5; r++) {
             cardData.grid.push([]);
@@ -57,6 +103,14 @@ export class BingoCard {
         str += "\n]";
     }
 
+    checkIsCompleted() {
+        for (let obj of this.grid.flat())
+            if (!obj.isCompleted) return false;
+        
+        // otherwise, return true
+        return true;
+    }
+
     checkBingos() {
         let completionGrid = [[], [], [], [], []];
         for (let r = 0; r < 5; r++)
@@ -64,45 +118,45 @@ export class BingoCard {
                 completionGrid[r].push(this.grid[r][c].isCompleted);
 
         // check diagonals
-        if (!this.bingos.topLeftDownDiag) {
+        if (!this.__bingos.topLeftDownDiag) {
             let topLeftDownDiag = true;
             for (let i = 0; i < 5 && topLeftDownDiag; i++)
                 if (!completionGrid[i][i])
                     topLeftDownDiag = false; // if tile is false, skip diagonal checking
-            this.bingos.topLeftDownDiag = topLeftDownDiag;
+            this.__bingos.topLeftDownDiag = topLeftDownDiag;
         }
 
-        if (!this.bingos.topRightDownDiag) {
+        if (!this.__bingos.topRightDownDiag) {
             let topRightDownDiag = true;
             for (let i = 0; i < 5 && topRightDownDiag; i++)
                 if (!completionGrid[i][4-i])
                     topRightDownDiag = false; // if tile is false, skip diagonal checking
-            this.bingos.topRightDownDiag = topRightDownDiag;
+            this.__bingos.topRightDownDiag = topRightDownDiag;
         }
 
         // check horizontals
         for (let r = 0; r < 5; r++) {
-            if (this.bingos.rows[r]) continue; // skip row if this has a bingo
+            if (this.__bingos.rows[r]) continue; // skip row if this has a bingo
 
             let rowHasBingo = true;
             for (let c = 0; c < 5 && rowHasBingo; c++) {
                 if (!completionGrid[r][c]) rowHasBingo = false;
             }
-            this.bingos.rows[r] = rowHasBingo;
+            this.__bingos.rows[r] = rowHasBingo;
         }
 
         // check verticals
         for (let c = 0; c < 5; c++) {
-            if (this.bingos.cols[c]) continue; // skip column if this has a bingo
+            if (this.__bingos.cols[c]) continue; // skip column if this has a bingo
             
             let colHasBingo = true;
             for (let r = 0; r < 5 && colHasBingo; r++) {
                 if (!completionGrid[r][c]) colHasBingo = false;
             }
-            this.bingos.cols[c] = colHasBingo;
+            this.__bingos.cols[c] = colHasBingo;
         }
 
-        return this.bingos;
+        return this.__bingos;
     }
 
 	getCompletionPercent() {

@@ -36,7 +36,24 @@ export const UserDataContext = React.createContext({
     },
 
     stats: {
-        userXP: 0,
+        xp: 0, // xp for user's level (not total & cumulative)
+        setXP: function(n) {  this.xp = n;  },
+        addXP: function(n) {
+            this.xp += n;
+            while (this.xp > Settings.XP_CONSTANTS.calculateLevelMax(this.level)) {
+                this.xp -= Settings.XP_CONSTANTS.calculateLevelMax(this.level);
+                this.level++;
+            }
+        },
+        level: 1, // user's level
+        setLevel: function(n) {  this.level = n;  },
+        getTotalXP: function() {
+            let total = this.xp;
+            for (let i = 1; i <= this.level; i++)
+                total += Settings.XP_CONSTANTS.calculateLevelMax(i);
+            
+            return total;
+        },
         lifetimeBingos: 0,
         lifetimeCards: 0,
         
@@ -127,6 +144,9 @@ export const loadUserData = async (userContext) => {
     userContext.stats.setLifetimeSteps(data.metadata.steps);
     userContext.stats.setLifetimeDistance(data.metadata.distance);
 
+    userContext.stats.setXP(data.stats.xp);
+    userContext.stats.setLevel(data.stats.level);
+
     // load card data
     for (let cardName in data.cardsData) {
         let card = data.cardsData[cardName];
@@ -146,7 +166,9 @@ export const loadUserData = async (userContext) => {
             }
         }
 
-        userContext.cardSlots[cardName] = new BingoCard(grid, card.difficulty, card.randomSeed);
+        const cardObj = new BingoCard(grid, card.difficulty, card.randomSeed, card.hasAwardedCompletion);
+        cardObj.checkBingos(); // fills the __bingos object so that it doesn't automatically award user free xp on loading
+        userContext.cardSlots[cardName] = cardObj;
     }
 };
 
@@ -154,9 +176,11 @@ export const exportUserData = async (userContext) => {
     // console.log("Saving user data...");
     // ignore certain properties
     const keysWhitelist = [
-        "metadata", "steps", "distance",
-        "selectedTheme", "selectedCard", "batterySaverStatus",
-        "stats", "userXP", "lifetimeBingos", "lifetimeCards"
+        "metadata",
+            "steps", "distance",
+        "stats",
+            "xp", "level", "lifetimeBingos", "lifetimeCards",
+        "selectedTheme", "selectedCard", "batterySaverStatus"
     ];
 
     // use JSON.stringify(obj, whitelistedKeysArr) as it neglects including functions automatically
@@ -213,9 +237,13 @@ export const clearUserData = async (userContext) => {
     userContext.setSelectedTheme("base");
     userContext.setBatterySaverStatus(Settings.BATTERY_SAVER_OFF);
 
+    userContext.stats.setXP( 0 );
+    userContext.stats.setLevel( 1 );
+
     userContext.cardSlots.daily = null;
     userContext.cardSlots.custom1 = null;
     userContext.cardSlots.custom2 = null;
+    userContext.selectedCard = null;
 
     console.log("User data cleared!");
 };

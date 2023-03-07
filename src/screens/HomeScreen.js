@@ -107,6 +107,13 @@ const HomeScreen = (props) => {
                             userContext.cardSlots.daily  ?.runCompletionChecks(userContext);
                             userContext.cardSlots.custom1?.runCompletionChecks(userContext);
                             userContext.cardSlots.custom2?.runCompletionChecks(userContext);
+                            
+                            // re-render card display
+                            // console.log("re-render")
+
+                            // for lazy developers ONLY
+                            userContext.metadata.addDistance(250);
+                            userContext.metadata.setSteps(userContext.metadata.steps + 1000);
 
                             // export data
                             exportUserData(userContext);

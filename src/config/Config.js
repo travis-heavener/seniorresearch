@@ -31,6 +31,16 @@ export const Settings = {
             taskCompletionCheck: 5000 // how often to check for objective completion, in ms
         }
     },
+    XP_CONSTANTS: {
+        firstBingo: 15,
+        genericBingo: 10,
+        completion: 50,
+        levelBase: 25, // base xp while at level 1 (to get to level 2)
+        levelIncrement: 25, // xp increment per level
+        calculateLevelMax: function(level) {
+            return this.levelBase + level*this.levelIncrement;
+        }
+    },
 	LOCATION_NOISE_THRESH: 25, // in meters, widest accuracy radius of geolocation calls, limits noise
     MAX_GRADIENT_SPEED: 3, // max speed recognized by gradient before it maxes the color
     BATTERY_SAVER_OFF: "batterySaverOff",

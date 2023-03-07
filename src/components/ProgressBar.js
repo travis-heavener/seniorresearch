@@ -1,5 +1,4 @@
-import { useFocusEffect } from "@react-navigation/native";
-import {useCallback, useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { StyleSheet, Text, View } from "react-native"
 import { Settings } from "../config/Config";
 import { vh, vw } from "../config/Toolbox";
