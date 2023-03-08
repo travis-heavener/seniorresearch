@@ -100,10 +100,21 @@ const ProfileScreenModal = (props) => {
                     <View style={styles.profileImage} />
 
                     <View style={styles.userInfoText}>
-                        <Text style={styles.userName}>({ userContext.stats.level }) My Name</Text>
+                        <View style={styles.userNameContainer}>
+                            <View style={styles.userLevelContainer}>
+                                <Text
+                                    style={styles.userLevel}
+                                    adjustsFontSizeToFit={true}
+                                    numberOfLines={1}
+                                >
+                                        { userContext.stats.level }
+                                </Text>
+                            </View>
+                            <Text style={styles.userName}>My Name</Text>
+                        </View>
                         {/* progress bar */}
                         <ProgressBar
-                            width={vw(43)} height="50%"
+                            width={vw(43)} height="33%"
                             min={0} max={maxXP}
                             current={currentXP} readout={readoutXP}
                         />
@@ -169,10 +180,34 @@ const styles = StyleSheet.create({
         flex: 1, // fill remaining space
         marginLeft: "5%",
         marginVertical: "5%",
-        backgroundColor: "#ff5"
+        justifyContent: "space-evenly"
+    },
+    userNameContainer: {
+        height: vh(4.5),
+        flexDirection: "row"
     },
     userName: {
-        fontSize: vh(3.125)
+        marginLeft: "1.25%",
+        fontSize: vh(3),
+        fontWeight: "600",
+        textAlignVertical: "center"
+    },
+    userLevelContainer: {
+        height: vh(4.125),
+        aspectRatio: 1,
+        alignSelf: "center",
+        borderRadius: vw(100),
+        borderWidth: vw(0.425),
+        backgroundColor: "gold"
+    },
+    userLevel: {
+        flex: 1,
+        borderRadius: vw(100),
+        fontSize: vh(1.75),
+        fontWeight: "600",
+        color: "#222",
+        textAlign: "center",
+        textAlignVertical: "center"
     },
     xpBarSubtitle: {
         textAlign: "right",
