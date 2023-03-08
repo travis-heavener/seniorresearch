@@ -75,10 +75,8 @@ const ProfileScreenModal = (props) => {
     };
 
     // xp stuff
-    const getCurrentXP = () => userContext.stats.xp;
-    const getReadoutXP = () => (Settings.XP_CONSTANTS.calculateLevelMax( userContext.stats.level ) - userContext.stats.xp) + " XP left";
-
-    console.log(userContext.stats.xp, userContext.stats.level);
+    const currentXP = userContext.stats.xp;
+    const readoutXP = (Settings.XP_CONSTANTS.calculateLevelMax( userContext.stats.level ) - currentXP) + " XP left";
 
     return (
 	<GestureRecognizer onSwipe={(name, state) => {
@@ -106,7 +104,7 @@ const ProfileScreenModal = (props) => {
                         <ProgressBar
                             width={vw(43)} height="50%"
                             min={0} max={Settings.XP_CONSTANTS.calculateLevelMax(userContext.stats.level)}
-                            getCurrent={getCurrentXP} getReadout={getReadoutXP}
+                            current={currentXP} readout={readoutXP}
                         />
                     </View>
                 </View>

@@ -26,17 +26,13 @@ const ObjectiveConfirmModal = (props) => {
             props.reject();
     };
 
-    let objText = props.obj.toString() ?? "Text"; // the "toString" has the toTitleCase called within (see CardObjective.js)
-    if (props.obj.constructor.name == "ExploreObjective")
-        objText = "Find a(n) " + objText;
-    else
-        objText = "Walk " + objText;
+    let objText = (props.obj.constructor.name == "ExploreObjective" ? "Find a(n) " : "Walk ");
+    objText += props.obj.toString(); // the "toString" has the toTitleCase called within (see CardObjective.js)
 
     // for progress bar
     const progressMax = props.obj.distanceGoal ?? props.obj.stepGoal;
-
-	const getProgressCurrent = () => props.obj.getStatus ? props.obj.getStatus(userContext) : null;
-	const getProgressReadout = () => props.obj.getStatusString ? props.obj.getStatusString(userContext) : null;
+	const progressCurrent = props.obj.getStatus ? props.obj.getStatus(userContext) : null;
+	const progressReadout = props.obj.getStatusString ? props.obj.getStatusString(userContext) : null;
 
     return (
         <Modal animationType="none" onRequestClose={reject} transparent={true} visible={props.isModalVisible}>
@@ -65,8 +61,8 @@ const ObjectiveConfirmModal = (props) => {
                         ]) : (
                             // progress bar
                             <ProgressBar
-                                width={vw(55)} height="60%" getReadout={getProgressReadout}
-                                max={progressMax} min={0} getCurrent={getProgressCurrent}
+                                width={vw(55)} height="60%" readout={progressReadout}
+                                max={progressMax} min={0} current={progressCurrent}
                             />
                         )
                     }
