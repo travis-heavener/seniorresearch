@@ -12,7 +12,8 @@ import TasksScreen from "./src/screens/TasksScreen";
 import { loadUserData, UserDataContext } from "./src/config/UserDataManager";
 
 import React from "react";
-import { Image } from "react-native";
+import { Easing, Image } from "react-native";
+import ProfileScreenModal from "./src/screens/ProfileScreenModal";
 const LOADING_IMG = require("./assets/splash.png");
 
 const Stack = createStackNavigator();
@@ -20,7 +21,24 @@ const Stack = createStackNavigator();
 const opts = {
     headerShown: false,
     gestureEnabled: true,
-    gestureResponseDistance: 1000
+    gestureResponseDistance: 1000,
+    gestureVelocityImpact: 0.4,
+    transitionSpec: {
+        open: {
+            animation: "timing",
+            config: {
+                duration: 200,
+                easing: Easing.out(Easing.ease)
+            }
+        },
+        close: {
+            animation: "timing",
+            config: {
+                duration: 150,
+                easing: Easing.out(Easing.ease)
+            }
+        }
+    }
 };
 
 const CreateStack = () => (
@@ -36,6 +54,10 @@ const CreateStack = () => (
                 ...opts, cardStyleInterpolator: fromVert, gestureDirection: "vertical"
             }}
         />
+        {/* <Stack.Screen name="Profile" component={ProfileScreenModal} options={{
+            ...opts, cardStyleInterpolator: fromHoriz, gestureDirection: "horizontal-inverted", presentation: "transparentModal"
+            }}
+        /> */}
     </Stack.Navigator>
 );
 
