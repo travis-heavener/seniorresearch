@@ -1,16 +1,32 @@
-import { StyleSheet, Text, View } from "react-native"
+import { useEffect, useRef } from "react";
+import { StyleSheet, Text, View, Animated } from "react-native"
 import { vh, vw } from "../config/Toolbox";
 
 const ProgressBar = (props) => {
-    const {max, min, current, readout} = props;
+    const {max, min, current} = props;
     let percentage = current / (max - min) * 100; // 0 being at min & 100 being at max
     percentage = Math.max(0, Math.min(percentage, 100)); // clamp between 0 and 100
+    
+    // runs on a re-render
+    const percentageAnim = useRef(new Animated.Value(0)).current;
+    const xTranslation = percentageAnim.interpolate({
+        inputRange: [0, 100],
+        outputRange: [-props.width, 0]
+    });
+
+    useEffect(() => {
+        Animated.timing(percentageAnim, {
+            toValue: percentage,
+            duration: 250,
+            useNativeDriver: true
+        }).start();
+    }, [props]);
 
     return (
         <View style={[styles.top, {width: props.width, height: props.height}]}>
-            <View style={[styles.blob, {transform: [{translateX: -(100-percentage)/100*props.width}]}]}>
-                <Text numberOfLines={1} adjustsFontSizeToFit={true} style={styles.readout}>{ readout }</Text>
-            </View>
+            <Animated.View style={[styles.blob, {transform: [{translateX: xTranslation}]}]}>
+                <Text numberOfLines={1} adjustsFontSizeToFit={true} style={styles.readout}>{ props.readout }</Text>
+            </Animated.View>
         </View>
     )
 };

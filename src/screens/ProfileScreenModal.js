@@ -76,7 +76,8 @@ const ProfileScreenModal = (props) => {
 
     // xp stuff
     const currentXP = userContext.stats.xp;
-    const readoutXP = (Settings.XP_CONSTANTS.calculateLevelMax( userContext.stats.level ) - currentXP) + " XP left";
+    const readoutXP = currentXP + " XP";
+    const maxXP = Settings.XP_CONSTANTS.calculateLevelMax(userContext.stats.level);
 
     return (
 	<GestureRecognizer onSwipe={(name, state) => {
@@ -103,9 +104,10 @@ const ProfileScreenModal = (props) => {
                         {/* progress bar */}
                         <ProgressBar
                             width={vw(43)} height="50%"
-                            min={0} max={Settings.XP_CONSTANTS.calculateLevelMax(userContext.stats.level)}
+                            min={0} max={maxXP}
                             current={currentXP} readout={readoutXP}
                         />
+                        <Text style={styles.xpBarSubtitle}>{maxXP} XP</Text>
                     </View>
                 </View>
                 <View style={styles.statsView}>
@@ -171,6 +173,11 @@ const styles = StyleSheet.create({
     },
     userName: {
         fontSize: vh(3.125)
+    },
+    xpBarSubtitle: {
+        textAlign: "right",
+        fontSize: vh(1.5),
+        fontWeight: "600"
     },
     statsView: {
         flex: 59, // from vh(59)

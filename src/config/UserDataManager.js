@@ -40,7 +40,7 @@ export const UserDataContext = React.createContext({
         setXP: function(n) {  this.xp = n;  },
         addXP: function(n) {
             this.xp += n;
-            while (this.xp > Settings.XP_CONSTANTS.calculateLevelMax(this.level)) {
+            while (this.xp >= Settings.XP_CONSTANTS.calculateLevelMax(this.level)) {
                 this.xp -= Settings.XP_CONSTANTS.calculateLevelMax(this.level);
                 this.level++;
             }
