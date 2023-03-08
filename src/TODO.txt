@@ -16,4 +16,6 @@
 - Advanced battery saver??
   - Control various settings for each battery-saver-controlled part
     - Ex. battery saver setting for geolocation, pedometer/devicemotion, etc.
-- Fix user profile progress bar not updating (maybe see how the card display grid remounts????)
+- Fix formatting being based on raw pixel values
+  - Use relative coords (ie. vw & vh)
+    - borderWidth: 2 --> borderWidth: vw(0.1), for example
