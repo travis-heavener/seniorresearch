@@ -7,10 +7,13 @@ import { exportUserData, UserDataContext } from "../config/UserDataManager";
 // viewport height function to make life easier
 import { vw, vh } from "../config/Toolbox";
 import Checkbox from "./Checkbox";
+import ScalingText from "./ScalingText";
 
 // import images
 const MEDIA_ROOT = "../../assets/media/";
 const CARET_SRC = require(MEDIA_ROOT + "caretDown.png");
+
+const TILE_BORDER_WIDTH = 0;//vh(0.26);
 
 const TasksScreenCard = (props) => {
     const userContext = useContext( UserDataContext );
@@ -38,7 +41,6 @@ const TasksScreenCard = (props) => {
 	// Animated.View animated transition
 	// https://reactnative.dev/docs/animated
 	const heightAnim = useRef(new Animated.Value(0)).current;
-	const opacityAnim = useRef(new Animated.Value(0)).current;
 
 	useEffect(
 		() => {
@@ -85,10 +87,10 @@ const TasksScreenCard = (props) => {
                         style={[
                             styles.objectiveTile, // default styling
                             {backgroundColor: (obj.isCompleted ? THEME.checkedTile : THEME.uncheckedTile)}, // checked color
-                            (r == 0) ? {borderTopWidth: 2} : {}, (c == 0) ? {borderLeftWidth: 2} : {} // borders for top/left
+                            // (r == 0) ? {borderTopWidth: TILE_BORDER_WIDTH} : {}, (c == 0) ? {borderLeftWidth: TILE_BORDER_WIDTH} : {} // borders for top/left
                         ]}
                     >
-                        <Animated.Text style={styles.objectiveTileText}>{obj.toString()}</Animated.Text>
+                        <ScalingText maxLineLength={12}>{obj.toString()}</ScalingText>
                     </View>
                 );
             }
@@ -205,27 +207,28 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "space-evenly",
         borderColor: "#383838",
-        borderBottomWidth: 2
+        borderBottomWidth: vh(0.26)
     },
     cardGrid: {
-        height: "81%",
+        height: "82.2%", // 81% + 2x padding (0.6%)
         aspectRatio: 1.2,
-        backgroundColor: "black", // this fixes minor hitches in borders
+        padding: "0.6%",
+		backgroundColor: "black", // this fixes minor hitches in borders
+		justifyContent: "space-between",
         alignSelf: "center",
         borderColor: "black"
     },
     objectiveRow: {
-        flex: 1/5,
+        flex: 0.195,
         alignItems: "stretch",
-        flexDirection: "row"
+        flexDirection: "row",
+		justifyContent: "space-between"
     },
     objectiveTile: {
-        flex: 1/5,
+        flex: 0.195,
         borderColor: "black",
         justifyContent: "center",
-        backgroundColor: "#f7bcbc",
-        borderRightWidth: vh(.26),
-        borderBottomWidth: vh(.26)
+        backgroundColor: "#f7bcbc"
     },
     objectiveTileText: {
 		fontSize: vh(1.6),
@@ -238,7 +241,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
 		backgroundColor: "#fff7",
 		borderColor: "black",
-		borderWidth: 2,
+		borderWidth: vh(.26),
 		borderRadius: 250
     },
     selectButtonText: {
