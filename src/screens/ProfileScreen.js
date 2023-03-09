@@ -5,7 +5,6 @@ import { formatCommas, vh, vw } from "../config/Toolbox";
 import { UserDataContext } from "../config/UserDataManager";
 
 import ProgressBar from "../components/ProgressBar";
-import { BlurView } from "@react-native-community/blur";
 
 const ProfileScreen = (props) => {
     const userContext = useContext( UserDataContext );
@@ -47,7 +46,6 @@ const ProfileScreen = (props) => {
     return (
         <View style={{flex: 1}}>
             <TouchableOpacity style={styles.absolute} onPress={() => props.navigation.goBack()} activeOpacity={1} />
-            {/* <BlurView blurAmount={3} blurType="light" style={styles.absolute} /> */}
 
             {/* content itself */}
             <Animated.View style={[styles.body, {backgroundColor: THEME.body, transform: [{translateX: 0}]}]}>

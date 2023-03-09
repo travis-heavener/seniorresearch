@@ -24,8 +24,7 @@ const HomeScreen = (props) => {
     const THEME = Themes[ userContext.selectedTheme ].home; // select theme
 
     // profile modal visibility
-    const [isProfileVisible, setProfileVisibility] = useState(false);
-    const closeProfileModal = () => setProfileVisibility(false);
+    const [isBlurred, setBlurred] = useState(false);
 
     // remount (USE SPARINGLY)
     const [__remountStatus, __setRemountStatus] = useState(0);
@@ -138,79 +137,86 @@ const HomeScreen = (props) => {
     
     // initialize devicemotion readings (every time the screen is FOCUSED)
     useFocusEffect(
-        useCallback(
-            () => {
-                // save data everytime screen focuses
-                exportUserData(userContext);
+        useCallback(() => {
+			// unblur the screen
+			// setBlurred(false);
 
-                // reset device accelerometer timestamp delta
-                // reason: background would fade to green as if speed was really fast because timestamp recording would pause
-                userContext.metadata.setAccelDelta(Date.now());
-                
-                let list = DeviceMotion.addListener(data => {
-                    if (data.acceleration == undefined || data.rotation == undefined) return;
-                    userContext.metadata.setAcceleration(data.acceleration);
+			// save data everytime screen focuses
+			exportUserData(userContext);
 
-                    let { beta, gamma, alpha } = data.rotation; // beta -> x, gamma -> y, alpha -> z
-                    
-                    let accel = data.acceleration;
-                    let { accelDelta } = userContext.metadata;
+			// reset device accelerometer timestamp delta
+			// reason: background would fade to green as if speed was really fast because timestamp recording would pause
+			userContext.metadata.setAccelDelta(Date.now());
+			
+			let list = DeviceMotion.addListener(data => {
+				if (data.acceleration == undefined || data.rotation == undefined) return;
+				userContext.metadata.setAcceleration(data.acceleration);
 
-                    let delta = (Date.now() - accelDelta) / 1000;
-                    
-                    userContext.metadata.setAccelDelta(Date.now());
-                    
-                    // normalize local device coordinate axes to where device is flat and facing north
-                    let cg = Math.cos(gamma), ca = Math.cos(alpha), cb = Math.cos(beta); // to optimize calculations a bit
-                    let sg = Math.sin(gamma), sa = Math.sin(alpha), sb = Math.sin(beta); // to optimize calculations a bit
-                    
-                    let R = [
-                        [cg*sa, sb*sg*sa+cb*ca, cb*sg*sa-sb*ca],
-                        [cg*ca, sb*sg*ca-cb*sa, cb*sg*ca+sb*sa],
-                        [-sg, sb*cg, cb*cg]
-                    ];
+				let { beta, gamma, alpha } = data.rotation; // beta -> x, gamma -> y, alpha -> z
+				
+				let accel = data.acceleration;
+				let { accelDelta } = userContext.metadata;
 
-                    // multiply matrices
-                    let M = [accel.x, accel.y, accel.z];
-                    let res = {
-                        x: R[0][0]*M[0] + R[0][1]*M[1] + R[0][2]*M[2],
-                        y: R[1][0]*M[0] + R[1][1]*M[1] + R[1][2]*M[2],
-                        z: R[2][0]*M[0] + R[2][1]*M[1] + R[2][2]*M[2]
-                    };
+				let delta = (Date.now() - accelDelta) / 1000;
+				
+				userContext.metadata.setAccelDelta(Date.now());
+				
+				// normalize local device coordinate axes to where device is flat and facing north
+				let cg = Math.cos(gamma), ca = Math.cos(alpha), cb = Math.cos(beta); // to optimize calculations a bit
+				let sg = Math.sin(gamma), sa = Math.sin(alpha), sb = Math.sin(beta); // to optimize calculations a bit
+				
+				let R = [
+					[cg*sa, sb*sg*sa+cb*ca, cb*sg*sa-sb*ca],
+					[cg*ca, sb*sg*ca-cb*sa, cb*sg*ca+sb*sa],
+					[-sg, sb*cg, cb*cg]
+				];
 
-                    // with this normalized acceleration, calculate velocity
-                    const format = n => Math.sign(n) * Math.floor( Math.abs(n) * 40 ) / 40; // round off a bit
-                    const damper = delta * 0.6; // the velocity tends to get too high and not fall -- this aims to fix that
+				// multiply matrices
+				let M = [accel.x, accel.y, accel.z];
+				let res = {
+					x: R[0][0]*M[0] + R[0][1]*M[1] + R[0][2]*M[2],
+					y: R[1][0]*M[0] + R[1][1]*M[1] + R[1][2]*M[2],
+					z: R[2][0]*M[0] + R[2][1]*M[1] + R[2][2]*M[2]
+				};
 
-                    let current = userContext.metadata.velocity;
-                    let vel = {
-                        x: format(current.x*damper + res.x*delta),
-                        y: format(current.y*damper + res.y*delta),
-                        z: format(current.z*damper + res.z*delta)
-                    };
-                    
-                    userContext.metadata.setVelocity(vel);
-                });
-                return () => list.remove();
-            }, [props]
-        )
+				// with this normalized acceleration, calculate velocity
+				const format = n => Math.sign(n) * Math.floor( Math.abs(n) * 40 ) / 40; // round off a bit
+				const damper = delta * 0.6; // the velocity tends to get too high and not fall -- this aims to fix that
+
+				let current = userContext.metadata.velocity;
+				let vel = {
+					x: format(current.x*damper + res.x*delta),
+					y: format(current.y*damper + res.y*delta),
+					z: format(current.z*damper + res.z*delta)
+				};
+				
+				userContext.metadata.setVelocity(vel);
+			});
+			return () => list.remove();
+		}, [props])
     );
 
     // button functions
     const leftBtn = () => {
-        props.navigation.navigate("Profile");
-    };
-    const centerBtn = () => props.navigation.navigate("Tasks");
-    const rightBtn = () => props.navigation.navigate("Settings");
+		props.navigation.navigate("Profile");
+		// setBlurred(true);
+	};
+    const centerBtn = () => {
+		props.navigation.navigate("Tasks");
+		// setBlurred(true);
+	};
+    const rightBtn = () => {
+		props.navigation.navigate("Settings");
+		// setBlurred(true);
+	};
 
 	return (
 		<View style={styles.top}>
             <BackgroundGradient />
             {/* user profile modal instead of screen */}
 
-            {/* <ProfileScreenModal isModalVisible={isProfileVisible} close={closeProfileModal} /> */}
             {/* background blur -- https://github.com/Kureev/react-native-blur */}
-            <BlurView blurAmount={3} blurType="light" style={[styles.absolute, {display: (isProfileVisible ? "flex" : "none")}]} />
+            {/* <BlurView blurAmount={3} blurType="light" style={[styles.absolute, {display: (isBlurred ? "flex" : "none")}]} /> */}
 
             {/* ------------------ */}
 
