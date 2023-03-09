@@ -10,7 +10,7 @@ import * as Location from "expo-location";
 import HomeScreenButton from "../components/HomeScreenButton";
 import CompassWidget from "../components/CompassWidget";
 import CardDisplayGrid from "../components/CardDisplayGrid";
-import ProfileScreenModal from "./ProfileScreenModal";
+import ProfileScreenModal from "./ProfileScreen";
 
 import { Settings, PermsContext, Themes } from "../config/Config";
 import { exportUserData, UserDataContext } from "../config/UserDataManager";

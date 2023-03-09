@@ -39,7 +39,10 @@ const TasksScreen = (props) => {
 
 const styles = StyleSheet.create({
     body: {
-        flex: 1
+        width: vw(100),
+		height: vh(80), // 7.5 from the header, 8 + 8 for two unfocused cards & 50 from a focused card (without counting borders)
+		position: "absolute",
+		bottom: 0
     },
     header: {
         width: vw(100),

@@ -47,12 +47,6 @@ const TasksScreenCard = (props) => {
 				duration: 250,
 				useNativeDriver: true
 			}).start();
-			Animated.timing(opacityAnim, {
-				toValue: isContentOpen ? 1 : 0,
-				// this weird lil circle appeared at the top left corner of each card, this fixes it by making it disappear immediately
-                duration: 0,
-				useNativeDriver: true
-			}).start();
 		}, [isContentOpen]
 	);
 
@@ -137,9 +131,14 @@ const TasksScreenCard = (props) => {
                         <Text style={styles.seedText}>#{ seed?.toString().padStart(6, "0") }</Text>
                     </View>
                     <View style={styles.rightView}>
-                        <TouchableOpacity style={styles.rightBtn} onPress={removeCard}>
-                            <Text style={styles.rightBtnText}>—</Text>
-                        </TouchableOpacity>
+                        {
+							(props.cardName != "daily") ? (
+								<TouchableOpacity style={styles.rightBtn} onPress={removeCard}>
+									<Text style={styles.rightBtnText}>—</Text>
+								</TouchableOpacity>
+							) : null
+
+						}
                         <Image style={[styles.rightBtn, {transform: [{rotate: (180 * !isContentOpen) + "deg"}]}]} source={CARET_SRC} />
                     </View>
                 </TouchableOpacity>
@@ -147,7 +146,7 @@ const TasksScreenCard = (props) => {
 					styles.cardDisplay,
 					{
 						backgroundColor: THEME.cards[difficultyName], display: (isContentOpen ? "flex" : "none"),
-                        opacity: opacityAnim, // isContentOpen+0, <-- this works in place of opacityAnim as well (hides weird circle)
+                        opacity: isContentOpen+0, // <-- this works in place of opacityAnim as well (hides weird circle)
                         transform: [ { translateY: heightAnim } ], zIndex: -100
 					}]}
 				>
@@ -196,7 +195,7 @@ const styles = StyleSheet.create({
         height: vh(8),
         paddingHorizontal: "2%",
         borderColor: "#383838",
-        borderBottomWidth: 2,
+        borderBottomWidth: vh(0.26),
         backgroundColor: "#f7bcbc",
         flexDirection: "row"
     },
@@ -225,8 +224,8 @@ const styles = StyleSheet.create({
         borderColor: "black",
         justifyContent: "center",
         backgroundColor: "#f7bcbc",
-        borderRightWidth: 2,
-        borderBottomWidth: 2
+        borderRightWidth: vh(.26),
+        borderBottomWidth: vh(.26)
     },
     objectiveTileText: {
 		fontSize: vh(1.6),
@@ -264,8 +263,7 @@ const styles = StyleSheet.create({
         textAlignVertical: "center"
     },
     rightBtn: {
-        flex: 1/3,
-        height: "75%",
+        flex: 1/3.25,
         aspectRatio: 1,
         alignSelf: "center",
         justifyContent: "center"

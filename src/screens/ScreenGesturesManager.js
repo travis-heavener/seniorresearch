@@ -23,7 +23,7 @@ export const fromHoriz = ({ current, next, inverted, layouts: { screen } }) => {
 					translateX: Animated.multiply(
 						progress.interpolate({
 							inputRange: [0, 1, 2],
-							outputRange: [screen.width, 0, screen.width * -0.2],
+							outputRange: [screen.width, 0, 0], // screen.width * -0.1
 							extrapolate: "clamp"
 						}),
 						inverted
@@ -57,7 +57,7 @@ export const fromVert = ({ current, next, inverted, layouts: { screen } }) => {
 					translateY: Animated.multiply(
 						progress.interpolate({
 							inputRange: [0, 1, 2],
-							outputRange: [screen.height, 0, screen.height * -0.1],
+							outputRange: [screen.height, 0, 0], // screen.height * -0.1
 							extrapolate: "clamp"
 						}),
 						inverted

@@ -13,7 +13,7 @@ import { loadUserData, UserDataContext } from "./src/config/UserDataManager";
 
 import React from "react";
 import { Easing, Image } from "react-native";
-import ProfileScreenModal from "./src/screens/ProfileScreenModal";
+import ProfileScreen from "./src/screens/ProfileScreen";
 const LOADING_IMG = require("./assets/splash.png");
 
 const Stack = createStackNavigator();
@@ -51,12 +51,12 @@ const CreateStack = () => (
         />
         <Stack.Screen name="Tasks" component={TasksScreen}
             options={{
-                ...opts, cardStyleInterpolator: fromVert, gestureDirection: "vertical"
+                ...opts, cardStyleInterpolator: fromVert, gestureDirection: "vertical", presentation: "transparentModal"
             }}
         />
-        <Stack.Screen name="Profile" component={ProfileScreenModal}
+        <Stack.Screen name="Profile" component={ProfileScreen}
             options={{
-            ...opts, cardStyleInterpolator: fromHoriz, gestureDirection: "horizontal-inverted", presentation: "transparentModal"
+				...opts, cardStyleInterpolator: fromHoriz, gestureDirection: "horizontal-inverted", presentation: "transparentModal"
             }}
         />
     </Stack.Navigator>

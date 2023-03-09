@@ -1,52 +1,15 @@
-import { useCallback, useContext, useEffect, useRef } from "react";
-import { Animated, Easing, Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import GestureRecognizer from "react-native-swipe-gestures";
+import { useContext, useRef } from "react";
+import { Animated, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Settings, Themes } from "../config/Config";
 import { formatCommas, vh, vw } from "../config/Toolbox";
 import { UserDataContext } from "../config/UserDataManager";
 
-import { GestureHandlerRootView, Swipeable } from "react-native-gesture-handler";
 import ProgressBar from "../components/ProgressBar";
 import { BlurView } from "@react-native-community/blur";
 
-const CLOSE_TIMEOUT = 90; // 90 ms for closing animation
-
-const ProfileScreenModal = (props) => {
+const ProfileScreen = (props) => {
     const userContext = useContext( UserDataContext );
     const THEME = Themes[ userContext.selectedTheme ].profile;
-
-    const close = () => props.navigation.goBack();
-
-    // on focus events
-    // useEffect(
-    //     () => {
-    //         // console.log("IsModalVisible: " + props.isModalVisible);
-    //         Animated.timing(slideAnim, {
-    //             toValue: props.isModalVisible + 0, // cast boolean to number
-    //             duration: 175,
-	// 			easing: Easing.out( Easing.sin ),
-    //             useNativeDriver: true
-    //         }).start();
-    //     }, [props.isModalVisible]
-    // );
-
-    const queueClose = close;
-	// const queueClose = () => {
-	// 	Animated.timing(slideAnim, {
-	// 		toValue: 0,
-	// 		duration: CLOSE_TIMEOUT,
-	// 		easing: Easing.out( Easing.sin ),
-	// 		useNativeDriver: true
-	// 	}).start();
-	// 	setTimeout(close, CLOSE_TIMEOUT); // queue the close after the animation
-	// };
-
-    // animation
-    const slideAnim = useRef(new Animated.Value(0)).current;
-    const slideStatus = slideAnim.interpolate({
-        inputRange: [0, 1],
-        outputRange: [-vw(100), 0]
-    });
 
     const generateStat = (name) => {
         const md = userContext.metadata, st = userContext.stats;
@@ -82,13 +45,8 @@ const ProfileScreenModal = (props) => {
     const maxXP = Settings.XP_CONSTANTS.calculateLevelMax(userContext.stats.level);
 
     return (
-        <View style={{flex: 1}}
-            // animationType="none"
-            // transparent={true}
-            // visible={props.isModalVisible}
-            // onRequestClose={close}
-        >
-            <TouchableOpacity style={styles.absolute} onPress={close} activeOpacity={1} />
+        <View style={{flex: 1}}>
+            <TouchableOpacity style={styles.absolute} onPress={() => props.navigation.goBack()} activeOpacity={1} />
             {/* <BlurView blurAmount={3} blurType="light" style={styles.absolute} /> */}
 
             {/* content itself */}
@@ -104,7 +62,7 @@ const ProfileScreenModal = (props) => {
                                     adjustsFontSizeToFit={true}
                                     numberOfLines={1}
                                 >
-                                        { userContext.stats.level }
+                                    { userContext.stats.level }
                                 </Text>
                             </View>
                             <Text style={styles.userName}>My Name</Text>
@@ -183,7 +141,7 @@ const styles = StyleSheet.create({
         flexDirection: "row"
     },
     userName: {
-        marginLeft: "1.25%",
+        marginLeft: "2.5%",
         fontSize: vh(3),
         fontWeight: "600",
         textAlignVertical: "center"
@@ -242,18 +200,16 @@ const styles = StyleSheet.create({
     },
     statsText: {
         flex: 1,
-
         fontSize: vh(1.75),
         textAlign: "left"
     },
     statsVariable: {
         maxWidth: "33%",
         minWidth: "25%",
-
         fontSize: vh(1.75),
         fontStyle: "italic",
         textAlign: "right"
     }
 });
 
-export default ProfileScreenModal;
+export default ProfileScreen;
