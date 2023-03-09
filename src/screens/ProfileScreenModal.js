@@ -7,6 +7,7 @@ import { UserDataContext } from "../config/UserDataManager";
 
 import { GestureHandlerRootView, Swipeable } from "react-native-gesture-handler";
 import ProgressBar from "../components/ProgressBar";
+import { BlurView } from "@react-native-community/blur";
 
 const CLOSE_TIMEOUT = 90; // 90 ms for closing animation
 
@@ -14,30 +15,31 @@ const ProfileScreenModal = (props) => {
     const userContext = useContext( UserDataContext );
     const THEME = Themes[ userContext.selectedTheme ].profile;
 
-    const close = () => props.close();
+    const close = () => props.navigation.goBack();
 
     // on focus events
-    useEffect(
-        () => {
-            // console.log("IsModalVisible: " + props.isModalVisible);
-            Animated.timing(slideAnim, {
-                toValue: props.isModalVisible + 0, // cast boolean to number
-                duration: 175,
-				easing: Easing.out( Easing.sin ),
-                useNativeDriver: true
-            }).start();
-        }, [props.isModalVisible]
-    );
+    // useEffect(
+    //     () => {
+    //         // console.log("IsModalVisible: " + props.isModalVisible);
+    //         Animated.timing(slideAnim, {
+    //             toValue: props.isModalVisible + 0, // cast boolean to number
+    //             duration: 175,
+	// 			easing: Easing.out( Easing.sin ),
+    //             useNativeDriver: true
+    //         }).start();
+    //     }, [props.isModalVisible]
+    // );
 
-	const queueClose = () => {
-		Animated.timing(slideAnim, {
-			toValue: 0,
-			duration: CLOSE_TIMEOUT,
-			easing: Easing.out( Easing.sin ),
-			useNativeDriver: true
-		}).start();
-		setTimeout(close, CLOSE_TIMEOUT); // queue the close after the animation
-	};
+    const queueClose = close;
+	// const queueClose = () => {
+	// 	Animated.timing(slideAnim, {
+	// 		toValue: 0,
+	// 		duration: CLOSE_TIMEOUT,
+	// 		easing: Easing.out( Easing.sin ),
+	// 		useNativeDriver: true
+	// 	}).start();
+	// 	setTimeout(close, CLOSE_TIMEOUT); // queue the close after the animation
+	// };
 
     // animation
     const slideAnim = useRef(new Animated.Value(0)).current;
@@ -80,22 +82,17 @@ const ProfileScreenModal = (props) => {
     const maxXP = Settings.XP_CONSTANTS.calculateLevelMax(userContext.stats.level);
 
     return (
-	<GestureRecognizer onSwipe={(name, state) => {
-		// this basically allows swipes less than 45 degrees in either direction of left swipe directions
-		// because diagonal swipes aren't supported. this works beacuse algebra. cool.
-		if (Math.abs(state.dy / state.dx) < 1 && state.dx < 0)
-			queueClose();
-	}} onSwipeLeft={() => queueClose()}>
-			<Modal
-				animationType="none"
-				transparent={true}
-				visible={props.isModalVisible}
-				onRequestClose={close}
-			>
+        <View style={{flex: 1}}
+            // animationType="none"
+            // transparent={true}
+            // visible={props.isModalVisible}
+            // onRequestClose={close}
+        >
             <TouchableOpacity style={styles.absolute} onPress={close} activeOpacity={1} />
-            
+            {/* <BlurView blurAmount={3} blurType="light" style={styles.absolute} /> */}
+
             {/* content itself */}
-            <Animated.View style={[styles.body, {backgroundColor: THEME.body, transform: [{translateX: slideStatus}]}]}>
+            <Animated.View style={[styles.body, {backgroundColor: THEME.body, transform: [{translateX: 0}]}]}>
                 <View style={styles.userInfoView}>
                     <View style={styles.profileImage} />
 
@@ -136,8 +133,7 @@ const ProfileScreenModal = (props) => {
                     </View>
                 </View>
             </Animated.View>
-		</Modal>
-	</GestureRecognizer>
+        </View>
     );
 };
 

@@ -197,7 +197,9 @@ const HomeScreen = (props) => {
     );
 
     // button functions
-    const leftBtn = () => setProfileVisibility(!isProfileVisible);
+    const leftBtn = () => {
+        props.navigation.navigate("Profile");
+    };
     const centerBtn = () => props.navigation.navigate("Tasks");
     const rightBtn = () => props.navigation.navigate("Settings");
 
@@ -206,7 +208,7 @@ const HomeScreen = (props) => {
             <BackgroundGradient />
             {/* user profile modal instead of screen */}
 
-            <ProfileScreenModal isModalVisible={isProfileVisible} close={closeProfileModal} />
+            {/* <ProfileScreenModal isModalVisible={isProfileVisible} close={closeProfileModal} /> */}
             {/* background blur -- https://github.com/Kureev/react-native-blur */}
             <BlurView blurAmount={3} blurType="light" style={[styles.absolute, {display: (isProfileVisible ? "flex" : "none")}]} />
 

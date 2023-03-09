@@ -54,10 +54,11 @@ const CreateStack = () => (
                 ...opts, cardStyleInterpolator: fromVert, gestureDirection: "vertical"
             }}
         />
-        {/* <Stack.Screen name="Profile" component={ProfileScreenModal} options={{
+        <Stack.Screen name="Profile" component={ProfileScreenModal}
+            options={{
             ...opts, cardStyleInterpolator: fromHoriz, gestureDirection: "horizontal-inverted", presentation: "transparentModal"
             }}
-        /> */}
+        />
     </Stack.Navigator>
 );
 
