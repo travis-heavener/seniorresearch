@@ -9,9 +9,12 @@ export const DIFFICULTIES = {
 };
 
 export class BingoCard {
-    constructor(objectivesArray, difficulty, seed, hasAwardedCompletion=false) {
+    constructor(objectivesArray, difficulty, seed, timestamp=Date.now(), hasAwardedCompletion=false) {
         this.grid = objectivesArray;
         this.difficulty = difficulty;
+        this.timestamp = timestamp;
+
+        console.log(new Date(timestamp));
 
         this.hasAwardedCompletion = hasAwardedCompletion; // true once board is completed and has awarded the user
 
@@ -76,6 +79,7 @@ export class BingoCard {
             grid: [],
             difficulty: this.difficulty,
             randomSeed: this.randomSeed,
+            timestamp: this.timestamp,
             hasAwardedCompletion: this.hasAwardedCompletion
         };
         
@@ -169,7 +173,7 @@ export class BingoCard {
 	}
 }
 
-export const createBingoCard = (currentUserContext, difficulty=-1, seed=null) => {
+export const createBingoCard = (currentUserContext, difficulty=-1, seed=null, timestamp=Date.now()) => {
     if (difficulty == -1) {
         let diffIndex = Math.floor(Math.random() * 3);
         difficulty = [DIFFICULTIES.EASY, DIFFICULTIES.NORMAL, DIFFICULTIES.HARD][diffIndex];
@@ -222,5 +226,5 @@ export const createBingoCard = (currentUserContext, difficulty=-1, seed=null) =>
         }
     }
 
-    return new BingoCard(grid, difficulty, seed);
+    return new BingoCard(grid, difficulty, seed, timestamp);
 };

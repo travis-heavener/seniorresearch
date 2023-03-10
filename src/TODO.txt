@@ -8,7 +8,6 @@
 - Make data exporting/saving **better**
   - Every time a setting changes
   - Encrypt data or something when saving to disk
-- Check that the bingo player-completed objectives are being set by the same random so that they're always the same with the seed
 - Advanced battery saver??
   - Control various settings for each battery-saver-controlled part
     - Ex. battery saver setting for geolocation, pedometer/devicemotion, etc.

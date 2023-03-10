@@ -109,8 +109,13 @@ const HomeScreen = (props) => {
                 userContext.setCardUpdateInterval(
                     setInterval(
                         function() {
+                            // update timestamp
+                            const {lastTimestamp, currentTimestamp} = userContext.setTimestamp( Date.now() ); // returns old & current
+                            const lastDate = new Date(lastTimestamp), currentDate = new Date(currentTimestamp);
+
                             // verify that daily card is not null (create one if it is)
-                            if (userContext.cardSlots.daily == null) {
+                            // OR the date has changed (create a new daily card based on this date)
+                            if (userContext.cardSlots.daily == null || lastDate.getDate() !== currentDate.getDate()) {
                                 const seed = generateDailySeed(); // create seed from Date obj
                                 userContext.cardSlots.daily = createBingoCard(userContext, DIFFICULTIES.NORMAL, seed);
                             }
@@ -206,18 +211,9 @@ const HomeScreen = (props) => {
     );
 
     // button functions
-    const leftBtn = () => {
-		props.navigation.navigate("Profile");
-		// setBlurred(true);
-	};
-    const centerBtn = () => {
-		props.navigation.navigate("Tasks");
-		// setBlurred(true);
-	};
-    const rightBtn = () => {
-		props.navigation.navigate("Settings");
-		// setBlurred(true);
-	};
+    const leftBtn = () => props.navigation.navigate("Profile");
+    const centerBtn = () => props.navigation.navigate("Tasks");
+    const rightBtn = () => props.navigation.navigate("Settings");
 
 	return (
         <GestureWrapper gestureDistance={50} angleThresh={25} onSwipeLeft={leftBtn} onSwipeRight={rightBtn} onSwipeUp={centerBtn}>
@@ -227,8 +223,6 @@ const HomeScreen = (props) => {
 
                 {/* background blur -- https://github.com/Kureev/react-native-blur */}
                 {/* <BlurView blurAmount={3} blurType="light" style={[styles.absolute, {display: (isBlurred ? "flex" : "none")}]} /> */}
-
-                {/* ------------------ */}
 
                 <View style={styles.header}>
                     <View style={styles.compassWrapper}>
