@@ -1,14 +1,18 @@
-import { useContext } from "react";
-import { Animated, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useContext, useState } from "react";
+import { Animated, Image, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Settings, Themes } from "../config/Config";
 import { formatCommas, vh, vw } from "../config/Toolbox";
 import { UserDataContext } from "../config/UserDataManager";
 
 import ProgressBar from "../components/ProgressBar";
+const CHECK_IMG = require("../../assets/media/check.png");
 
 const ProfileScreen = (props) => {
     const userContext = useContext( UserDataContext );
     const THEME = Themes[ userContext.selectedTheme ].profile;
+
+    const [__remountStatus, __setRemountStatus] = useState(false);
+    const remount = () => __setRemountStatus(!__remountStatus);
 
     const generateStat = (name) => {
         const md = userContext.metadata, st = userContext.stats;
@@ -42,11 +46,18 @@ const ProfileScreen = (props) => {
     };
 
     const generateThemeIcon = (theme) => {
-        const col = theme == "base" ? "whitesmoke" : theme == "dark" ? "#555" : "#0000";
-        const onPress = () => userContext.setSelectedTheme(theme);
-
+        const col = theme == "base" ? "whitesmoke" :
+                    theme == "dark" ? "#555" :
+                    "#0000";
+        const onPress = () => {
+            userContext.setSelectedTheme(theme);
+            remount();
+        };
+        
         return (
-            <Pressable style={[styles.themeIcon, {backgroundColor: col}]} onPress={onPress} />
+            <Pressable style={[styles.themeIcon, {backgroundColor: col}]} onPress={onPress}>
+                <Image style={[styles.checkImg, {display: userContext.selectedTheme == theme ? "flex" : "none"}]} source={CHECK_IMG} />
+            </Pressable>
         )
     };
 
@@ -251,6 +262,11 @@ const styles = StyleSheet.create({
         borderColor: "#222",
         borderWidth: vh(.26),
         borderRadius: vh(2.5) // 1/4 the height
+    },
+    checkImg: {
+        width: "60%",
+        margin: "20%",
+        height: "60%"
     }
 });
 
