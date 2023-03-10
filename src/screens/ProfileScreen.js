@@ -1,5 +1,5 @@
-import { useContext, useRef } from "react";
-import { Animated, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useContext } from "react";
+import { Animated, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Settings, Themes } from "../config/Config";
 import { formatCommas, vh, vw } from "../config/Toolbox";
 import { UserDataContext } from "../config/UserDataManager";
@@ -21,13 +21,16 @@ const ProfileScreen = (props) => {
         } else if (name == "distance") {
             val = ((st.lifetimeDistance + md.distance)/1000).toFixed(1);
             val = formatCommas(val) + "km";
-            text = "Distance Traveled";
+            text = "Traveled";
         } else if (name == "cards") {
             val = st.lifetimeCards;
             text = "Cards Completed";
         } else if (name == "bingos") {
             val = st.lifetimeBingos;
             text = "Bingos";
+        } else if (name == "xp") {
+            val = st.getTotalXP();
+            text = "Total XP";
         }
 
         return (
@@ -35,6 +38,15 @@ const ProfileScreen = (props) => {
                 <Text adjustsFontSizeToFit={true} numberOfLines={1} style={styles.statsText}>{text}:</Text>
                 <Text adjustsFontSizeToFit={true} numberOfLines={1} style={styles.statsVariable}>{val}</Text>
             </View>
+        )
+    };
+
+    const generateThemeIcon = (theme) => {
+        const col = theme == "base" ? "whitesmoke" : theme == "dark" ? "#555" : "#0000";
+        const onPress = () => userContext.setSelectedTheme(theme);
+
+        return (
+            <Pressable style={[styles.themeIcon, {backgroundColor: col}]} onPress={onPress} />
         )
     };
 
@@ -48,18 +60,14 @@ const ProfileScreen = (props) => {
             <TouchableOpacity style={styles.absolute} onPress={() => props.navigation.goBack()} activeOpacity={1} />
 
             {/* content itself */}
-            <Animated.View style={[styles.body, {backgroundColor: THEME.body, transform: [{translateX: 0}]}]}>
+            <View style={[styles.body, {backgroundColor: THEME.body, transform: [{translateX: 0}]}]}>
                 <View style={styles.userInfoView}>
                     <View style={styles.profileImage} />
 
                     <View style={styles.userInfoText}>
                         <View style={styles.userNameContainer}>
                             <View style={styles.userLevelContainer}>
-                                <Text
-                                    style={styles.userLevel}
-                                    adjustsFontSizeToFit={true}
-                                    numberOfLines={1}
-                                >
+                                <Text style={styles.userLevel} adjustsFontSizeToFit={true} numberOfLines={1}>
                                     { userContext.stats.level }
                                 </Text>
                             </View>
@@ -68,8 +76,7 @@ const ProfileScreen = (props) => {
                         {/* progress bar */}
                         <ProgressBar
                             width={vw(43)} height="33%"
-                            min={0} max={maxXP}
-                            current={currentXP} readout={readoutXP}
+                            min={0} max={maxXP} current={currentXP} readout={readoutXP}
                         />
                         <Text style={styles.xpBarSubtitle}>{maxXP} XP</Text>
                     </View>
@@ -85,10 +92,19 @@ const ProfileScreen = (props) => {
                         <View style={styles.statsColumn}>
                             { generateStat("cards") }
                             { generateStat("bingos") }
+                            { generateStat("xp") }
                         </View>
                     </View>
                 </View>
-            </Animated.View>
+                <View style={styles.themePickerView}>
+                    <Text style={styles.themePickerHeader}>Available Themes</Text>
+
+                    <View style={styles.themePicker}>
+                        { generateThemeIcon("base") }
+                        { generateThemeIcon("dark") }
+                    </View>
+                </View>
+            </View>
         </View>
     );
 };
@@ -102,15 +118,15 @@ const styles = StyleSheet.create({
     body: {
         position: "absolute",
         width: vw(100),
-        height: vh(75),
+        height: vh(75.26), // 75vh + bottom border width
         bottom: 0,
         flexDirection: "column",
         justifyContent: "flex-start",
         alignItems: "stretch",
         borderColor: "black",
-        borderTopWidth: 2,
-        borderRightWidth: 2,
-        borderLeftWidth: 2
+        borderTopWidth: vh(.26),
+        borderRightWidth: vh(.26),
+        borderLeftWidth: vh(.26)
     },
     userInfoView: {
         flex: 16, // from vh(16)
@@ -167,8 +183,8 @@ const styles = StyleSheet.create({
         fontWeight: "600"
     },
     statsView: {
-        flex: 59, // from vh(59)
-        maxHeight: vh(29), // remaining space below is 30vh
+        flex: 22, // from vh(24)
+        maxHeight: vh(22),
         backgroundColor: "cornflowerblue"
     },
     statsHeader: {
@@ -207,6 +223,34 @@ const styles = StyleSheet.create({
         fontSize: vh(1.75),
         fontStyle: "italic",
         textAlign: "right"
+    },
+    themePickerView: {
+        flex: 37,
+        maxHeight: vh(37),
+        backgroundColor: "lime"
+    },
+    themePickerHeader: {
+        textAlign: "center",
+        fontSize: vh(2.75),
+        textDecorationLine: "underline"
+    },
+    themePicker: {
+        width: "60%",
+        height: vh(11),
+        marginTop: vh(1/2),
+        marginHorizontal: "20%",
+        justifyContent: "space-evenly",
+        alignItems: "center",
+        flexDirection: "row",
+        borderRadius: vh(2.5), // same as children
+        backgroundColor: "#0001" // UNCOMMENT FOR BACKGROUND
+    },
+    themeIcon: {
+        height: "85%",
+        aspectRatio: 1,
+        borderColor: "#222",
+        borderWidth: vh(.26),
+        borderRadius: vh(2.5) // 1/4 the height
     }
 });
 

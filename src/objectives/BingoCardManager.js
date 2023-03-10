@@ -14,8 +14,6 @@ export class BingoCard {
         this.difficulty = difficulty;
         this.timestamp = timestamp;
 
-        console.log(new Date(timestamp));
-
         this.hasAwardedCompletion = hasAwardedCompletion; // true once board is completed and has awarded the user
 
         this.randomSeed = seed;
