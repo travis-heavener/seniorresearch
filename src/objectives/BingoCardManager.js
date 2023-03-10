@@ -169,15 +169,15 @@ export class BingoCard {
 	}
 }
 
-export const createBingoCard = (currentUserContext, difficulty=-1) => {
+export const createBingoCard = (currentUserContext, difficulty=-1, seed=null) => {
     if (difficulty == -1) {
         let diffIndex = Math.floor(Math.random() * 3);
         difficulty = [DIFFICULTIES.EASY, DIFFICULTIES.NORMAL, DIFFICULTIES.HARD][diffIndex];
     }
     
     // generate seed at a later date to re-roll the same card
-    const seed = generateSeed(),
-        random = new Random(seed);
+    seed = seed ?? generateSeed(); // overwrite if null value
+    const random = new Random(seed);
 
     // different types of objectives (can't encourage speed objectives because player could feel they need to drive)
     // two types of objectives:

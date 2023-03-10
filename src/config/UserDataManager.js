@@ -225,6 +225,7 @@ export const exportUserData = async (userContext) => {
 export const clearUserData = async (userContext) => {
     try {
 		await AsyncStorage.removeItem("com.heavener-sr.user-data");
+        console.log("Cleared async storage");
 	} catch (e) {
 		console.log(e);
 	}
@@ -233,6 +234,7 @@ export const clearUserData = async (userContext) => {
     userContext.stats.setLifetimeSteps(0);
     userContext.metadata.setDistance(0);
     userContext.stats.setLifetimeDistance(0);
+    userContext.metadata.setAcceleration({x: 0, y: 0, z: 0});
 
     userContext.setSelectedTheme("base");
     userContext.setBatterySaverStatus(Settings.BATTERY_SAVER_OFF);

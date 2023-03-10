@@ -34,9 +34,19 @@ function mulberry32(a) {
     }
 }
 
+const MAX_SEED = 1000000;
 export const generateSeed = () => {
     // generate random number from 0 to 999_999, inclusive
-    return Math.floor(Math.random() * 1000000); // removed 1_000_000 underscores to fix gradle compiling... annoying!
+    return Math.floor(Math.random() * MAX_SEED); // removed 1_000_000 underscores to fix gradle compiling... annoying!
+};
+
+export const generateDailySeed = () => {
+    const date = new Date();
+    const random = new Random(123456); // new random object w/ fixed seed
+    let raw = date.getDate() * (date.getMonth()+1);
+    raw *= (random.next() * 10000);
+    raw = Math.floor(raw);
+    return raw % MAX_SEED; // clamp
 };
 
 export class Random {

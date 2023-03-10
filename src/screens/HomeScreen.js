@@ -14,9 +14,10 @@ import ProfileScreenModal from "./ProfileScreen";
 
 import { Settings, PermsContext, Themes } from "../config/Config";
 import { exportUserData, UserDataContext } from "../config/UserDataManager";
-import { latLongDist, vh, vw } from "../config/Toolbox";
+import { generateDailySeed, latLongDist, vh, vw } from "../config/Toolbox";
 import { BlurView } from "@react-native-community/blur";
 import BackgroundGradient from "../components/BackgroundGradient";
+import { createBingoCard, DIFFICULTIES } from "../objectives/BingoCardManager";
 
 const HomeScreen = (props) => {
     const userContext = useContext( UserDataContext );
@@ -53,6 +54,12 @@ const HomeScreen = (props) => {
             DeviceMotion.setUpdateInterval(
                 Settings.sensorUpdateIntervals[ userContext.batterySaverStatus ].deviceMotion
             );
+
+            // verify that daily card is not null (create one if it is)
+            if (userContext.cardSlots.daily == null) {
+                const seed = generateDailySeed(); // create seed from Date obj
+                userContext.cardSlots.daily = createBingoCard(userContext, DIFFICULTIES.NORMAL, seed);
+            }
             
             setHasStarted(true);
         } )();
@@ -106,6 +113,12 @@ const HomeScreen = (props) => {
                 userContext.setCardUpdateInterval(
                     setInterval(
                         function() {
+                            // verify that daily card is not null (create one if it is)
+                            if (userContext.cardSlots.daily == null) {
+                                const seed = generateDailySeed(); // create seed from Date obj
+                                userContext.cardSlots.daily = createBingoCard(userContext, DIFFICULTIES.NORMAL, seed);
+                            }
+
                             // check cards
                             for (let card of Object.values(userContext.cardSlots))
                                 if (card) // if not null, run checks

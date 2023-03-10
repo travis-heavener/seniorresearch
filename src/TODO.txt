@@ -19,3 +19,4 @@
 - Fix formatting being based on raw pixel values
   - Use relative coords (ie. vw & vh)
     - borderWidth: 2 --> borderWidth: vw(0.1), for example
+- Encrypt data or something when saving to disk

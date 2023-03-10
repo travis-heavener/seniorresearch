@@ -5,7 +5,7 @@ import { Themes } from "../config/Config";
 import { exportUserData, UserDataContext } from "../config/UserDataManager";
 
 // viewport height function to make life easier
-import { vw, vh } from "../config/Toolbox";
+import { vw, vh, generateDailySeed } from "../config/Toolbox";
 import Checkbox from "./Checkbox";
 import ScalingText from "./ScalingText";
 
@@ -167,7 +167,8 @@ const TasksScreenCard = (props) => {
         const addCard = () => {
             // daily is ALWAYS normal difficulty
             let difficulty = props.cardName == "daily" ? DIFFICULTIES.NORMAL : undefined; // undefined is overwritten by random in method
-            userContext.cardSlots[props.cardName] = createBingoCard(userContext, difficulty); // with random difficulty
+            let seed = props.cardName == "daily" ? generateDailySeed() : undefined; // undefined is overwritten by random seed
+            userContext.cardSlots[props.cardName] = createBingoCard(userContext, difficulty, seed); // with random difficulty
             exportUserData(userContext); // save data
             props.remount(); // force a parent screen remount
         };
