@@ -10,22 +10,18 @@ import * as Location from "expo-location";
 import HomeScreenButton from "../components/HomeScreenButton";
 import CompassWidget from "../components/CompassWidget";
 import CardDisplayGrid from "../components/CardDisplayGrid";
-import ProfileScreenModal from "./ProfileScreen";
+import BackgroundGradient from "../components/BackgroundGradient";
+import GestureWrapper from "../components/GestureWrapper";
 
 import { Settings, PermsContext, Themes } from "../config/Config";
 import { exportUserData, UserDataContext } from "../config/UserDataManager";
 import { generateDailySeed, latLongDist, vh, vw } from "../config/Toolbox";
-import { BlurView } from "@react-native-community/blur";
-import BackgroundGradient from "../components/BackgroundGradient";
 import { createBingoCard, DIFFICULTIES } from "../objectives/BingoCardManager";
 
 const HomeScreen = (props) => {
     const userContext = useContext( UserDataContext );
     const permsContext = useContext( PermsContext );
     const THEME = Themes[ userContext.selectedTheme ].home; // select theme
-
-    // profile modal visibility
-    const [isBlurred, setBlurred] = useState(false);
 
     // remount (USE SPARINGLY)
     const [__remountStatus, __setRemountStatus] = useState(0);
@@ -224,37 +220,33 @@ const HomeScreen = (props) => {
 	};
 
 	return (
-		<View style={styles.top}>
-            <BackgroundGradient />
-            {/* user profile modal instead of screen */}
+        <GestureWrapper gestureDistance={50} angleThresh={25} onSwipeLeft={leftBtn} onSwipeRight={rightBtn} onSwipeUp={centerBtn}>
+            <View style={styles.top}>
+                <BackgroundGradient />
+                {/* user profile modal instead of screen */}
 
-            {/* background blur -- https://github.com/Kureev/react-native-blur */}
-            {/* <BlurView blurAmount={3} blurType="light" style={[styles.absolute, {display: (isBlurred ? "flex" : "none")}]} /> */}
+                {/* background blur -- https://github.com/Kureev/react-native-blur */}
+                {/* <BlurView blurAmount={3} blurType="light" style={[styles.absolute, {display: (isBlurred ? "flex" : "none")}]} /> */}
 
-            {/* ------------------ */}
+                {/* ------------------ */}
 
-			<View style={styles.header}>
-                <View style={styles.compassWrapper}>
-                    <CompassWidget navigation={props.navigation} />
+                <View style={styles.header}>
+                    <View style={styles.compassWrapper}>
+                        <CompassWidget navigation={props.navigation} />
+                    </View>
+                </View>
+
+                <View style={styles.body}>
+                    <CardDisplayGrid remountStatus={__remountStatus} />
+                </View>
+
+                <View style={styles.bottomButtons}>
+                    <HomeScreenButton flex={.75} onPress={leftBtn} />
+                    <HomeScreenButton flex={1} onPress={centerBtn} />
+                    <HomeScreenButton flex={.75} onPress={rightBtn} />
                 </View>
             </View>
-
-            <View style={styles.body}>
-                <CardDisplayGrid remountStatus={__remountStatus} />
-            </View>
-
-            {/* <Text>Steps: {userContext.metadata.steps}</Text>
-            <Text>Lifetime Steps: {userContext.metadata.lifetimeSteps}</Text>
-            <Text>Speed: {userContext.metadata.getSpeed().toFixed(3)} m/s</Text>
-            <Text>Traveled: {userContext.metadata.distance.toFixed(3)} m</Text>
-            <Text>Lifetime Traveled: {userContext.metadata.lifetimeDistance.toFixed(3)} m</Text> */}
-
-            <View style={styles.bottomButtons}>
-                <HomeScreenButton flex={.75} onPress={leftBtn} />
-                <HomeScreenButton flex={1} onPress={centerBtn} />
-                <HomeScreenButton flex={.75} onPress={rightBtn} />
-            </View>
-		</View>
+        </GestureWrapper>
 	);
 };
 

@@ -5,13 +5,9 @@
   - react-navigation-stack -> @react-navigation/stack
 - Update theme colors
   - Use CardDisplay theme for the CardSelectItem mini grid
-- Potentially use GesterRecognizer from react-native-swipe-gestures to handle gesture recognition on the home screen
-  - This can open each individual screen as the swipe gesture already dismisses them
-  - Removes the need for tab navigator
 - Make data exporting/saving **better**
   - Every time a setting changes
-- Slow down sensor polling rates while profile modal is open????
-  - You can literally see the compass moving around while the content itself is blurred
+  - Encrypt data or something when saving to disk
 - Check that the bingo player-completed objectives are being set by the same random so that they're always the same with the seed
 - Advanced battery saver??
   - Control various settings for each battery-saver-controlled part
@@ -19,4 +15,3 @@
 - Fix formatting being based on raw pixel values
   - Use relative coords (ie. vw & vh)
     - borderWidth: 2 --> borderWidth: vw(0.1), for example
-- Encrypt data or something when saving to disk
