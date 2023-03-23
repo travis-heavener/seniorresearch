@@ -1,5 +1,5 @@
 import { useFocusEffect } from "@react-navigation/native";
-import { useCallback, useContext, useRef } from "react";
+import { useCallback, useContext, useEffect, useRef } from "react";
 import { Animated, StyleSheet } from "react-native";
 import { Settings, Themes } from "../config/Config";
 import { vh, vw } from "../config/Toolbox";
@@ -32,7 +32,7 @@ const BackgroundGradient = (props) => {
 
         // prevent animation from running if it doesn't need to (ie. the color is the same)
         if (targetColor == null) return;
-        
+
         // start animation
         Animated.timing(backgroundAnim, {
             toValue: step,

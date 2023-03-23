@@ -84,7 +84,7 @@ const ProfileScreen = (props) => {
                                     { userContext.stats.level }
                                 </Text>
                             </View>
-                            <ThemedText style={styles.userName}>My Name</ThemedText>
+                            <ThemedText style={styles.userName}>Name</ThemedText>
                         </View>
                         {/* progress bar */}
                         <ProgressBar

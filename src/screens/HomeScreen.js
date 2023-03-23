@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect, useCallback, useRef } from "react";
-import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 import { View, StyleSheet, Text, TouchableOpacity, Animated } from "react-native";
 
 // Pedometer + necessary Android permissions imports
@@ -27,6 +27,9 @@ const HomeScreen = (props) => {
     const [__remountStatus, __setRemountStatus] = useState(0);
     const remount = () => __setRemountStatus(Math.random());
     
+    // forces a remount on screen load
+    useIsFocused();
+
     const [hasStarted, setHasStarted] = useState(false);
 
     // initial, on-load events (empty triggers array to act as componentDidMount)

@@ -42,7 +42,7 @@ export const Settings = {
         }
     },
 	LOCATION_NOISE_THRESH: 25, // in meters, widest accuracy radius of geolocation calls, limits noise
-    MAX_GRADIENT_SPEED: 3, // max speed recognized by gradient before it maxes the color
+    MAX_GRADIENT_SPEED: 1, // max speed recognized by gradient before it maxes the color
     BATTERY_SAVER_OFF: "batterySaverOff",
     BATTERY_SAVER_ON: "batterySaverOn"
 };
@@ -92,8 +92,8 @@ export const Themes = {
     dark: {
         home: {
             backgrounds: {
-                stopped: "rgb(255, 196, 194)",
-                fast: "rgb(109, 227, 114)"
+                stopped: "rgb(66, 66, 66)",
+                fast: "rgb(135, 191, 250)"
             }
         },
         settings: {
