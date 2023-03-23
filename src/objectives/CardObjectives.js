@@ -179,7 +179,10 @@ export class ExploreObjective extends CardObjective {
             { name: "motorcycle" },
             { name: "skateboard" },
             { name: "scooter" },
-            { name: "sign", variants: ["stop", "yield", "crosswalk", "railroad", "school zone"] }
+            { name: "sign", variants: ["stop", "yield", "crosswalk", "railroad", "school zone"] },
+            { name: "limousine" },
+            { name: "train" },
+            { name: "helicopter" }
         ];
 
         // pick random

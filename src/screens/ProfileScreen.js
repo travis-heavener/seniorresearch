@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { Animated, Image, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { Settings, Themes } from "../config/Config";
 import { formatCommas, vh, vw } from "../config/Toolbox";
 import { UserDataContext } from "../config/UserDataManager";
@@ -13,6 +13,8 @@ const ProfileScreen = (props) => {
 
     const [__remountStatus, __setRemountStatus] = useState(false);
     const remount = () => __setRemountStatus(!__remountStatus);
+
+    const ThemedText = (props) => <Text {...props} style={[props.style, {color: THEME.text}]}>{props.children}</Text>
 
     const generateStat = (name) => {
         const md = userContext.metadata, st = userContext.stats;
@@ -39,8 +41,8 @@ const ProfileScreen = (props) => {
 
         return (
             <View style={styles.singleStatView}>
-                <Text adjustsFontSizeToFit={true} numberOfLines={1} style={styles.statsText}>{text}:</Text>
-                <Text adjustsFontSizeToFit={true} numberOfLines={1} style={styles.statsVariable}>{val}</Text>
+                <ThemedText adjustsFontSizeToFit={true} numberOfLines={1} style={styles.statsText}>{text}:</ThemedText>
+                <ThemedText adjustsFontSizeToFit={true} numberOfLines={1} style={styles.statsVariable}>{val}</ThemedText>
             </View>
         )
     };
@@ -68,11 +70,11 @@ const ProfileScreen = (props) => {
 
     return (
         <View style={{flex: 1}}>
-            <TouchableOpacity style={styles.absolute} onPress={() => props.navigation.goBack()} activeOpacity={1} />
+            <Pressable style={styles.absolute} onPress={() => props.navigation.goBack()} />
 
             {/* content itself */}
-            <View style={[styles.body, {backgroundColor: THEME.body, transform: [{translateX: 0}]}]}>
-                <View style={styles.userInfoView}>
+            <View style={[styles.body, {transform: [{translateX: 0}]}]}>
+                <View style={[styles.userInfoView, {backgroundColor: THEME.userInfo}]}>
                     <View style={styles.profileImage} />
 
                     <View style={styles.userInfoText}>
@@ -82,33 +84,33 @@ const ProfileScreen = (props) => {
                                     { userContext.stats.level }
                                 </Text>
                             </View>
-                            <Text style={styles.userName}>My Name</Text>
+                            <ThemedText style={styles.userName}>My Name</ThemedText>
                         </View>
                         {/* progress bar */}
                         <ProgressBar
                             width={vw(43)} height="33%"
                             min={0} max={maxXP} current={currentXP} readout={readoutXP}
                         />
-                        <Text style={styles.xpBarSubtitle}>{maxXP} XP</Text>
+                        <ThemedText style={styles.xpBarSubtitle}>{maxXP} XP</ThemedText>
                     </View>
                 </View>
-                <View style={styles.statsView}>
-                    <Text style={styles.statsHeader}>Lifetime Stats</Text>
+                <View style={[styles.statsView, {backgroundColor: THEME.stats}]}>
+                    <ThemedText style={styles.statsHeader}>Lifetime Stats</ThemedText>
 
                     <View style={styles.statsColumnView}>
-                        <View style={styles.statsColumn}>
+                        <View style={[styles.statsColumn, {backgroundColor: THEME.statsColumn, borderColor: THEME.statsBorder}]}>
                             { generateStat("steps") }
                             { generateStat("distance") }
                         </View>
-                        <View style={styles.statsColumn}>
+                        <View style={[styles.statsColumn, {backgroundColor: THEME.statsColumn, borderColor: THEME.statsBorder}]}>
                             { generateStat("cards") }
                             { generateStat("bingos") }
                             { generateStat("xp") }
                         </View>
                     </View>
                 </View>
-                <View style={styles.themePickerView}>
-                    <Text style={styles.themePickerHeader}>Available Themes</Text>
+                <View style={[styles.themePickerView, {backgroundColor: THEME.themes}]}>
+                    <ThemedText style={styles.themePickerHeader}>Available Themes</ThemedText>
 
                     <View style={styles.themePicker}>
                         { generateThemeIcon("base") }
@@ -143,8 +145,8 @@ const styles = StyleSheet.create({
         flex: 16, // from vh(16)
         maxHeight: vh(16),
         paddingHorizontal: vw(10),
-        flexDirection: "row",
-        backgroundColor: "#f55"
+        flexDirection: "row"
+        // backgroundColor: "#f55"
     },
     profileImage: {
         marginTop: -vh(5),
@@ -153,7 +155,7 @@ const styles = StyleSheet.create({
         backgroundColor: "cornflowerblue",
         borderRadius: vh(16),
         borderColor: "black",
-        borderWidth: 2
+        borderWidth: vh(0.26)
     },
     userInfoText: {
         flex: 1, // fill remaining space
@@ -195,12 +197,13 @@ const styles = StyleSheet.create({
     },
     statsView: {
         flex: 22, // from vh(24)
-        maxHeight: vh(22),
-        backgroundColor: "cornflowerblue"
+        maxHeight: vh(22)
+        // backgroundColor: "cornflowerblue"
     },
     statsHeader: {
         textAlign: "center",
         fontSize: vh(2.75),
+        fontWeight: "500",
         textDecorationLine: "underline"
     },
     statsColumnView: {
@@ -212,9 +215,10 @@ const styles = StyleSheet.create({
     },
     statsColumn: {
         flex: .425,
+        paddingHorizontal: "1.25%",
         backgroundColor: "white",
-        borderWidth: 2,
-        borderColor: "black"
+        borderWidth: vh(0.26),
+        borderRadius: vw(3)
     },
     singleStatView: {
         width: "100%",
@@ -226,23 +230,26 @@ const styles = StyleSheet.create({
     statsText: {
         flex: 1,
         fontSize: vh(1.75),
+        fontWeight: "500",
         textAlign: "left"
     },
     statsVariable: {
         maxWidth: "33%",
         minWidth: "25%",
         fontSize: vh(1.75),
+        fontWeight: "500",
         fontStyle: "italic",
         textAlign: "right"
     },
     themePickerView: {
         flex: 37,
-        maxHeight: vh(37),
-        backgroundColor: "lime"
+        maxHeight: vh(37)
+        // backgroundColor: "lime"
     },
     themePickerHeader: {
         textAlign: "center",
         fontSize: vh(2.75),
+        fontWeight: "500",
         textDecorationLine: "underline"
     },
     themePicker: {

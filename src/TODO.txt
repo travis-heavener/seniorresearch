@@ -1,8 +1,5 @@
 - Move permissions stuff from Config.js to new PermissionsManager.js
   - Handle permission rejection
-- Update final paper w/ dependency changes + future methodology updates
-  - react-navigation -> @react-navigation/native
-  - react-navigation-stack -> @react-navigation/stack
 - Update theme colors
   - Use CardDisplay theme for the CardSelectItem mini grid
 - Make data exporting/saving **better**
@@ -14,3 +11,6 @@
 - Fix formatting being based on raw pixel values
   - Use relative coords (ie. vw & vh)
     - borderWidth: 2 --> borderWidth: vw(0.1), for example
+- @expo-google-fonts?
+- Add titles to user profile
+  - ie. "Novice", "Amateur" (gets flagged on school WiFi lol), "Champion", "Olympian"

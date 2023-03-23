@@ -13,11 +13,12 @@ import ScalingText from "./ScalingText";
 const MEDIA_ROOT = "../../assets/media/";
 const CARET_SRC = require(MEDIA_ROOT + "caretDown.png");
 
-const TILE_BORDER_WIDTH = 0;//vh(0.26);
+const TILE_BORDER_WIDTH = 0; //vh(0.26);
 
 const TasksScreenCard = (props) => {
     const userContext = useContext( UserDataContext );
     const THEME = Themes[ userContext.selectedTheme ].tasks; // select theme
+    const CARDS_THEME = Themes[ userContext.selectedTheme ].cards; // select cards theme
 
     const [isSelected, setSelected] = useState(false);
     const [isContentOpen, setContentOpen] = useState(false);
@@ -86,7 +87,7 @@ const TasksScreenCard = (props) => {
                         key={c} // random key just to ignore the error :)
                         style={[
                             styles.objectiveTile, // default styling
-                            {backgroundColor: (obj.isCompleted ? THEME.checkedTile : THEME.uncheckedTile)}, // checked color
+                            {backgroundColor: (obj.isCompleted ? CARDS_THEME.checkedTile : CARDS_THEME.uncheckedTile)}, // checked color
                             // (r == 0) ? {borderTopWidth: TILE_BORDER_WIDTH} : {}, (c == 0) ? {borderLeftWidth: TILE_BORDER_WIDTH} : {} // borders for top/left
                         ]}
                     >
@@ -147,7 +148,7 @@ const TasksScreenCard = (props) => {
                 <Animated.View style={[
 					styles.cardDisplay,
 					{
-						backgroundColor: THEME.cards[difficultyName], display: (isContentOpen ? "flex" : "none"),
+						backgroundColor: CARDS_THEME[difficultyName], display: (isContentOpen ? "flex" : "none"),
                         opacity: isContentOpen+0, // <-- this works in place of opacityAnim as well (hides weird circle)
                         transform: [ { translateY: heightAnim } ], zIndex: -100
 					}]}

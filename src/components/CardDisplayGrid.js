@@ -19,7 +19,7 @@ const CardDisplayGrid = (props) => {
     const closeObjModal = () => setObjModalData({isModalVisible: false, reject: null, confirm: null, obj: null});
 
     const userContext = useContext( UserDataContext );
-    const THEME = Themes[ userContext.selectedTheme ].cardDisplay; // select theme
+    const THEME = Themes[ userContext.selectedTheme ].cards; // select theme
     
     // triggers a remount every time the screen is refocused
     useIsFocused();
@@ -46,7 +46,7 @@ const CardDisplayGrid = (props) => {
     }
     
     const diffName = card.difficulty == DIFFICULTIES.HARD ? "Hard" : card.difficulty == DIFFICULTIES.NORMAL ? "Normal" : "Easy";
-    const diffColor = THEME.cards[diffName.toLowerCase()];
+    const diffColor = THEME[diffName.toLowerCase()];
     const title = (cardName == "daily" ? "Daily" : diffName) + " Card";
 
     // card grid generation

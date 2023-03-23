@@ -53,7 +53,7 @@ export const Themes = {
     base: {
         home: {
             backgrounds: {
-                stopped: "rgb(252, 170, 167)",
+                stopped: "rgb(255, 196, 194)",
                 fast: "rgb(109, 227, 114)"
             }
         },
@@ -64,19 +64,16 @@ export const Themes = {
         },
         tasks: {
             primary: "#f7bcbc", primaryAccent: "#fad9d9",
-            secondary: "#e3a6a6", secondaryAccent: "#d39696",
-            checkedTile: "#7be385",
-            uncheckedTile: "#f7bcbc",
-            cards: {
-                easy: "#44cc3f", normal: "#d6ae47", hard: "#c45147"
-            }
+            secondary: "#e3a6a6", secondaryAccent: "#d39696"
+        },
+        cards: {
+            checkedTile: "#63e06e",
+            uncheckedTile: "#e8dbcc",
+            easy: "#44cc3f",
+            normal: "#d6ae47",
+            hard: "#c45147"
         },
         cardDisplay: {
-            checkedTile: "#46eb57",
-            uncheckedTile: "#f7bcbc",
-            cards: {
-                easy: "#44cc3f", normal: "#d6ae47", hard: "#c45147"
-            },
             modalBorder: "#333",
             modalBackground: "#e6e6e6",
             modalText: "#222",
@@ -84,13 +81,18 @@ export const Themes = {
             modalConfirm: "cornflowerblue"
         },
         profile: {
-            body: "#f0f0f0"
+            userInfo: "#d0d0d0",
+            stats: "#e0e0e0",
+            statsColumn: "#f0f0f0",
+            statsBorder: "#d0d0d0",
+            themes: "#e8e8e8",
+            text: "#222"
         }
     },
     dark: {
         home: {
             backgrounds: {
-                stopped: "rgb(252, 170, 167)",
+                stopped: "rgb(255, 196, 194)",
                 fast: "rgb(109, 227, 114)"
             }
         },
@@ -101,19 +103,16 @@ export const Themes = {
         },
         tasks: {
             primary: "#f7bcbc", primaryAccent: "#fad9d9",
-            secondary: "#e3a6a6", secondaryAccent: "#d39696",
-            checkedTile: "#46eb57",
-            uncheckedTile: "#f7bcbc",
-            cards: {
-                easy: "#44cc3f", normal: "#d6ae47", hard: "#c45147"
-            }
+            secondary: "#e3a6a6", secondaryAccent: "#d39696"
+        },
+        cards: {
+            checkedTile: "#63e06e",
+            uncheckedTile: "#e8dbcc",
+            easy: "#44cc3f",
+            normal: "#d6ae47",
+            hard: "#c45147"
         },
         cardDisplay: {
-            checkedTile: "#46eb57",
-            uncheckedTile: "#f7bcbc",
-            cards: {
-                easy: "#44cc3f", normal: "#d6ae47", hard: "#c45147"
-            },
             modalBorder: "#111",
             modalBackground: "#333",
             modalText: "#f5f5f5",
@@ -121,7 +120,12 @@ export const Themes = {
             modalConfirm: "cornflowerblue"
         },
         profile: {
-            body: "#f0f0f0"
+            userInfo: "#202020",
+            stats: "#303030",
+            statsColumn: "#505050",
+            statsBorder: "#1a1a1a",
+            themes: "#393939",
+            text: "#eee"
         }
     }
 };
