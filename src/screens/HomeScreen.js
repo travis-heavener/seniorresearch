@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect, useCallback, useRef } from "react";
 import { useFocusEffect, useIsFocused } from "@react-navigation/native";
-import { View, StyleSheet, Text, TouchableOpacity, Animated } from "react-native";
+import { View, StyleSheet, Text, TouchableOpacity, Animated, Pressable } from "react-native";
 
 // Pedometer + necessary Android permissions imports
 import { Pedometer, DeviceMotion } from "expo-sensors";
@@ -216,10 +216,13 @@ const HomeScreen = (props) => {
     // button functions
     const leftBtn = () => props.navigation.navigate("Profile");
     const centerBtn = () => props.navigation.navigate("Tasks");
-    const rightBtn = () => props.navigation.navigate("Settings");
+    const rightBtn = () => props.navigation.navigate("Rewards");
+    const openSettings = () => props.navigation.navigate("Settings");
 
 	return (
-        <GestureWrapper gestureDistance={50} angleThresh={25} onSwipeLeft={leftBtn} onSwipeRight={rightBtn} onSwipeUp={centerBtn}>
+        <GestureWrapper gestureDistance={50} angleThresh={25}
+            onSwipeDown={openSettings} onSwipeLeft={leftBtn} onSwipeRight={rightBtn} onSwipeUp={centerBtn}
+        >
             <View style={styles.top}>
                 <BackgroundGradient />
                 {/* user profile modal instead of screen */}
@@ -228,6 +231,9 @@ const HomeScreen = (props) => {
                 {/* <BlurView blurAmount={3} blurType="light" style={[styles.absolute, {display: (isBlurred ? "flex" : "none")}]} /> */}
 
                 <View style={styles.header}>
+                    <Pressable onPress={openSettings}>
+                        <View style={styles.settingsIcon} />
+                    </Pressable>
                     <View style={styles.compassWrapper}>
                         <CompassWidget navigation={props.navigation} />
                     </View>
@@ -259,13 +265,18 @@ const styles = StyleSheet.create({
     },
     header: {
         flex: 0.1,
+        paddingHorizontal: "2.5%",
         flexDirection: "row",
-        justifyContent: "flex-end"
+        justifyContent: "space-between",
     },
     compassWrapper: {
         height: "100%",
+        aspectRatio: 1
+    },
+    settingsIcon: {
+        height: "100%",
         aspectRatio: 1,
-        marginRight: "2.5%"
+        backgroundColor: "red"
     },
     body: {
         flex: 0.75,

@@ -30,7 +30,7 @@ const SettingsScreen = (props) => {
 			<View style={[styles.header, {backgroundColor: THEME.secondary, borderColor: THEME.secondaryAccent}]}>
                 <Text style={[styles.headerText, {color: THEME.text}]} adjustsFontSizeToFit>Settings</Text>
             </View>
-            <View style={[styles.body, {backgroundColor: THEME.primary}]}>
+            <View style={[styles.body, {backgroundColor: THEME.primary, borderColor: THEME.primaryAccent}]}>
                 <SettingsSwitch
                     text="Battery Saver"
                     activityListener={() => userContext.isBatterySaverOn()}
@@ -47,6 +47,7 @@ const SettingsScreen = (props) => {
                     toggle={wrapFunc( () => clearUserData(userContext) )}
                 />
             </View>
+            <View style={[styles.dropdownBubble, {borderColor: THEME.primary}]} />
 		</View>
 	);
 };
@@ -69,9 +70,18 @@ const styles = StyleSheet.create({
     },
     body: {
         width: vw(100),
-        height: vh(92),
+        height: vh(57.5),
+        borderBottomWidth: vh(0.5),
         flexDirection: "column",
         justifyContent: "flex-start"
+    },
+    dropdownBubble: {
+        width: vw(10),
+        aspectRatio: 1,
+        marginTop: vh(-1.5),
+        alignSelf: "center",
+        borderRadius: vw(5),
+        borderWidth: vh(1)
     }
 });
 

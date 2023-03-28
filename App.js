@@ -14,6 +14,7 @@ import { loadUserData, UserDataContext } from "./src/config/UserDataManager";
 import React from "react";
 import { Easing, Image } from "react-native";
 import ProfileScreen from "./src/screens/ProfileScreen";
+import RewardsScreen from "./src/screens/RewardsScreen";
 const LOADING_IMG = require("./assets/splash.png");
 
 const Stack = createStackNavigator();
@@ -44,21 +45,18 @@ const opts = {
 const CreateStack = () => (
     <Stack.Navigator initialRouteName="Home">
         <Stack.Screen name="Home" component={HomeScreen} options={opts} />
-        <Stack.Screen name="Settings" component={SettingsScreen}
-            options={{
-                ...opts, cardStyleInterpolator: fromHoriz, gestureDirection: "horizontal"
-            }}
-        />
-        <Stack.Screen name="Tasks" component={TasksScreen}
-            options={{
-                ...opts, cardStyleInterpolator: fromVert, gestureDirection: "vertical", presentation: "transparentModal"
-            }}
-        />
-        <Stack.Screen name="Profile" component={ProfileScreen}
-            options={{
-				...opts, cardStyleInterpolator: fromHoriz, gestureDirection: "horizontal-inverted", presentation: "transparentModal"
-            }}
-        />
+        <Stack.Screen name="Settings" component={SettingsScreen} options={{
+            ...opts, cardStyleInterpolator: fromVert, gestureDirection: "vertical-inverted", presentation: "transparentModal"
+        }} />
+        <Stack.Screen name="Rewards" component={RewardsScreen} options={{
+            ...opts, cardStyleInterpolator: fromHoriz, gestureDirection: "horizontal"
+        }} />
+        <Stack.Screen name="Tasks" component={TasksScreen} options={{
+            ...opts, cardStyleInterpolator: fromVert, gestureDirection: "vertical", presentation: "transparentModal"
+        }} />
+        <Stack.Screen name="Profile" component={ProfileScreen} options={{
+            ...opts, cardStyleInterpolator: fromHoriz, gestureDirection: "horizontal-inverted", presentation: "transparentModal"
+        }} />
     </Stack.Navigator>
 );
 
