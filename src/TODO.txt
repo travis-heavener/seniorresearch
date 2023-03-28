@@ -1,7 +1,5 @@
 - Move permissions stuff from Config.js to new PermissionsManager.js
   - Handle permission rejection
-- Update theme colors
-  - Use CardDisplay theme for the CardSelectItem mini grid
 - Make data exporting/saving **better**
   - Every time a setting changes
   - Encrypt data or something when saving to disk
@@ -14,3 +12,6 @@
 - @expo-google-fonts?
 - Add titles to user profile
   - ie. "Novice", "Amateur" (gets flagged on school WiFi lol), "Champion", "Olympian"
+- Add a separate file with an unlockable objective lookup
+  - Ie. if one file needs to know if a theme is unlocked, the level at which it is unlocked
+    should be stored with the objective in a RewardsManager.js file
