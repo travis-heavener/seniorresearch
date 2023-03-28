@@ -1,9 +1,24 @@
 import { StyleSheet, Text, View } from "react-native"
+import { FlatList } from "react-native-gesture-handler";
+import RewardEntry from "../components/RewardEntry";
+import { vh, vw } from "../config/Toolbox";
 
 const RewardsScreen = (props) => {
+    const rewardsEntries = [
+        {level: 5 , id: "darkTheme"     , text: "Dark Theme"},
+        {level: 10, id: "pandaIcon"     , text: "Panda Icon"},
+        {level: 15, id: "rainbowTheme"  , text: "Rainbow Theme"}
+    ];
+    
     return (
         <View style={styles.top}>
-            <Text>text</Text>
+            <View style={styles.rewardsList}>
+                <FlatList // using the react-native-gesture-handler FlatList bc it doesn't interfere with screen swipe gestures
+                    data={rewardsEntries}
+                    keyExtractor={item => item.level}
+                    renderItem={({item}) => <RewardEntry reqs={item} />}
+                />
+            </View>
         </View>
     )
 };
@@ -12,6 +27,15 @@ export default RewardsScreen;
 
 const styles = StyleSheet.create({
     top: {
-
+        flex: 1,
+        backgroundColor: "blue"
+    },
+    rewardsList: {
+        position: "absolute",
+        width: vw(80),
+        height: vh(80),
+        bottom: vh(5),
+        alignSelf: "center",
+        backgroundColor: "whitesmoke"
     }
 });
