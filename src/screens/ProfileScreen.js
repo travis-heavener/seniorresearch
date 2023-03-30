@@ -113,7 +113,7 @@ const ProfileScreen = (props) => {
                     </View>
                 </View>
                 <View style={[styles.themePickerView, {backgroundColor: THEME.themes}]}>
-                    <ThemedText style={styles.themePickerHeader}>Available Themes</ThemedText>
+                    <ThemedText style={styles.themePickerHeader}>Themes</ThemedText>
 
                     <View style={styles.themePicker}>
                         <FlatList
