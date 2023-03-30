@@ -1,6 +1,8 @@
 import React from "react";
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 
+/* add require statements for preloaded image lookup (DON'T PASS IMG THRU PROPS, PASS TYPE) */
+
 const HomeScreenButton = (props) => {
     const size = (props.flex * 100);
 
@@ -10,7 +12,7 @@ const HomeScreenButton = (props) => {
             onPress={props.onPress}
             activeOpacity={.65}
         >
-            <Text style={{textAlign: "center"}}>{props.flex}</Text>
+            <Text style={{textAlign: "center"}}>{props.type}</Text>
         </TouchableOpacity>
     );
 };

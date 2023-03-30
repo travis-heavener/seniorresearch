@@ -244,9 +244,9 @@ const HomeScreen = (props) => {
                 </View>
 
                 <View style={styles.bottomButtons}>
-                    <HomeScreenButton flex={.75} onPress={leftBtn} />
-                    <HomeScreenButton flex={1} onPress={centerBtn} />
-                    <HomeScreenButton flex={.75} onPress={rightBtn} />
+                    <HomeScreenButton type="left" flex={.75} onPress={leftBtn} />
+                    <HomeScreenButton type="center" flex={1} onPress={centerBtn} />
+                    <HomeScreenButton type="right" flex={.75} onPress={rightBtn} />
                 </View>
             </View>
         </GestureWrapper>
