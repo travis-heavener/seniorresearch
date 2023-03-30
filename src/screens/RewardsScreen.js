@@ -14,6 +14,7 @@ const RewardsScreen = (props) => {
                 <FlatList // using the react-native-gesture-handler FlatList bc it doesn't interfere with screen swipe gestures
                     data={rewardsEntries}
                     keyExtractor={Math.random} // ignores error
+                    showsVerticalScrollIndicator={false}
                     renderItem={({item}) => <RewardEntry reqs={item} />}
                 />
             </View>
