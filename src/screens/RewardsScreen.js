@@ -5,14 +5,15 @@ import { rewardsList } from "../config/RewardsManager";
 import { vh, vw } from "../config/Toolbox";
 
 const RewardsScreen = (props) => {
-    const rewardsEntries = rewardsList;
+    const rewardsEntries = rewardsList
+        .sort((a, b) => a.level-b.level); // got this first try AND from memory (huge W)
     
     return (
         <View style={styles.top}>
             <View style={styles.rewardsList}>
                 <FlatList // using the react-native-gesture-handler FlatList bc it doesn't interfere with screen swipe gestures
                     data={rewardsEntries}
-                    keyExtractor={item => item.level}
+                    keyExtractor={Math.random} // ignores error
                     renderItem={({item}) => <RewardEntry reqs={item} />}
                 />
             </View>
