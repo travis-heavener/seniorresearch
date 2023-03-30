@@ -6,6 +6,7 @@ import { UserDataContext } from "../config/UserDataManager";
 
 import ProgressBar from "../components/ProgressBar";
 import { getUnlockedThemes, themeLookup } from "../config/RewardsManager";
+import { FlatList } from "react-native-gesture-handler";
 const CHECK_IMG = require("../../assets/media/check.png");
 
 const ProfileScreen = (props) => {
@@ -66,6 +67,10 @@ const ProfileScreen = (props) => {
     const readoutXP = currentXP + " XP";
     const maxXP = Settings.XP_CONSTANTS.calculateLevelMax(userContext.stats.level);
 
+    const initialThemeIndex = getUnlockedThemes(userContext.stats.level).map(t => t.id).indexOf(userContext.selectedTheme);
+
+    console.log(initialThemeIndex);
+
     return (
         <View style={{flex: 1}}>
             <Pressable style={styles.absolute} onPress={() => props.navigation.goBack()} />
@@ -111,9 +116,16 @@ const ProfileScreen = (props) => {
                     <ThemedText style={styles.themePickerHeader}>Available Themes</ThemedText>
 
                     <View style={styles.themePicker}>
-                        {
-                            getUnlockedThemes(userContext.stats.level).map(theme => generateThemeIcon(theme))
-                        }
+                        <FlatList
+                            data={getUnlockedThemes(userContext.stats.level)}
+                            renderItem={({item}) => generateThemeIcon(item)}
+
+                            showsHorizontalScrollIndicator={false}
+                            contentContainerStyle={{padding: "2%"}}
+                            horizontal={true}
+
+                            initialScrollIndex={initialThemeIndex}
+                        />
                     </View>
                 </View>
             </View>
@@ -252,18 +264,18 @@ const styles = StyleSheet.create({
         textDecorationLine: "underline"
     },
     themePicker: {
-        width: "60%",
+        width: "75%",
         height: vh(11),
         marginTop: vh(1/2),
-        marginHorizontal: "20%",
-        justifyContent: "space-evenly",
-        alignItems: "center",
+        marginHorizontal: "12.5%",
+        alignItems: "center", // centers the flatlist vertically
         flexDirection: "row",
         borderRadius: vh(2.5), // same as children
         backgroundColor: "#0001" // UNCOMMENT FOR BACKGROUND
     },
     themeIcon: {
-        height: "85%",
+        height: vh(8.5),
+        marginHorizontal: vw(.75),
         aspectRatio: 1,
         borderColor: "#222",
         borderWidth: vh(.26),
