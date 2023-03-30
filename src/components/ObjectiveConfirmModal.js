@@ -1,6 +1,6 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { Modal, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { Themes } from "../config/Config";
+import { Themes } from "../config/Themes";
 import { vh, vw } from "../config/Toolbox";
 import { UserDataContext } from "../config/UserDataManager";
 import ProgressBar from "./ProgressBar";

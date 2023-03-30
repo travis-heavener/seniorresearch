@@ -1,7 +1,7 @@
 import { useIsFocused } from "@react-navigation/native";
 import { useContext, useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { Themes } from "../config/Config";
+import { Themes } from "../config/Themes";
 import { vw, vh } from "../config/Toolbox";
 import { exportUserData, UserDataContext } from "../config/UserDataManager";
 import { DIFFICULTIES } from "../objectives/BingoCardManager";

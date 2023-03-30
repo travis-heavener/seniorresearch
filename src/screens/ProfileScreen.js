@@ -1,11 +1,12 @@
 import { useContext, useState } from "react";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
-import { Settings, Themes } from "../config/Config";
+import { Settings } from "../config/Config";
+import { Themes } from "../config/Themes";
 import { formatCommas, vh, vw } from "../config/Toolbox";
 import { UserDataContext } from "../config/UserDataManager";
 
 import ProgressBar from "../components/ProgressBar";
-import { getUnlockedThemes, themeLookup } from "../config/RewardsManager";
+import { getUnlockedThemes } from "../config/RewardsManager";
 import { FlatList } from "react-native-gesture-handler";
 const CHECK_IMG = require("../../assets/media/check.png");
 
@@ -67,9 +68,8 @@ const ProfileScreen = (props) => {
     const readoutXP = currentXP + " XP";
     const maxXP = Settings.XP_CONSTANTS.calculateLevelMax(userContext.stats.level);
 
+    // for auto-scrolling to selected theme (if not on screen)
     const initialThemeIndex = getUnlockedThemes(userContext.stats.level).map(t => t.id).indexOf(userContext.selectedTheme);
-
-    console.log(initialThemeIndex);
 
     return (
         <View style={{flex: 1}}>

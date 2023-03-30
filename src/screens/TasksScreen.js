@@ -1,8 +1,8 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import { View, StyleSheet, Text } from "react-native";
 
-import { Themes, Settings } from "../config/Config";
-import { exportUserData, UserDataContext } from "../config/UserDataManager";
+import { Themes } from "../config/Themes";
+import { UserDataContext } from "../config/UserDataManager";
 
 import TasksScreenCard from "../components/TasksScreenCard";
 

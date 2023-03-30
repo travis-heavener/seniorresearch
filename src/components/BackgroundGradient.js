@@ -1,7 +1,8 @@
 import { useFocusEffect } from "@react-navigation/native";
-import { useCallback, useContext, useEffect, useRef } from "react";
+import { useCallback, useContext, useRef } from "react";
 import { Animated, StyleSheet } from "react-native";
-import { Settings, Themes } from "../config/Config";
+import { Settings } from "../config/Config";
+import { Themes } from "../config/Themes";
 import { vh, vw } from "../config/Toolbox";
 import { UserDataContext } from "../config/UserDataManager";
 import { calculateToColor, generateAnimGradient } from "./GradientManager";

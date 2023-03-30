@@ -1,10 +1,10 @@
 import React, { useState, useContext } from "react";
-import { View, StyleSheet, Text, Dimensions } from "react-native";
+import { View, StyleSheet, Text } from "react-native";
 
 // Pedometer + necessary Android permissions imports
 import SettingsSwitch from "../components/SettingsSwitch";
 
-import { Themes } from "../config/Config";
+import { Themes } from "../config/Themes";
 import { clearUserData, UserDataContext } from "../config/UserDataManager";
 
 // viewport height function to make life easier

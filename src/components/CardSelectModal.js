@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { FlatList, Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { vh, vw } from "../config/Toolbox";
 import { UserDataContext } from "../config/UserDataManager";
 import CardSelectItem from "./CardSelectItem";

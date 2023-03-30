@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native"
+import { StyleSheet, View } from "react-native"
 import { FlatList } from "react-native-gesture-handler";
 import RewardEntry from "../components/RewardEntry";
 import { rewardsList } from "../config/RewardsManager";

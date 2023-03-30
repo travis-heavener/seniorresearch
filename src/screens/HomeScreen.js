@@ -1,6 +1,6 @@
-import React, { useState, useContext, useEffect, useCallback, useRef } from "react";
+import React, { useState, useContext, useEffect, useCallback } from "react";
 import { useFocusEffect, useIsFocused } from "@react-navigation/native";
-import { View, StyleSheet, Text, TouchableOpacity, Animated, Pressable } from "react-native";
+import { View, StyleSheet, Pressable } from "react-native";
 
 // Pedometer + necessary Android permissions imports
 import { Pedometer, DeviceMotion } from "expo-sensors";
@@ -13,7 +13,8 @@ import CardDisplayGrid from "../components/CardDisplayGrid";
 import BackgroundGradient from "../components/BackgroundGradient";
 import GestureWrapper from "../components/GestureWrapper";
 
-import { Settings, PermsContext, Themes } from "../config/Config";
+import { Settings, PermsContext } from "../config/Config";
+import { Themes } from "../config/Themes";
 import { exportUserData, UserDataContext } from "../config/UserDataManager";
 import { generateDailySeed, latLongDist, vh, vw } from "../config/Toolbox";
 import { createBingoCard, DIFFICULTIES } from "../objectives/BingoCardManager";
