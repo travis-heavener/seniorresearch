@@ -5,6 +5,7 @@ import { formatCommas, vh, vw } from "../config/Toolbox";
 import { UserDataContext } from "../config/UserDataManager";
 
 import ProgressBar from "../components/ProgressBar";
+import { getUnlockedThemes, themeLookup } from "../config/RewardsManager";
 const CHECK_IMG = require("../../assets/media/check.png");
 
 const ProfileScreen = (props) => {
@@ -48,17 +49,14 @@ const ProfileScreen = (props) => {
     };
 
     const generateThemeIcon = (theme) => {
-        const col = theme == "base" ? "whitesmoke" :
-                    theme == "dark" ? "#555" :
-                    "#0000";
         const onPress = () => {
-            userContext.setSelectedTheme(theme);
+            userContext.setSelectedTheme(theme.id);
             remount();
         };
         
         return (
-            <Pressable style={[styles.themeIcon, {backgroundColor: col}]} onPress={onPress}>
-                <Image style={[styles.checkImg, {display: userContext.selectedTheme == theme ? "flex" : "none"}]} source={CHECK_IMG} />
+            <Pressable key={Math.random()} style={[styles.themeIcon, {backgroundColor: theme.iconColor}]} onPress={onPress}>
+                <Image style={[styles.checkImg, {display: userContext.selectedTheme == theme.id ? "flex" : "none"}]} source={CHECK_IMG} />
             </Pressable>
         )
     };
@@ -113,8 +111,9 @@ const ProfileScreen = (props) => {
                     <ThemedText style={styles.themePickerHeader}>Available Themes</ThemedText>
 
                     <View style={styles.themePicker}>
-                        { generateThemeIcon("base") }
-                        { generateThemeIcon("dark") }
+                        {
+                            getUnlockedThemes(userContext.stats.level).map(theme => generateThemeIcon(theme))
+                        }
                     </View>
                 </View>
             </View>

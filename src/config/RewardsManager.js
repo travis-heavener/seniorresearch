@@ -1,7 +1,7 @@
 const ICON_PATH = "../../assets/icons/";
 
 export const rewardsList = [
-    /* theme */ {level: 1 , type: "theme", iconColor: "whitesmoke", id: "base"}, // MIN LEVEL
+    /* theme */ {level: 1 , type: "theme", iconColor: "#eee", id: "base"}, // MIN LEVEL
     /* theme */ {level: 1 , type: "theme", iconColor: "#555", id: "dark"}, // MIN LEVEL
     /* theme */ {level: 10, type: "theme", iconColor: "lime", id: "rainbow"},
     /* theme */ {level: 25, type: "theme", iconColor: "pink", id: "pink"},
@@ -16,9 +16,28 @@ export const rewardsList = [
     /* icon */ {level: 90, type: "icon", label: "Yellow Panda", img: require(ICON_PATH + "yellow_panda.png")}, // MAX LEVEL
 ];
 
-export const rewardLookup = (type, id) => {
+export const getUnlockedThemes = (level) => {
+    const themes = [];
+
+    for (let reward of rewardsList) {
+        if (reward.type == "theme" && reward.level <= level)
+            themes.push(reward);
+    }
+
+    return themes.sort((a,b) => a.level-b.level);
+};
+
+export const themeLookup = (id) => {
     for (let reward of rewardsList)
-        if (reward.type == type && reward.id == id)
+        if (reward.type == "theme" && reward.id == id)
+            return reward;
+    
+    return null; // if nothing else is found
+};
+
+export const iconLookup = (label) => {
+    for (let reward of rewardsList)
+        if (reward.type == "icon" && reward.label == label)
             return reward;
     
     return null; // if nothing else is found
