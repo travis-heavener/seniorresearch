@@ -12,9 +12,9 @@
 - @expo-google-fonts?
 - Add titles to user profile
   - ie. "Novice", "Amateur" (gets flagged on school WiFi lol), "Champion", "Olympian"
-- Add a separate file with an unlockable objective lookup
-  - Ie. if one file needs to know if a theme is unlocked, the level at which it is unlocked
-    should be stored with the objective in a RewardsManager.js file
+- Exponential level XP calculation?
+  - Make level 25 max or something
+    - Fixes rewards being more spread out at higher levels
 - Font API: https://docs.expo.dev/versions/v48.0.0/sdk/font/#processfontfamilyfontfamily
 - Audio API: https://docs.expo.dev/versions/v48.0.0/sdk/audio/
 - Battery API: https://docs.expo.dev/versions/v48.0.0/sdk/battery/#isbatteryoptimizationenabledasync
