@@ -15,3 +15,6 @@
 - Add a separate file with an unlockable objective lookup
   - Ie. if one file needs to know if a theme is unlocked, the level at which it is unlocked
     should be stored with the objective in a RewardsManager.js file
+- Font API: https://docs.expo.dev/versions/v48.0.0/sdk/font/#processfontfamilyfontfamily
+- Audio API: https://docs.expo.dev/versions/v48.0.0/sdk/audio/
+- Battery API: https://docs.expo.dev/versions/v48.0.0/sdk/battery/#isbatteryoptimizationenabledasync

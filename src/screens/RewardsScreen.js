@@ -1,14 +1,11 @@
 import { StyleSheet, Text, View } from "react-native"
 import { FlatList } from "react-native-gesture-handler";
 import RewardEntry from "../components/RewardEntry";
+import { rewardsList } from "../config/RewardsManager";
 import { vh, vw } from "../config/Toolbox";
 
 const RewardsScreen = (props) => {
-    const rewardsEntries = [
-        {level: 5 , id: "darkTheme"     , text: "Dark Theme"},
-        {level: 10, id: "pandaIcon"     , text: "Panda Icon"},
-        {level: 15, id: "rainbowTheme"  , text: "Rainbow Theme"}
-    ];
+    const rewardsEntries = rewardsList;
     
     return (
         <View style={styles.top}>
