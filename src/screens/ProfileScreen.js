@@ -1,9 +1,9 @@
-import { useContext, useState } from "react";
-import { Image, ImageBackground, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useContext, useEffect, useRef, useState } from "react";
+import { BackHandler, Image, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Settings } from "../config/Config";
 import { Themes } from "../config/Themes";
 import { formatCommas, vh, vw } from "../config/Toolbox";
-import { clearUserData, UserDataContext } from "../config/UserDataManager";
+import { UserDataContext } from "../config/UserDataManager";
 
 import ProgressBar from "../components/ProgressBar";
 import { getUnlockedIcons, getUnlockedThemes, iconLookup } from "../config/RewardsManager";
@@ -73,9 +73,7 @@ const ProfileScreen = (props) => {
         
         return (
             <Pressable key={Math.random()} style={styles.dropdownIcon} onPress={onPress}>
-                <ImageBackground style={styles.dropdownIconImg} source={icon.img}>
-                    <Image style={[styles.checkImg, {display: userContext.selectedIcon == icon.label ? "flex" : "none"}]} source={CHECK_IMG} />
-                </ImageBackground>
+                <Image style={styles.dropdownIconImg} source={icon.img} />
             </Pressable>
         )
     };
@@ -92,6 +90,21 @@ const ProfileScreen = (props) => {
     // icon selector modal
     const [areIconsVisible, setIconsVisibility] = useState(false);
     const toggleIconDropdown = () => setIconsVisibility(!areIconsVisible);
+
+    // android back button functionality (on screen focus)
+    useEffect(() => {
+        const handleBack = () => {
+            if (areIconsVisible) {
+                setIconsVisibility(false);
+                return true; // prevent default
+            }
+            
+            return false; // allow default
+        };
+
+        BackHandler.addEventListener("hardwareBackPress", handleBack);
+        return () => BackHandler.removeEventListener("hardwareBackPress", handleBack);
+    }, [areIconsVisible]);
 
     return (
         <View style={{flex: 1}}>
@@ -173,6 +186,7 @@ const ProfileScreen = (props) => {
                         initialScrollIndex={initialIconIndex}
                     />
                 </View>
+                <Pressable style={[styles.absolute, {display: areIconsVisible ? "flex" : "none"}]} onPress={() => setIconsVisibility(false)} />
             </View>
         </View>
     );
@@ -182,7 +196,11 @@ const styles = StyleSheet.create({
     absolute: {
         position: "absolute",
         width: vw(100),
-        height: vh(100)
+        height: vh(100),
+        left: 0,
+        top: 0,
+        bottom: 0,
+        right: 0
     },
     body: {
         position: "absolute",
