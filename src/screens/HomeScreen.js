@@ -132,7 +132,7 @@ const HomeScreen = (props) => {
                             // for lazy developers ONLY
                             // userContext.metadata.addDistance(250);
                             // userContext.metadata.setSteps(userContext.metadata.steps + 1000);
-                            // userContext.stats.addXP(250);
+                            // userContext.stats.addXP(86050);
 
                             // re-render card display
                             remount();

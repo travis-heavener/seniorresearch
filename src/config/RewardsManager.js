@@ -29,6 +29,17 @@ export const getUnlockedThemes = (level) => {
     return themes.sort((a,b) => a.level-b.level);
 };
 
+export const getUnlockedIcons = (level) => {
+    const icons = [];
+
+    for (let reward of rewardsList) {
+        if (reward.type == "icon" && reward.level <= level)
+            icons.push(reward);
+    }
+
+    return icons.sort((a,b) => a.level-b.level);
+};
+
 export const themeLookup = (id) => {
     for (let reward of rewardsList)
         if (reward.type == "theme" && reward.id == id)
@@ -42,5 +53,5 @@ export const iconLookup = (label) => {
         if (reward.type == "icon" && reward.label == label)
             return reward;
     
-    return null; // if nothing else is found
+    return {img: null}; // if nothing else is found
 };

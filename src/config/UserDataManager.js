@@ -96,17 +96,10 @@ export const UserDataContext = React.createContext({
         this.cardUpdateInterval = null;
     },
     
+    selectedIcon: "Brown Panda",
+    setSelectedIcon: function(n) {  this.selectedIcon = n; },
     selectedTheme: "base",
-    setSelectedTheme: function(n) {
-        this.selectedTheme = n;
-        // console.log("Selected theme: " + n);
-    },
-    toggleSelectedTheme: function() {
-        if (this.selectedTheme == "dark")
-            this.setSelectedTheme("base");
-        else
-            this.setSelectedTheme("dark");
-    },
+    setSelectedTheme: function(n) {  this.selectedTheme = n;  },
     
     batterySaverStatus: Settings.BATTERY_SAVER_OFF,
     isBatterySaverOn: function() {  return this.batterySaverStatus == Settings.BATTERY_SAVER_ON;  },
@@ -151,6 +144,7 @@ export const loadUserData = async (userContext) => {
     
     userContext.setBatterySaverStatus(data.batterySaverStatus);
     userContext.setSelectedTheme(data.selectedTheme);
+    userContext.setSelectedIcon(data.selectedIcon);
     userContext.setSelectedCard(data.selectedCard);
 
     userContext.stats.setLifetimeSteps(data.metadata.steps);
@@ -195,7 +189,7 @@ export const exportUserData = async (userContext) => {
             "steps", "distance",
         "stats",
             "xp", "level", "lifetimeBingos", "lifetimeCards", "dailySkips",
-        "timestamp", "selectedTheme", "selectedCard", "batterySaverStatus"
+        "timestamp", "selectedTheme", "selectedIcon", "selectedCard", "batterySaverStatus"
     ];
 
     // use JSON.stringify(obj, whitelistedKeysArr) as it neglects including functions automatically
@@ -252,6 +246,7 @@ export const clearUserData = async (userContext) => {
     userContext.metadata.setAcceleration({x: 0, y: 0, z: 0});
 
     userContext.setSelectedTheme("base");
+    userContext.setSelectedIcon("Brown Panda");
     userContext.setBatterySaverStatus(Settings.BATTERY_SAVER_OFF);
 
     userContext.stats.setXP( 0 );

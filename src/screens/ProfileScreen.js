@@ -1,14 +1,16 @@
 import { useContext, useState } from "react";
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { Image, ImageBackground, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Settings } from "../config/Config";
 import { Themes } from "../config/Themes";
 import { formatCommas, vh, vw } from "../config/Toolbox";
-import { UserDataContext } from "../config/UserDataManager";
+import { clearUserData, UserDataContext } from "../config/UserDataManager";
 
 import ProgressBar from "../components/ProgressBar";
-import { getUnlockedThemes } from "../config/RewardsManager";
+import { getUnlockedIcons, getUnlockedThemes, iconLookup } from "../config/RewardsManager";
 import { FlatList } from "react-native-gesture-handler";
+
 const CHECK_IMG = require("../../assets/media/check.png");
+const CARET_IMG = require("../../assets/media/caretDown.png");
 
 const ProfileScreen = (props) => {
     const userContext = useContext( UserDataContext );
@@ -63,6 +65,21 @@ const ProfileScreen = (props) => {
         )
     };
 
+    const generateUserIcon = (icon) => {
+        const onPress = () => {
+            userContext.setSelectedIcon(icon.label);
+            remount();
+        };
+        
+        return (
+            <Pressable key={Math.random()} style={styles.dropdownIcon} onPress={onPress}>
+                <ImageBackground style={styles.dropdownIconImg} source={icon.img}>
+                    <Image style={[styles.checkImg, {display: userContext.selectedIcon == icon.label ? "flex" : "none"}]} source={CHECK_IMG} />
+                </ImageBackground>
+            </Pressable>
+        )
+    };
+
     // xp stuff
     const currentXP = userContext.stats.xp;
     const readoutXP = currentXP + " XP";
@@ -70,6 +87,11 @@ const ProfileScreen = (props) => {
 
     // for auto-scrolling to selected theme (if not on screen)
     const initialThemeIndex = getUnlockedThemes(userContext.stats.level).map(t => t.id).indexOf(userContext.selectedTheme);
+    const initialIconIndex = getUnlockedIcons(userContext.stats.level).map(t => t.label).indexOf(userContext.selectedIcon);
+
+    // icon selector modal
+    const [areIconsVisible, setIconsVisibility] = useState(false);
+    const toggleIconDropdown = () => setIconsVisibility(!areIconsVisible);
 
     return (
         <View style={{flex: 1}}>
@@ -78,7 +100,16 @@ const ProfileScreen = (props) => {
             {/* content itself */}
             <View style={[styles.body, {transform: [{translateX: 0}]}]}>
                 <View style={[styles.userInfoView, {backgroundColor: THEME.userInfo}]}>
-                    <View style={styles.profileImage} />
+                    <View style={styles.profileImageWrap}>
+                        <Image style={styles.profileImage} source={iconLookup(userContext.selectedIcon).img} />
+                        <TouchableOpacity activeOpacity={0.98} style={styles.iconSelector} onPress={toggleIconDropdown}>
+                            <Image
+                                resizeMethod="scale"
+                                style={[styles.iconCaret, {transform: [{rotate: (!areIconsVisible * 180) + "deg"}]}]}
+                                source={CARET_IMG}
+                            />
+                        </TouchableOpacity>
+                    </View>
 
                     <View style={styles.userInfoText}>
                         <View style={styles.userNameContainer}>
@@ -128,6 +159,20 @@ const ProfileScreen = (props) => {
                         />
                     </View>
                 </View>
+
+                {/* icon dropdown (putting this here makes it overlay other elements w/o zIndex & elevation CSS) */}
+                <View style={[styles.iconDropdown, {display: areIconsVisible ? "flex" : "none"}]}>
+                    <FlatList
+                        data={getUnlockedIcons(userContext.stats.level)}
+                        renderItem={({item}) => generateUserIcon(item)}
+
+                        showsHorizontalScrollIndicator={false}
+                        contentContainerStyle={{padding: "2%"}}
+                        horizontal={true}
+
+                        initialScrollIndex={initialIconIndex}
+                    />
+                </View>
             </View>
         </View>
     );
@@ -159,14 +204,61 @@ const styles = StyleSheet.create({
         flexDirection: "row"
         // backgroundColor: "#f55"
     },
-    profileImage: {
+    profileImageWrap: {
         marginTop: -vh(5),
         height: vh(16),
         aspectRatio: 1,
+        justifyContent: "center",
+        alignItems: "center",
         backgroundColor: "cornflowerblue",
-        borderRadius: vh(16),
+        borderRadius: vh(8),
         borderColor: "black",
         borderWidth: vh(0.26)
+    },
+    profileImage: {
+        width: "85%",
+        height: "85%",
+        borderRadius: vh(4)
+    },
+    iconSelector: {
+        width: "30%",
+        height: "27.5%",
+        position: "absolute",
+        bottom: 0,
+        left: 0,
+        borderRadius: vh(1.35),
+        backgroundColor: "#a0d0ff",
+        borderColor: "#222",
+        borderWidth: vh(0.26),
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    iconCaret: {
+        width: "90%",
+        height: null,
+        aspectRatio: 1
+    },
+    iconDropdown: {
+        position: "absolute",
+        left: vw(10)+vh(0.39), // 10vw margin + 0.26vh border on profile image + half 0.26vh border on selector view
+        // right: vw(10)+vh(0.39), // equal to left margin (fills evenly in the middle)
+        bottom: vh(56),
+        width: vw(60),
+        height: vh(25)/3,
+        borderWidth: vh(0.20),
+        borderRadius: vh(25)/16,
+        borderColor: "#333",
+        backgroundColor: "#eee"
+    },
+    dropdownIcon: {
+        flex: 1
+    },
+    dropdownIconImg: {
+        aspectRatio: 1,
+        width: null,
+        height: "100%",
+        borderRadius: vh(2.5), // same as children
+        backgroundColor: "#0001" // UNCOMMENT FOR BACKGROUND
     },
     userInfoText: {
         flex: 1, // fill remaining space
