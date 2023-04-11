@@ -72,9 +72,9 @@ const ProfileScreen = (props) => {
         };
         
         return (
-            <Pressable key={Math.random()} style={styles.dropdownIcon} onPress={onPress}>
+            <TouchableOpacity activeOpacity={0.75} key={Math.random()} style={styles.dropdownIcon} onPress={onPress}>
                 <Image style={styles.dropdownIconImg} source={icon.img} />
-            </Pressable>
+            </TouchableOpacity>
         )
     };
 
