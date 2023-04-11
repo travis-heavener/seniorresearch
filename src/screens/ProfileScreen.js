@@ -94,12 +94,8 @@ const ProfileScreen = (props) => {
     // android back button functionality (on screen focus)
     useEffect(() => {
         const handleBack = () => {
-            if (areIconsVisible) {
-                setIconsVisibility(false);
-                return true; // prevent default
-            }
-            
-            return false; // allow default
+            setIconsVisibility(false); // either closes this or goes back, regardless
+            return areIconsVisible; // if true, prevent default and only close; otherwise, allow default
         };
 
         BackHandler.addEventListener("hardwareBackPress", handleBack);
@@ -173,6 +169,7 @@ const ProfileScreen = (props) => {
                     </View>
                 </View>
 
+                <Pressable style={[styles.absolute, {display: areIconsVisible ? "flex" : "none"}]} onPress={() => setIconsVisibility(false)} />
                 {/* icon dropdown (putting this here makes it overlay other elements w/o zIndex & elevation CSS) */}
                 <View style={[styles.iconDropdown, {display: areIconsVisible ? "flex" : "none"}]}>
                     <FlatList
@@ -186,7 +183,6 @@ const ProfileScreen = (props) => {
                         initialScrollIndex={initialIconIndex}
                     />
                 </View>
-                <Pressable style={[styles.absolute, {display: areIconsVisible ? "flex" : "none"}]} onPress={() => setIconsVisibility(false)} />
             </View>
         </View>
     );
@@ -260,11 +256,11 @@ const styles = StyleSheet.create({
         position: "absolute",
         left: vw(10)+vh(0.39), // 10vw margin + 0.26vh border on profile image + half 0.26vh border on selector view
         // right: vw(10)+vh(0.39), // equal to left margin (fills evenly in the middle)
-        bottom: vh(56),
+        top: vh(16)*0.85*0.725 + vh(0.65), // 85% of (100% - 27.5%) of the circle's height of 16vh + 2 border widths and half boroder
         width: vw(60),
-        height: vh(25)/3,
+        height: vh(9),
         borderWidth: vh(0.20),
-        borderRadius: vh(25)/16,
+        borderRadius: vh(25)/12,
         borderColor: "#333",
         backgroundColor: "#eee"
     },
@@ -275,7 +271,8 @@ const styles = StyleSheet.create({
         aspectRatio: 1,
         width: null,
         height: "100%",
-        borderRadius: vh(2.5), // same as children
+        marginHorizontal: vw(.75),
+        borderRadius: vh(1.75),
         backgroundColor: "#0001" // UNCOMMENT FOR BACKGROUND
     },
     userInfoText: {
