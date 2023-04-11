@@ -3,7 +3,7 @@ import { BackHandler, Image, Pressable, StyleSheet, Text, TouchableOpacity, View
 import { Settings } from "../config/Config";
 import { Themes } from "../config/Themes";
 import { formatCommas, vh, vw } from "../config/Toolbox";
-import { UserDataContext } from "../config/UserDataManager";
+import { exportUserData, UserDataContext } from "../config/UserDataManager";
 
 import ProgressBar from "../components/ProgressBar";
 import { getUnlockedIcons, getUnlockedThemes, iconLookup } from "../config/RewardsManager";
@@ -55,6 +55,7 @@ const ProfileScreen = (props) => {
     const generateThemeIcon = (theme) => {
         const onPress = () => {
             userContext.setSelectedTheme(theme.id);
+            exportUserData(userContext);
             remount();
         };
         
@@ -68,6 +69,7 @@ const ProfileScreen = (props) => {
     const generateUserIcon = (icon) => {
         const onPress = () => {
             userContext.setSelectedIcon(icon.label);
+            exportUserData(userContext);
             remount();
         };
         
