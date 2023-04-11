@@ -76,5 +76,14 @@ export const Themes = {
             themes: "#393939",
             text: "#eee"
         }
+    }, 
+    get rainbow() { // placeholder for theme (TBI)
+        return this.base;
+    },
+    get pink() { // placeholder for theme (TBI)
+        return this.base;
+    },
+    get red() { // placeholder for theme (TBI)
+        return this.base;
     }
 };
