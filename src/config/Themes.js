@@ -40,6 +40,7 @@ export const Themes = {
         rewards: {
             background: "#eee",
             text: "#333",
+            borderColor: "#222",
             entryBackground: "white",
             separatorColor: "whitesmoke",
             unlockedText: "#111",
@@ -87,7 +88,8 @@ export const Themes = {
         rewards: {
             background: "#333",
             text: "#f0f0f0",
-            entryBackground: "#282828",
+            borderColor: "#222",
+            entryBackground: "#3c3c3c",
             separatorColor: "#333",
             unlockedText: "#eee",
             lockedText: "#aaa"

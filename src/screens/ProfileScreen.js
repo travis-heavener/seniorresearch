@@ -297,7 +297,7 @@ const styles = StyleSheet.create({
         height: vh(4.125),
         aspectRatio: 1,
         alignSelf: "center",
-        borderRadius: vw(100),
+        borderRadius: vh(4.125/2),
         borderWidth: vw(0.425),
         backgroundColor: "gold"
     },
