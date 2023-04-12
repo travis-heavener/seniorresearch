@@ -37,11 +37,6 @@ const SettingsScreen = (props) => {
                     toggle={wrapFunc( () => userContext.toggleBatterySaver() )}
                 />
                 <SettingsSwitch
-                    text="Use Dark Theme"
-                    activityListener={() => userContext.selectedTheme == "dark"}
-                    toggle={wrapFunc( () => userContext.toggleSelectedTheme() )}
-                />
-                <SettingsSwitch
                     text="Reset User Data"
                     activityListener={() => false}
                     toggle={wrapFunc( () => clearUserData(userContext) )}

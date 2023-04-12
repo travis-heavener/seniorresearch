@@ -14,9 +14,8 @@
   - ie. "Novice", "Amateur" (gets flagged on school WiFi lol), "Champion", "Olympian"
 - Exponential level XP calculation?
   - Make level 25 max or something
-    - Fixes rewards being more spread out at higher levels
-- Add user xp readout to rewards screen?
-  - Mini readout w/ progress bar and level in one lil row
+    - Fixes rewards being more spread out at higher level
+- Regenerate daily card upon user data refresh
 - Make brown panda lighter so it isn't close to red (despite what non-colorblind people say)
 - Font API: https://docs.expo.dev/versions/v48.0.0/sdk/font/#processfontfamilyfontfamily
 - Audio API: https://docs.expo.dev/versions/v48.0.0/sdk/audio/

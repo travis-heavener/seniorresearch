@@ -49,7 +49,7 @@ export const UserDataContext = React.createContext({
         setLevel: function(n) {  this.level = n;  },
         getTotalXP: function() {
             let total = this.xp;
-            for (let i = 1; i <= this.level; i++)
+            for (let i = 1; i < this.level; i++)
                 total += Settings.XP_CONSTANTS.calculateLevelMax(i);
             
             return total;
