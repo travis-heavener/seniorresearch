@@ -8,6 +8,13 @@ export const DIFFICULTIES = {
     HARD: 5
 };
 
+export const OBJECTIVES_COUNT = {
+    DISTANCE: 4,
+    STEPS: 4,
+    FREE: 1,
+    EXPLORE: 16
+};
+
 export class BingoCard {
     constructor(objectivesArray, difficulty, seed, timestamp=Date.now(), hasAwardedCompletion=false) {
         this.grid = objectivesArray;
@@ -204,32 +211,102 @@ export const createBingoCard = (currentUserContext, difficulty=-1, seed=null, ti
         return labels;
     }).flat(); // flatten to remove arrays returned within the array
 
-    const genRandom = () => {
-        // later rely on seeds, this works for now
-        let index = Math.floor( random.next() * objMap.length );
-        return objMap[index];
+    const genRandomLabel = () => objMap[ Math.floor( random.next() * objMap.length ) ];
+
+    const genEmptyPos = (grid) => {
+        let pos;
+        do {
+            pos = {
+                row: Math.floor( random.next() * 5 ),
+                col: Math.floor( random.next() * 5 )
+            };
+        } while (grid[pos.row][pos.col]);
+
+        return pos;
     };
 
     // generate 5x5 grid (w/ free space in center)
-    let grid = [];
-    for (let r = 0; r < 5; r++) {
-        grid.push([]);
-        for (let c = 0; c < 5; c++) {
-            let label = (r == 2 && c == 2) ? "free" : genRandom();
-            
-            let args = [label, difficulty, currentUserContext, random.next];
+    let grid = [ new Array(5), new Array(5), new Array(5), new Array(5), new Array(5) ];
+    const args = [difficulty, currentUserContext, random.next];
+    const MAX_RANDOMS = 25;
 
-            if (label == "steps") {
-                grid[r].push( new StepsObjective(...args) );
-            } else if (label == "distance") {
-                grid[r].push( new DistanceObjective(...args ) );
-            } else if (label == "free") {
-                grid[r].push( new FreeObjective(...args) );
-            } else {
-                grid[r].push( new ExploreObjective(...args) );
-            }
+    // generate free space
+    grid[2][2] = new FreeObjective("free", ...args);
+
+    // generate four distance objectives
+    for (let i = 0; i < OBJECTIVES_COUNT.DISTANCE; i++) {
+        let n = 0, pos;
+
+        do {
+            pos = genEmptyPos(grid);
+        } while (++n < MAX_RANDOMS && (
+            isInRow("DistanceObjective", pos, grid) // while sharing a row w/ another DistanceObjective
+            || isInCol("DistanceObjective", pos, grid) // while sharing a row w/ another DistanceObjective
+        ))
+        
+        grid[pos.row][pos.col] = new DistanceObjective("distance", ...args);
+    }
+
+    // generate four steps objectives
+    for (let i = 0; i < OBJECTIVES_COUNT.STEPS; i++) {
+        let n = 0, pos;
+
+        do {
+            pos = genEmptyPos(grid);
+        } while (++n < MAX_RANDOMS && (
+            isInRow("StepsObjective", pos, grid) // while sharing a row w/ another StepsObjective
+            || isInCol("StepsObjective", pos, grid) // while sharing a row w/ another StepsObjective
+        ))
+        
+        grid[pos.row][pos.col] = new StepsObjective("steps", ...args);
+    }
+
+    // fill remaining tiles with explore objectives
+    for (let r = 0; r < 5; r++) {
+        for (let c = 0; c < 5; c++) {
+            if (grid[r][c]) continue; // skip over already-filled tiles
+            
+            const pos = {row: r, col: c};
+            let obj;
+            
+            let n = 0;
+            do {
+                obj = new ExploreObjective("findSomething", ...args);
+            } while (++n < MAX_RANDOMS && (
+                isInRow("ExploreObjective", pos, grid, obj.displayText)
+                || isInCol("ExploreObjective", pos, grid, obj.displayText)
+            ));
+            
+            grid[r][c] = obj;
         }
     }
 
     return new BingoCard(grid, difficulty, seed, timestamp);
+};
+
+const isInRow = (type, pos, grid, exploreType="") => {
+    for (let obj of grid[pos.row])
+        if (obj?.constructor.name == type) {
+            if (!exploreType || obj.displayText == exploreType) {
+                // if (obj.displayText == exploreType)
+                    // console.log("Found dupe at (" + pos.row + ", " + pos.col + "): " + exploreType);
+                
+                return true;
+            }
+        }
+    return false;
+};
+
+const isInCol = (type, pos, grid, exploreType="") => {
+    for (let r = 0; r < 5; r++) {
+        const obj = grid[r][pos.col];
+        if (obj?.constructor.name == type)
+            if (!exploreType || obj.displayText == exploreType) {
+                // if (obj.displayText == exploreType)
+                    // console.log("Found dupe at (" + pos.row + ", " + pos.col + "): " + exploreType);
+                
+                return true;
+            }
+    }
+    return false;
 };
