@@ -31,13 +31,20 @@ export class BingoCard {
 
             // handle if a new bingo appears
             const handleNewBingo = () => {
+                const multiplier = this.difficulty == DIFFICULTIES.EASY ? 1
+                    : this.difficulty == DIFFICULTIES.NORMAL ? 2 : 3;
+                
                 // award xp
-                userContext.stats.addXP( !this.hasFirstBingo ? XP_CONSTANTS.firstBingo : XP_CONSTANTS.genericBingo );
+                userContext.stats.addXP(
+                    !this.hasFirstBingo
+                    ? XP_CONSTANTS.firstBingo * multiplier
+                    : XP_CONSTANTS.genericBingo * multiplier
+                );
                 
                 // save to user stats
                 // handle if card is completed
                 if ( this.checkIsCompleted() && !this.hasAwardedCompletion ) {
-                    userContext.stats.addXP( XP_CONSTANTS.completion );
+                    userContext.stats.addXP( XP_CONSTANTS.completion * multiplier );
                     this.hasAwardedCompletion = true;
                     console.log("Board completion!");
                 }
