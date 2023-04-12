@@ -89,8 +89,8 @@ export const Themes = {
             background: "#333",
             text: "#f0f0f0",
             borderColor: "#222",
-            entryBackground: "#3c3c3c",
-            separatorColor: "#333",
+            entryBackground: "#505050",
+            separatorColor: "#404040",
             unlockedText: "#eee",
             lockedText: "#aaa"
         }

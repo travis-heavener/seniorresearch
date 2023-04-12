@@ -25,7 +25,7 @@ const RewardEntry = (props) => {
             <Text style={labelTextStyle}>{ labelText }</Text>
             {
                 reqs.type == "icon" ? <Image style={styles.iconStyle} source={reqs.img} />
-                : reqs.type == "theme" ? <View style={[styles.iconStyle, {backgroundColor: reqs.iconColor}]} />
+                : reqs.type == "theme" ? <View style={[styles.iconStyle, {backgroundColor: reqs.iconColor, borderWidth: vh(0.2)}]} />
                 : null
             }
         </View>
@@ -74,8 +74,9 @@ const styles = StyleSheet.create({
         fontWeight: "400"
     },
     iconStyle: {
-        width: vh(7) * 0.9, // 90% of height
+        width: vh(7) * 0.85, // 85% of height
         aspectRatio: 1,
-        borderRadius: vh(2)
+        borderColor: "#000",
+        borderRadius: vh(1.8)
     }
 });
