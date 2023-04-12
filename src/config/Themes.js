@@ -36,6 +36,14 @@ export const Themes = {
             statsBorder: "#d0d0d0",
             themes: "#e8e8e8",
             text: "#222"
+        },
+        rewards: {
+            background: "#eee",
+            text: "#333",
+            entryBackground: "white",
+            separatorColor: "whitesmoke",
+            unlockedText: "#111",
+            lockedText: "#777"
         }
     },
     dark: {
@@ -75,6 +83,14 @@ export const Themes = {
             statsBorder: "#1a1a1a",
             themes: "#393939",
             text: "#eee"
+        },
+        rewards: {
+            background: "#333",
+            text: "#f0f0f0",
+            entryBackground: "#282828",
+            separatorColor: "#333",
+            unlockedText: "#eee",
+            lockedText: "#aaa"
         }
     }, 
     get rainbow() { // placeholder for theme (TBI)
