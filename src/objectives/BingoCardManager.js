@@ -211,8 +211,6 @@ export const createBingoCard = (currentUserContext, difficulty=-1, seed=null, ti
         return labels;
     }).flat(); // flatten to remove arrays returned within the array
 
-    const genRandomLabel = () => objMap[ Math.floor( random.next() * objMap.length ) ];
-
     const genEmptyPos = (grid) => {
         let pos;
         do {
@@ -228,7 +226,7 @@ export const createBingoCard = (currentUserContext, difficulty=-1, seed=null, ti
     // generate 5x5 grid (w/ free space in center)
     let grid = [ new Array(5), new Array(5), new Array(5), new Array(5), new Array(5) ];
     const args = [difficulty, currentUserContext, random.next];
-    const MAX_RANDOMS = 25;
+    const MAX_RANDOMS = 25, MAX_OCCURANCES = 2;
 
     // generate free space
     grid[2][2] = new FreeObjective("free", ...args);
@@ -267,14 +265,13 @@ export const createBingoCard = (currentUserContext, difficulty=-1, seed=null, ti
             if (grid[r][c]) continue; // skip over already-filled tiles
             
             const pos = {row: r, col: c};
-            let obj;
-            
-            let n = 0;
+            let obj, n = 0;
             do {
                 obj = new ExploreObjective("findSomething", ...args);
             } while (++n < MAX_RANDOMS && (
                 isInRow("ExploreObjective", pos, grid, obj.displayText)
                 || isInCol("ExploreObjective", pos, grid, obj.displayText)
+                || getObjFrequency(grid, obj.displayText) >= MAX_OCCURANCES
             ));
             
             grid[r][c] = obj;
@@ -309,4 +306,14 @@ const isInCol = (type, pos, grid, exploreType="") => {
             }
     }
     return false;
+};
+
+const getObjFrequency = (grid, exploreType) => {
+    let count = 0;
+
+    for (let r = 0; r < grid.length; r++)
+        for (let c = 0; c < grid[r].length; c++)
+            count += (grid[r][c]?.displayText == exploreType);
+
+    return count;
 };
