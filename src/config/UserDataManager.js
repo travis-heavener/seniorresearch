@@ -79,7 +79,8 @@ export const UserDataContext = React.createContext({
     cardSlots: {
         daily: null,
         custom1: null,
-        custom2: null
+        custom2: null,
+        custom3: null
     },
     selectedCard: null,
     setSelectedCard: function(n) {  this.selectedCard = n;  },
@@ -256,6 +257,7 @@ export const clearUserData = async (userContext) => {
     userContext.cardSlots.daily = null;
     userContext.cardSlots.custom1 = null;
     userContext.cardSlots.custom2 = null;
+    userContext.cardSlots.custom3 = null;
     userContext.selectedCard = null;
 
     userContext.setTimestamp( Date.now() );

@@ -25,7 +25,7 @@ const TasksScreen = (props) => {
                 <Text style={[styles.headerText, {color: THEME.text}]}>Active Cards</Text>
             </View>
             <FlatList
-                data={["daily", "custom1", "custom2"]}
+                data={Object.keys(userContext.cardSlots)}
                 renderItem={
                     ({item}) => <TasksScreenCard focusedCard={focusedCard} setFocusedCard={n => setFocusedCard(n)} remount={forceRemount} cardName={item} />
                 }

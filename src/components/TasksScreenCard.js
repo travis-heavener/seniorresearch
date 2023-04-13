@@ -166,8 +166,13 @@ const TasksScreenCard = (props) => {
         );
     } else {
         const addCard = () => {
-            // daily is ALWAYS normal difficulty
-            let difficulty = props.cardName == "daily" ? DIFFICULTIES.NORMAL : undefined; // undefined is overwritten by random in method
+            // daily is ALWAYS normal difficulty, custom 1-3 have difficulties now too :)
+            let difficulty = props.cardName == "daily" ? DIFFICULTIES.NORMAL
+            : props.cardName == "custom1" ? DIFFICULTIES.EASY
+            : props.cardName == "custom2" ? DIFFICULTIES.NORMAL
+            : props.cardName == "custom3" ? DIFFICULTIES.HARD
+            : undefined; // undefined is overwritten by random in method
+
             let seed = props.cardName == "daily" ? generateDailySeed() : undefined; // undefined is overwritten by random seed
             userContext.cardSlots[props.cardName] = createBingoCard(userContext, difficulty, seed); // with random difficulty
             exportUserData(userContext); // save data

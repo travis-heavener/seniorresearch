@@ -15,8 +15,9 @@
 - Exponential level XP calculation?
   - Make level 25 max or something
     - Fixes rewards being more spread out at higher level
-- Regenerate daily card upon user data refresh
-- Make brown panda lighter so it isn't close to red (despite what non-colorblind people say)
+- Make card selector components change background colors based on difficulty?
+  - Or maybe not because their dropdown content has a custom background color
+    - Maybe switch the color to the card selector component and give all dropdowns a fixed color based on theme?
 - Font API: https://docs.expo.dev/versions/v48.0.0/sdk/font/#processfontfamilyfontfamily
 - Audio API: https://docs.expo.dev/versions/v48.0.0/sdk/audio/
 - Battery API: https://docs.expo.dev/versions/v48.0.0/sdk/battery/#isbatteryoptimizationenabledasync
