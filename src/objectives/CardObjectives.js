@@ -167,28 +167,43 @@ export class ExploreObjective extends CardObjective {
         this.triggerPlayerCompletion = () => this.isCompleted = true; // when triggered, objective is checked
 
         // declare objectives
-        const randomObjPool = [
-            { name: "tree", variants: ["tall", "short"] },
-            { name: "bush" },
-            { name: "flower bed" },
-            { name: "school bus" },
-            { name: "public bus" },
-            { name: "taxi" },
-            { name: "car", variants: ["red", "green", "yellow", "blue", "gray", "white", "black"] },
-            { name: "bicycle" },
-            { name: "motorcycle" },
-            { name: "skateboard" },
-            { name: "scooter" },
-            { name: "sign", variants: ["stop", "yield", "crosswalk", "railroad", "school zone"] },
-            { name: "limousine" },
-            { name: "train" },
-            { name: "helicopter" }
-        ];
+        const randomObjPool = {
+            easy: [
+                { name: "sign", variants: ["stop", "yield", "crosswalk", "railroad", "school zone"] },
+                { name: "tree", variants: ["tall", "short"] },
+                { name: "car", variants: ["red", "green", "yellow", "blue", "gray", "white", "black"] },
+                { name: "bush" },
+                { name: "pond" },
+            ],
+            normal: [
+                { name: "school bus" },
+                { name: "flower bed" },
+                { name: "bicycle" },
+                { name: "motorcycle" },
+                { name: "skateboard" },
+                { name: "scooter" },
+            ],
+            hard: [
+                { name: "taxi" },
+                { name: "public bus" },
+                { name: "train" },
+                { name: "limousine" },
+                { name: "helicopter" }
+            ]
+        };
+
+        // create obj pool from difficulty setting
+        let objPool = randomObjPool.easy.slice(0); // shallow clone array
+        
+        // NOTE: THE VALUES FOR EACH DIFFICULTY ARE HARD CODED HERE TO PREVENT "REQUIRE CYCLES" WARNING
+        // SEE https://stackoverflow.com/questions/55664673/require-cycles-are-allowed-but-can-result-in-uninitialized-values-consider-ref
+        if (difficulty >= 2.5) objPool = objPool.concat(...randomObjPool.normal);
+        if (difficulty == 5) objPool = objPool.concat(...randomObjPool.hard);
 
         // pick random
         const randomFromArr = arr => arr[ Math.floor(arr.length * random()) ];
 
-        const randomType = randomFromArr( randomObjPool );
+        const randomType = randomFromArr( objPool );
         const randomVariant = randomType.variants ? randomFromArr( randomType.variants ) : null;
 
         this.displayText = (randomVariant ? randomVariant + " " : "") + randomType.name;
