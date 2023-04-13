@@ -109,37 +109,41 @@ const HomeScreen = (props) => {
                 
                 getListener();
 
+                // main game loop
+                function gameLoop() {
+                    // update timestamp
+                    const {lastTimestamp, currentTimestamp} = userContext.setTimestamp( Date.now() ); // returns old & current
+                    const lastDate = new Date(lastTimestamp), currentDate = new Date(currentTimestamp);
+
+                    // verify that daily card is not null (create one if it is)
+                    // OR the date has changed (create a new daily card based on this date)
+                    if (userContext.cardSlots.daily == null || lastDate.getDate() !== currentDate.getDate()) {
+                        const seed = generateDailySeed(); // create seed from Date obj
+                        userContext.cardSlots.daily = createBingoCard(userContext, DIFFICULTIES.NORMAL, seed);
+                    }
+
+                    // check cards
+                    for (let card of Object.values(userContext.cardSlots))
+                        card?.runCompletionChecks(userContext);
+
+                    // for lazy developers ONLY
+                    // userContext.metadata.addDistance(250);
+                    // userContext.metadata.setSteps(userContext.metadata.steps + 1000);
+                    // userContext.stats.addXP(150);
+
+                    // re-render card display
+                    remount();
+
+                    // export data
+                    exportUserData(userContext);
+                }
+
                 // initialize card update interval & autosave interval
+                gameLoop(); // initial all to load in immediately
                 userContext.setCardUpdateInterval(
                     setInterval(
-                        function() {
-                            // update timestamp
-                            const {lastTimestamp, currentTimestamp} = userContext.setTimestamp( Date.now() ); // returns old & current
-                            const lastDate = new Date(lastTimestamp), currentDate = new Date(currentTimestamp);
-
-                            // verify that daily card is not null (create one if it is)
-                            // OR the date has changed (create a new daily card based on this date)
-                            if (userContext.cardSlots.daily == null || lastDate.getDate() !== currentDate.getDate()) {
-                                const seed = generateDailySeed(); // create seed from Date obj
-                                userContext.cardSlots.daily = createBingoCard(userContext, DIFFICULTIES.NORMAL, seed);
-                            }
-
-                            // check cards
-                            for (let card of Object.values(userContext.cardSlots))
-                                if (card) // if not null, run checks
-                                    card.runCompletionChecks(userContext);
-
-                            // for lazy developers ONLY
-                            // userContext.metadata.addDistance(250);
-                            // userContext.metadata.setSteps(userContext.metadata.steps + 1000);
-                            // userContext.stats.addXP(150);
-
-                            // re-render card display
-                            remount();
-
-                            // export data
-                            exportUserData(userContext);
-                        }, Settings.sensorUpdateIntervals[ userContext.batterySaverStatus ].taskCompletionCheck
+                        gameLoop,
+                        Settings.sensorUpdateIntervals[ userContext.batterySaverStatus ].taskCompletionCheck
                     )
                 );
 
