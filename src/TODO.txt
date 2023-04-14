@@ -18,6 +18,7 @@
 - Make card selector components change background colors based on difficulty?
   - Or maybe not because their dropdown content has a custom background color
     - Maybe switch the color to the card selector component and give all dropdowns a fixed color based on theme?
+- Revisit card & objective random generation to improve performance (ie. generateEmptyPos method w/o a while loop)
 - Font API: https://docs.expo.dev/versions/v48.0.0/sdk/font/#processfontfamilyfontfamily
 - Audio API: https://docs.expo.dev/versions/v48.0.0/sdk/audio/
 - Battery API: https://docs.expo.dev/versions/v48.0.0/sdk/battery/#isbatteryoptimizationenabledasync
