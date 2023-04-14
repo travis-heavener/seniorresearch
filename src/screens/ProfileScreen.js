@@ -129,7 +129,8 @@ const ProfileScreen = (props) => {
                                     { userContext.stats.level }
                                 </Text>
                             </View>
-                            <ThemedText style={styles.userName}>Name</ThemedText>
+                            <ThemedText style={styles.userName}>{ userContext.stats.username }</ThemedText>
+                            {/* TODO: add edit icon to change username */}
                         </View>
                         {/* progress bar */}
                         <ProgressBar

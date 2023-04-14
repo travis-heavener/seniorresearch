@@ -266,7 +266,8 @@ const styles = StyleSheet.create({
         zIndex: 10000
     },
     top: {
-        flex: 1
+        width: vw(100),
+        height: vh(100)
     },
     header: {
         flex: 0.1,

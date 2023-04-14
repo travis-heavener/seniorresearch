@@ -55,6 +55,12 @@ export const UserDataContext = React.createContext({
             return total;
         },
 
+        isNewUser: true,
+        setIsNewUser: function(n) {  this.isNewUser = n;  },
+
+        username: "Player",
+        setUsername: function(n) {  this.username = n;  },
+
         dailySkips: 0, // the number of card skips the user has done today
         setDailySkips: function(n) {  this.dailySkips = n;  },
         addDailySkips: function(n) {  this.dailySkips += n;  },
@@ -153,6 +159,8 @@ export const loadUserData = async (userContext) => {
 
     userContext.stats.setXP(data.stats.xp);
     userContext.stats.setLevel(data.stats.level);
+    userContext.stats.setUsername(data.stats.username);
+    userContext.stats.setIsNewUser(data.stats.isNewUser);
 
     userContext.stats.dailySkips = data.stats.dailySkips;
     userContext.timestamp = data.timestamp;
@@ -189,7 +197,7 @@ export const exportUserData = async (userContext) => {
         "metadata",
             "steps", "distance",
         "stats",
-            "xp", "level", "lifetimeBingos", "lifetimeCards", "dailySkips",
+            "xp", "level", "lifetimeBingos", "lifetimeCards", "dailySkips", "username", "isNewUser",
         "timestamp", "selectedTheme", "selectedIcon", "selectedCard", "batterySaverStatus"
     ];
 
@@ -253,6 +261,8 @@ export const clearUserData = async (userContext) => {
     userContext.stats.setXP( 0 );
     userContext.stats.setLevel( 1 );
     userContext.stats.setDailySkips( 0 );
+    userContext.stats.setIsNewUser( false );
+    userContext.stats.setUsername( "Player" );
 
     userContext.cardSlots.daily = null;
     userContext.cardSlots.custom1 = null;

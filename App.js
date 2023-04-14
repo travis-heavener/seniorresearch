@@ -15,6 +15,7 @@ import React from "react";
 import { Easing, Image } from "react-native";
 import ProfileScreen from "./src/screens/ProfileScreen";
 import RewardsScreen from "./src/screens/RewardsScreen";
+import SignupScreen from "./src/screens/SignupScreen";
 const LOADING_IMG = require("./assets/splash.png");
 
 const Stack = createStackNavigator();
@@ -42,8 +43,8 @@ const opts = {
     }
 };
 
-const CreateStack = () => (
-    <Stack.Navigator initialRouteName="Home">
+const CreateStack = ({initialRouteName}) => (
+    <Stack.Navigator initialRouteName={initialRouteName}>
         <Stack.Screen name="Home" component={HomeScreen} options={opts} />
         <Stack.Screen name="Settings" component={SettingsScreen} options={{
             ...opts, cardStyleInterpolator: fromVert, gestureDirection: "vertical-inverted", presentation: "transparentModal"
@@ -57,6 +58,7 @@ const CreateStack = () => (
         <Stack.Screen name="Profile" component={ProfileScreen} options={{
             ...opts, cardStyleInterpolator: fromHoriz, gestureDirection: "horizontal-inverted", presentation: "transparentModal"
         }} />
+        <Stack.Screen name="Signup" component={SignupScreen} options={{headerShown: false}} />
     </Stack.Navigator>
 );
 
@@ -76,7 +78,7 @@ const App = () => {
     if (hasLoaded) {
         return (
             <NavigationContainer>
-                <CreateStack />
+                <CreateStack initialRouteName={userContext.stats.isNewUser ? "Signup" : "Home"} />
             </NavigationContainer>
         );
     } else {

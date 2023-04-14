@@ -19,6 +19,8 @@
   - Or maybe not because their dropdown content has a custom background color
     - Maybe switch the color to the card selector component and give all dropdowns a fixed color based on theme?
 - Revisit card & objective random generation to improve performance (ie. generateEmptyPos method w/o a while loop)
+  - Measure how long it takes to generate a card to see if more random iterations can be added
+- Change progress bar color to theme color (ie. dark --> orange bar)
 - Font API: https://docs.expo.dev/versions/v48.0.0/sdk/font/#processfontfamilyfontfamily
 - Audio API: https://docs.expo.dev/versions/v48.0.0/sdk/audio/
 - Battery API: https://docs.expo.dev/versions/v48.0.0/sdk/battery/#isbatteryoptimizationenabledasync

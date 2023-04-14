@@ -18,11 +18,14 @@ const SettingsScreen = (props) => {
     const [__remountStatus, __setRemountStatus] = useState(false);
     const forceRemount = () => __setRemountStatus(!__remountStatus);
 
-    const wrapFunc = func => {
-        return () => {
-            func();
-            forceRemount();
-        };
+    const toggleBatterySaver = () => {
+        useContext.toggleBatterySaver();
+        forceRemount();
+    };
+
+    const resetUserData = () => {
+        clearUserData(userContext);
+        props.navigation.navigate("Signup");
     };
 
     return (
@@ -34,12 +37,12 @@ const SettingsScreen = (props) => {
                 <SettingsSwitch
                     text="Battery Saver"
                     activityListener={() => userContext.isBatterySaverOn()}
-                    toggle={wrapFunc( () => userContext.toggleBatterySaver() )}
+                    toggle={toggleBatterySaver}
                 />
                 <SettingsSwitch
                     text="Reset User Data"
                     activityListener={() => false}
-                    toggle={wrapFunc( () => clearUserData(userContext) )}
+                    toggle={resetUserData}
                 />
             </View>
             <View style={[styles.dropdownBubble, {borderColor: THEME.primary}]} />
