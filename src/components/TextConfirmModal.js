@@ -1,11 +1,15 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { View, Modal, StyleSheet, Text, Pressable, TextInput, BackHandler } from "react-native";
+import { Themes } from "../config/Themes";
 import { generateRandomString, vh, vw } from "../config/Toolbox";
+import { UserDataContext } from "../config/UserDataManager";
 
 const STRING_LENGTH = 6;
 
 const TextConfirmModal = (props) => {
     const {reject, confirm, isModalVisible} = props;
+    const userContext = useContext( UserDataContext );
+    const THEME = Themes[ userContext.selectedTheme ].settings; // select theme
 
     const [fieldText, setFieldText] = useState("");
     const [randomText, setRandomText] = useState(generateRandomString(STRING_LENGTH));
@@ -30,16 +34,17 @@ const TextConfirmModal = (props) => {
         >
             <Pressable style={styles.absolute} onPress={reject} />
 
-            <View style={styles.body}>
+            <View style={[styles.body, {backgroundColor: THEME.modalTop, borderColor: THEME.modalBorder}]}>
                 <View style={styles.top}>
-                    <Text>{ randomText }</Text>
+                    <Text style={[styles.headerText, {color: THEME.modalText}]}>Reset User Data?</Text>
+                    <Text style={[styles.randomText, {color: THEME.modalText}]}>Enter the following to confirm:{ "\n" + randomText }</Text>
                 </View>
-                <View style={styles.bottom}>
+                <View style={[styles.bottom, {backgroundColor: THEME.modalBottom}]}>
                     <TextInput
                         autoCapitalize="characters" numberOfLines={1} keyboardType="default" maxLength={STRING_LENGTH}
                         style={styles.textInput} onChangeText={t => setFieldText(t)} value={fieldText} 
                     />
-                    <Pressable style={styles.submitButton} onPress={submit}>
+                    <Pressable style={[styles.submitButton, {backgroundColor: THEME.modalConfirm}]} onPress={submit}>
                         <Text style={styles.submitText}>Submit</Text>
                     </Pressable>
                 </View>
@@ -63,12 +68,33 @@ const styles = StyleSheet.create({
         marginHorizontal: vw(25/2),
         marginTop: vh(30),
         marginBottom: vh(37),
-        backgroundColor: "red"
+        overflow: "hidden",
+        borderRadius: vh(4),
+        borderWidth: vh(0.52)
     },
     top: {
         flex: 0.67,
+        width: "90%",
+        marginHorizontal: "5%",
+        justifyContent: "center"
+    },
+    headerText: {
+        textAlign: "center",
+        fontSize: vh(3),
+        marginBottom: vh(1),
+        fontWeight: "500"
+    },
+    randomText: {
+        textAlign: "center",
+        fontSize: vh(2),
+        fontWeight: "600"
+    },
+    bottom: {
+        flex: 0.33,
         width: "100%",
-        backgroundColor: "yellow"
+        flexDirection: "row",
+        justifyContent: "space-evenly",
+        alignItems: "center"
     },
     textInput: {
         flex: 0.6,
@@ -84,7 +110,7 @@ const styles = StyleSheet.create({
     submitButton: {
         flex: 0.25,
         height: vh(5.25),
-        backgroundColor: "red"
+        borderRadius: vh(1)
     },
     submitText: {
         flex: 1,
@@ -93,14 +119,6 @@ const styles = StyleSheet.create({
         textAlign: "center",
         textAlignVertical: "center",
         color: "whitesmoke"
-    },
-    bottom: {
-        flex: 0.33,
-        width: "100%",
-        flexDirection: "row",
-        justifyContent: "space-evenly",
-        alignItems: "center",
-        backgroundColor: "blue"
     }
 });
 

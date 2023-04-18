@@ -9,7 +9,10 @@ export const Themes = {
         settings: {
             primary: "#f0f0f0", primaryAccent: "#e3e3e3",
             secondary: "#e4e4e4", secondaryAccent: "#d6d6d6",
-            text: "#031c0a"
+            text: "#031c0a",
+            modalBorder: "#333", modalTop: "#eee", modalBottom: "#ddd",
+            modalText: "#222",
+            modalConfirm: "cornflowerblue"
         },
         tasks: {
             primary: "#f7bcbc", primaryAccent: "#fad9d9",
@@ -57,7 +60,11 @@ export const Themes = {
         settings: {
             primary: "#363636", primaryAccent: "#2a2a2a",
             secondary: "#2f2f2f", secondaryAccent: "#252525",
-            text: "#f5f5f5"
+            text: "#f5f5f5",
+            modalBorder: " ",
+            modalTop: "#333", modalBottom: "#444",
+            modalText: "#f5f5f5",
+            modalConfirm: "cornflowerblue"
         },
         tasks: {
             primary: "#f7bcbc", primaryAccent: "#fad9d9",
