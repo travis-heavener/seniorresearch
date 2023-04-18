@@ -10,6 +10,7 @@ import { clearUserData, UserDataContext } from "../config/UserDataManager";
 // viewport height function to make life easier
 import { vh, vw } from "../config/Toolbox";
 import SettingsButton from "../components/SettingsButton";
+import TextConfirmModal from "../components/TextConfirmModal";
 
 const SettingsScreen = (props) => {
     const userContext = useContext( UserDataContext );
@@ -19,12 +20,17 @@ const SettingsScreen = (props) => {
     const [__remountStatus, __setRemountStatus] = useState(false);
     const forceRemount = () => __setRemountStatus(!__remountStatus);
 
+    const [isResetModalShown, setResetModalVisibility] = useState(false);
+    const hideResetModal = () => setResetModalVisibility(false);
+    const showResetModal = () => setResetModalVisibility(true);
+
     const toggleBatterySaver = () => {
         userContext.toggleBatterySaver();
         forceRemount();
     };
 
     const resetUserData = () => {
+        hideResetModal();
         clearUserData(userContext);
         props.navigation.navigate("Signup");
     };
@@ -43,10 +49,12 @@ const SettingsScreen = (props) => {
                 <SettingsButton
                     text="Reset User Data"
                     activityListener={() => false}
-                    onPress={resetUserData}
+                    onPress={showResetModal}
                 />
             </View>
             <View style={[styles.dropdownBubble, {borderColor: THEME.primary}]} />
+
+            <TextConfirmModal isModalVisible={isResetModalShown} confirm={resetUserData} reject={hideResetModal} />
 		</View>
 	);
 };

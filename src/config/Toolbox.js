@@ -56,6 +56,16 @@ export class Random {
     }
 }
 
+export const generateRandomString = (length) => {
+    const avail = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    let string = "";
+
+    for (let i = 0; i < length; i++)
+        string += avail.charAt( Math.floor(Math.random() * avail.length) );
+    
+    return string;
+};
+
 // 2-28-23 @ 12:14 PM -- fun one-liner I wrote and I'm strangely proud of :)
 export const toTitleCase = str => str.split(" ").map(frag => frag[0].toUpperCase() + frag.substring(1)).join(" ");
 
