@@ -9,6 +9,7 @@ import { clearUserData, UserDataContext } from "../config/UserDataManager";
 
 // viewport height function to make life easier
 import { vh, vw } from "../config/Toolbox";
+import SettingsButton from "../components/SettingsButton";
 
 const SettingsScreen = (props) => {
     const userContext = useContext( UserDataContext );
@@ -19,7 +20,7 @@ const SettingsScreen = (props) => {
     const forceRemount = () => __setRemountStatus(!__remountStatus);
 
     const toggleBatterySaver = () => {
-        useContext.toggleBatterySaver();
+        userContext.toggleBatterySaver();
         forceRemount();
     };
 
@@ -39,10 +40,10 @@ const SettingsScreen = (props) => {
                     activityListener={() => userContext.isBatterySaverOn()}
                     toggle={toggleBatterySaver}
                 />
-                <SettingsSwitch
+                <SettingsButton
                     text="Reset User Data"
                     activityListener={() => false}
-                    toggle={resetUserData}
+                    onPress={resetUserData}
                 />
             </View>
             <View style={[styles.dropdownBubble, {borderColor: THEME.primary}]} />

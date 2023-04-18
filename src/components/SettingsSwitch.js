@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
         height: vh(8),
         paddingHorizontal: vw(5),
         flexDirection: "row",
-        borderBottomWidth: 2
+        borderBottomWidth: vh(0.26)
     },
     desc: {
         flex: 0.8,
@@ -59,18 +59,18 @@ const styles = StyleSheet.create({
         width: "100%",
         height: "63.5%",
         backgroundColor: "#f5f5f5",
-        borderRadius: 1000,
-        borderColor: "#b6b6b6",
+        borderRadius: vh(50),
+        borderColor: "#d0d0d0",
         flexDirection: "row",
-        borderWidth: 2.5
+        borderWidth: vh(0.36)
     },
     switchBlob: {
         height: "100%",
         aspectRatio: 1,
-        backgroundColor: "#75a9fa",
+        backgroundColor: "#84b2fa",
         borderRadius: 1000,
-        borderColor: "#5a91e8",
-        borderWidth: 2.5
+        borderColor: "#6194e6",
+        borderWidth: vh(0.36)
     }
 });
 
