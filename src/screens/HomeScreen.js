@@ -112,8 +112,10 @@ const HomeScreen = (props) => {
                 // main game loop
                 function gameLoop() {
                     // send user back to signup if they manage to skip the signup screen
-                    if (userContext.stats.isNewUser)
+                    if (userContext.stats.isNewUser) {
                         props.navigation.navigate("Signup");
+                        console.log("How did you skip the signup screen?!\nReveni, asine!");
+                    }
 
                     // update timestamp
                     const {lastTimestamp, currentTimestamp} = userContext.setTimestamp( Date.now() ); // returns old & current

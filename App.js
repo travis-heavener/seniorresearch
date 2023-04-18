@@ -58,7 +58,7 @@ const CreateStack = ({initialRouteName}) => (
         <Stack.Screen name="Profile" component={ProfileScreen} options={{
             ...opts, cardStyleInterpolator: fromHoriz, gestureDirection: "horizontal-inverted", presentation: "transparentModal"
         }} />
-        <Stack.Screen name="Signup" component={SignupScreen} options={{headerShown: false}} />
+        <Stack.Screen name="Signup" component={SignupScreen} options={{headerShown: false, gestureEnabled: false}} />
     </Stack.Navigator>
 );
 
