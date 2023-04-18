@@ -21,6 +21,7 @@
 - Revisit card & objective random generation to improve performance (ie. generateEmptyPos method w/o a while loop)
   - Measure how long it takes to generate a card to see if more random iterations can be added
 - Change progress bar color to theme color (ie. dark --> orange bar)
+- Add screen closure function to tapping background of transparent modal screens
 - Font API: https://docs.expo.dev/versions/v48.0.0/sdk/font/#processfontfamilyfontfamily
 - Audio API: https://docs.expo.dev/versions/v48.0.0/sdk/audio/
 - Battery API: https://docs.expo.dev/versions/v48.0.0/sdk/battery/#isbatteryoptimizationenabledasync
