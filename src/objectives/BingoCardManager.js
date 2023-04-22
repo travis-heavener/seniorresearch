@@ -233,28 +233,30 @@ export const createBingoCard = (currentUserContext, difficulty=-1, seed=null, ti
 
     // generate four distance objectives
     for (let i = 0; i < OBJECTIVES_COUNT.DISTANCE; i++) {
-        let n = 0, pos;
-
-        do {
-            pos = genEmptyPos(grid);
-        } while (++n < MAX_RANDOMS && (
+        let n = 0;
+        let pos = genEmptyPos(grid);
+        
+        while (++n < MAX_RANDOMS && (
             isInRow("DistanceObjective", pos, grid) // while sharing a row w/ another DistanceObjective
             || isInCol("DistanceObjective", pos, grid) // while sharing a row w/ another DistanceObjective
-        ))
+        )) {
+            pos = genEmptyPos(grid);
+        };
         
         grid[pos.row][pos.col] = new DistanceObjective("distance", ...args);
     }
 
     // generate four steps objectives
     for (let i = 0; i < OBJECTIVES_COUNT.STEPS; i++) {
-        let n = 0, pos;
-
-        do {
+        let n = 0;
+        let pos = genEmptyPos(grid);
+        
+        while (++n < MAX_RANDOMS && (
+            isInRow("StepsObjective", pos, grid) // while sharing a row w/ another DistanceObjective
+            || isInCol("StepsObjective", pos, grid) // while sharing a row w/ another DistanceObjective
+        )) {
             pos = genEmptyPos(grid);
-        } while (++n < MAX_RANDOMS && (
-            isInRow("StepsObjective", pos, grid) // while sharing a row w/ another StepsObjective
-            || isInCol("StepsObjective", pos, grid) // while sharing a row w/ another StepsObjective
-        ))
+        };
         
         grid[pos.row][pos.col] = new StepsObjective("steps", ...args);
     }
@@ -265,14 +267,16 @@ export const createBingoCard = (currentUserContext, difficulty=-1, seed=null, ti
             if (grid[r][c]) continue; // skip over already-filled tiles
             
             const pos = {row: r, col: c};
-            let obj, n = 0;
-            do {
-                obj = new ExploreObjective("findSomething", ...args);
-            } while (++n < MAX_RANDOMS && (
+            let n = 0;
+            let obj = new ExploreObjective("findSomething", ...args);
+            
+            while (++n < MAX_RANDOMS && (
                 isInRow("ExploreObjective", pos, grid, obj.displayText)
                 || isInCol("ExploreObjective", pos, grid, obj.displayText)
                 || getObjFrequency(grid, obj.displayText) >= MAX_OCCURANCES
-            ));
+            )) {
+                obj = new ExploreObjective("findSomething", ...args);
+            };
             
             grid[r][c] = obj;
         }
