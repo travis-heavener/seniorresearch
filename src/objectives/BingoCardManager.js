@@ -284,7 +284,7 @@ export const createBingoCard = (currentUserContext, difficulty=-1, seed=null, ti
 const isInRow = (type, pos, grid, exploreType="") => {
     for (let obj of grid[pos.row])
         if (obj?.constructor.name == type) {
-            if (!exploreType || obj.displayText == exploreType) {
+            if (exploreType == "" || obj.displayText == exploreType) {
                 // if (obj.displayText == exploreType)
                     // console.log("Found dupe at (" + pos.row + ", " + pos.col + "): " + exploreType);
                 
@@ -298,7 +298,7 @@ const isInCol = (type, pos, grid, exploreType="") => {
     for (let r = 0; r < 5; r++) {
         const obj = grid[r][pos.col];
         if (obj?.constructor.name == type)
-            if (!exploreType || obj.displayText == exploreType) {
+            if (exploreType == "" || obj.displayText == exploreType) {
                 // if (obj.displayText == exploreType)
                     // console.log("Found dupe at (" + pos.row + ", " + pos.col + "): " + exploreType);
                 
