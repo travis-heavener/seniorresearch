@@ -1,5 +1,5 @@
-import { useContext, useEffect, useRef, useState } from "react";
-import { BackHandler, Image, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useContext, useEffect, useState } from "react";
+import { BackHandler, DeviceEventEmitter, Image, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Settings } from "../config/Config";
 import { Themes } from "../config/Themes";
 import { formatCommas, vh, vw } from "../config/Toolbox";
@@ -56,6 +56,7 @@ const ProfileScreen = (props) => {
         const onPress = () => {
             userContext.setSelectedTheme(theme.id);
             exportUserData(userContext);
+            DeviceEventEmitter.emit("event.updateTheme", {theme: theme.id});
             remount();
         };
         

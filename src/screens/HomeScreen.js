@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect, useCallback } from "react";
 import { useFocusEffect, useIsFocused } from "@react-navigation/native";
-import { View, StyleSheet, Pressable, Image } from "react-native";
+import { View, StyleSheet, Pressable, Image, DeviceEventEmitter } from "react-native";
 
 // Pedometer + necessary Android permissions imports
 import { Pedometer, DeviceMotion } from "expo-sensors";
@@ -80,6 +80,9 @@ const HomeScreen = (props) => {
     useFocusEffect(
         useCallback(
             () => {
+                // remove any residual theme listeners
+                DeviceEventEmitter.removeAllListeners("event.updateTheme");
+
 				if (!permsContext.hasRequestedPermissions) return () => {}; // prevent trying to listen before permissions granted
 
 				// prevent trying to listen without permissions after requesting
@@ -167,6 +170,11 @@ const HomeScreen = (props) => {
                 const removeListeners = () => {
                     subscription.remove(); // remove GPS listener
                     userContext.clearCardUpdateInterval(); // remove card update interval
+
+                    // ADD listener for theme changes from profile screen
+                    DeviceEventEmitter.addListener("event.updateTheme", (theme) => {
+                        remount(); // update theme on this screen
+                    });
                 };
 
                 return () => { subscription && removeListeners() };
@@ -236,14 +244,14 @@ const HomeScreen = (props) => {
     );
 
     // button functions
-    const leftBtn = () => props.navigation.navigate("Profile");
-    const centerBtn = () => props.navigation.navigate("Tasks");
-    const rightBtn = () => props.navigation.navigate("Rewards");
+    const openProfile = () => props.navigation.navigate("Profile");
+    const openTasks = () => props.navigation.navigate("Tasks");
+    const openRewards = () => props.navigation.navigate("Rewards");
     const openSettings = () => props.navigation.navigate("Settings");
 
 	return (
         <GestureWrapper gestureDistance={50} angleThresh={25}
-            onSwipeDown={openSettings} onSwipeLeft={leftBtn} onSwipeRight={rightBtn} onSwipeUp={centerBtn}
+            onSwipeDown={openSettings} onSwipeLeft={openProfile} onSwipeRight={openRewards} onSwipeUp={openTasks}
         >
             <View style={styles.top}>
                 <BackgroundGradient />
@@ -266,9 +274,9 @@ const HomeScreen = (props) => {
                 </View>
 
                 <View style={styles.bottomButtons}>
-                    <HomeScreenButton type="left" flex={.75} onPress={leftBtn} />
-                    <HomeScreenButton type="center" flex={1} onPress={centerBtn} />
-                    <HomeScreenButton type="right" flex={.75} onPress={rightBtn} />
+                    <HomeScreenButton type="Profile" flex={.75} onPress={openProfile} />
+                    <HomeScreenButton type="Tasks" flex={1} onPress={openTasks} />
+                    <HomeScreenButton type="Rewards" flex={.75} onPress={openRewards} />
                 </View>
             </View>
         </GestureWrapper>
