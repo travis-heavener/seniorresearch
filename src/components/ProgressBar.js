@@ -1,8 +1,13 @@
-import { useEffect, useRef } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { StyleSheet, Text, View, Animated } from "react-native"
+import { Themes } from "../config/Themes";
 import { vh, vw } from "../config/Toolbox";
+import { UserDataContext } from "../config/UserDataManager";
 
 const ProgressBar = (props) => {
+    const userContext = useContext( UserDataContext );
+    const THEME = Themes[ userContext.selectedTheme ].progressBar;
+
     const {max, min, current} = props;
     let percentage = current / (max - min) * 100; // 0 being at min & 100 being at max
     percentage = Math.max(0, Math.min(percentage, 100)); // clamp between 0 and 100
@@ -24,7 +29,7 @@ const ProgressBar = (props) => {
 
     return (
         <View style={[styles.top, {width: props.width, height: props.height}]}>
-            <Animated.View style={[styles.blob, {transform: [{translateX: xTranslation}]}]}>
+            <Animated.View style={[styles.blob, {transform: [{translateX: xTranslation}], backgroundColor: THEME.fillColor}]}>
                 <Text numberOfLines={1} adjustsFontSizeToFit={true} style={styles.readout}>{ props.readout }</Text>
             </Animated.View>
         </View>
@@ -44,8 +49,7 @@ const styles = StyleSheet.create({
         // borderBottomRightRadius: vw(3),
         width: "100%",
         height: "100%",
-        justifyContent: "center",
-        backgroundColor: "cornflowerblue"
+        justifyContent: "center"
     },
     readout: {
         height: "100%",

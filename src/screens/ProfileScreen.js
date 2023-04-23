@@ -111,7 +111,7 @@ const ProfileScreen = (props) => {
             {/* content itself */}
             <View style={[styles.body, {transform: [{translateX: 0}]}]}>
                 <View style={[styles.userInfoView, {backgroundColor: THEME.userInfo}]}>
-                    <View style={styles.profileImageWrap}>
+                    <View style={[styles.profileImageWrap, {backgroundColor: THEME.iconBackground}]}>
                         <Image style={styles.profileImage} source={iconLookup(userContext.selectedIcon).img} />
                         <TouchableOpacity activeOpacity={0.98} style={styles.iconSelector} onPress={toggleIconDropdown}>
                             <Image
@@ -227,7 +227,6 @@ const styles = StyleSheet.create({
         aspectRatio: 1,
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "cornflowerblue",
         borderRadius: vh(8),
         borderColor: "black",
         borderWidth: vh(0.26)

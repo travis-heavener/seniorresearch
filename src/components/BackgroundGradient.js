@@ -29,7 +29,7 @@ const BackgroundGradient = (props) => {
 
         // calculate gradient
         let bColor = backgroundColor ?? styles.top.backgroundColor;
-        let { targetColor, step } = calculateToColor( bColor, THEME.backgrounds.stopped, THEME.backgrounds.fast, speed );
+        let { targetColor, step } = calculateToColor( bColor, THEME.stopped, THEME.fast, speed );
 
         // prevent animation from running if it doesn't need to (ie. the color is the same)
         if (targetColor == null) return;
@@ -45,7 +45,7 @@ const BackgroundGradient = (props) => {
     // background animation color
     const backgroundAnim = useRef(new Animated.Value(0)).current;
     const backgroundColor = backgroundAnim.interpolate(
-        generateAnimGradient(THEME.backgrounds.stopped, THEME.backgrounds.fast)
+        generateAnimGradient(THEME.stopped, THEME.fast)
     );
 
     return (

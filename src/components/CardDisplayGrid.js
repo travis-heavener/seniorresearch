@@ -101,7 +101,7 @@ const CardDisplayGrid = (props) => {
 
             <View style={styles.titleWrapper}>
                 <View style={[styles.difficultyIndicator, {backgroundColor: diffColor}]}></View>
-                <Text style={styles.title}>{ title }</Text>
+                <Text style={[styles.title, {color: THEME.labelText}]}>{ title }</Text>
             </View>
             <View style={styles.grid}>
                 { generateCardGrid(userContext.cardSlots[cardName]) }
@@ -152,6 +152,7 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: (vw(85) / 14.4), // (width / 1.2) = height, height / 12 = width / 14.4
+        fontWeight: "500",
         textAlign: "center"
     },
     row: {

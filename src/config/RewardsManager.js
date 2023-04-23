@@ -4,7 +4,7 @@ export const rewardsList = [
     /* themes */
     {level: 1 , type: "theme", iconColor: "#eee", id: "base"}, // MIN LEVEL
     {level: 1 , type: "theme", iconColor: "#555", id: "dark"}, // MIN LEVEL
-    {level: 10, type: "theme", iconColor: "lime", id: "rainbow"},
+    {level: 10, type: "theme", iconColor: "lime", id: "earth"},
     {level: 25, type: "theme", iconColor: "pink", id: "pink"},
     {level: 50, type: "theme", iconColor: "#f66", id: "red"},
     {level: 99, type: "theme", iconColor: "gold", id: "gold"}, // MAX LEVEL
