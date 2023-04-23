@@ -34,6 +34,8 @@ const styles = StyleSheet.create({
     },
     desc: {
         flex: 0.825,
+        fontSize: vh(1.875),
+        fontWeight: "500",
         alignSelf: "center"
     },
     buttonContainer: {

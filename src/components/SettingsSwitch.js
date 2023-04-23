@@ -49,6 +49,8 @@ const styles = StyleSheet.create({
     },
     desc: {
         flex: 0.8,
+        fontSize: vh(1.875),
+        fontWeight: "500",
         alignSelf: "center"
     },
     switch: {
