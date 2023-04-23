@@ -275,7 +275,7 @@ const HomeScreen = (props) => {
 
                 <View style={styles.bottomButtons}>
                     <HomeScreenButton type="Profile" flex={.75} onPress={openProfile} />
-                    <HomeScreenButton type="Tasks" flex={1} onPress={openTasks} />
+                    <HomeScreenButton type="Tasks" flex={.95} onPress={openTasks} />
                     <HomeScreenButton type="Rewards" flex={.75} onPress={openRewards} />
                 </View>
             </View>
