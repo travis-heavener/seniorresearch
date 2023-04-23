@@ -91,7 +91,7 @@ const TasksScreenCard = (props) => {
                             // (r == 0) ? {borderTopWidth: TILE_BORDER_WIDTH} : {}, (c == 0) ? {borderLeftWidth: TILE_BORDER_WIDTH} : {} // borders for top/left
                         ]}
                     >
-                        <ScalingText maxLineLength={12}>{obj.toString()}</ScalingText>
+                        <ScalingText maxLineLength={12}>{obj.toString(userContext)}</ScalingText>
                     </View>
                 );
             }

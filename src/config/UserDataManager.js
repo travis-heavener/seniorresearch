@@ -114,7 +114,13 @@ export const UserDataContext = React.createContext({
         this.batterySaverStatus = this.isBatterySaverOn() ? Settings.BATTERY_SAVER_OFF : Settings.BATTERY_SAVER_ON;
         // console.log("Battery saver: " + (this.isBatterySaverOn() ? "ON" : "OFF"));
     },
-    setBatterySaverStatus: function(n) {  this.batterySaverStatus = n;  }
+    setBatterySaverStatus: function(n) {  this.batterySaverStatus = n;  },
+
+    preferredUnits: "Metric",
+    togglePreferredUnits: function() {
+        this.preferredUnits = (this.preferredUnits == "Metric") ? "Imperial" : "Metric";
+    },
+    setPreferredUnits: function(n) {  this.preferredUnits = n;  }
 });
 
 /************* LOAD USER DATA FROM DISK, IF AVAILABLE *************/
@@ -150,6 +156,7 @@ export const loadUserData = async (userContext) => {
     data = JSON.parse(data);
     
     userContext.setBatterySaverStatus(data.batterySaverStatus);
+    userContext.setPreferredUnits(data.preferredUnits);
     userContext.setSelectedTheme(data.selectedTheme);
     userContext.setSelectedIcon(data.selectedIcon);
     userContext.setSelectedCard(data.selectedCard);
@@ -198,7 +205,7 @@ export const exportUserData = async (userContext) => {
             "steps", "distance",
         "stats",
             "xp", "level", "lifetimeBingos", "lifetimeCards", "dailySkips", "username", "isNewUser",
-        "timestamp", "selectedTheme", "selectedIcon", "selectedCard", "batterySaverStatus"
+        "timestamp", "selectedTheme", "selectedIcon", "selectedCard", "batterySaverStatus", "preferredUnits"
     ];
 
     // use JSON.stringify(obj, whitelistedKeysArr) as it neglects including functions automatically
@@ -257,6 +264,7 @@ export const clearUserData = async (userContext) => {
     userContext.setSelectedTheme("base");
     userContext.setSelectedIcon("Brown Panda");
     userContext.setBatterySaverStatus(Settings.BATTERY_SAVER_OFF);
+    userContext.setPreferredUnits("Metric");
 
     userContext.stats.setXP( 0 );
     userContext.stats.setLevel( 1 );

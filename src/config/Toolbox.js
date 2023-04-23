@@ -69,6 +69,9 @@ export const generateRandomString = (length) => {
 // 2-28-23 @ 12:14 PM -- fun one-liner I wrote and I'm strangely proud of :)
 export const toTitleCase = str => str.split(" ").map(frag => frag[0].toUpperCase() + frag.substring(1)).join(" ");
 
+export const kilometersToMiles = (km) => km * 0.6213712;
+export const milesToKilometers = (mi) => mi / 0.6213712;
+
 /* ********** GPS ********** */
 
 function degreesToRadians(degrees) {

@@ -79,7 +79,7 @@ const CardDisplayGrid = (props) => {
                     ]}
                 >
                     {/* <Text numberOfLines={1} adjustsFontSizeToFit={true} style={styles.tileText}>{obj.toString()}</Text> */}
-                    <ScalingText maxLineLength={12}>{ obj.toString() }</ScalingText>
+                    <ScalingText maxLineLength={12}>{ obj.toString(userContext) }</ScalingText>
                 </Pressable>
             );
         }

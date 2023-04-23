@@ -144,7 +144,7 @@ const HomeScreen = (props) => {
                         card?.runCompletionChecks(userContext);
 
                     // for lazy developers ONLY
-                    // userContext.metadata.addDistance(250);
+                    // userContext.metadata.addDistance(1000);
                     // userContext.metadata.setSteps(userContext.metadata.steps + 1000);
                     // userContext.stats.addXP(150);
 

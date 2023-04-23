@@ -29,6 +29,11 @@ const SettingsScreen = (props) => {
         forceRemount();
     };
 
+    const toggleUnits = () => {
+        userContext.togglePreferredUnits();
+        forceRemount();
+    };
+
     const resetUserData = () => {
         hideResetModal();
         clearUserData(userContext);
@@ -45,6 +50,11 @@ const SettingsScreen = (props) => {
                     text="Battery Saver"
                     activityListener={() => userContext.isBatterySaverOn()}
                     toggle={toggleBatterySaver}
+                />
+                <SettingsSwitch
+                    text="Use metric units"
+                    activityListener={() => userContext.preferredUnits == "Metric"}
+                    toggle={toggleUnits}
                 />
                 <SettingsButton
                     text="Reset User Data"

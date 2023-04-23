@@ -1,4 +1,4 @@
-import { toTitleCase } from "../config/Toolbox";
+import { kilometersToMiles, toTitleCase } from "../config/Toolbox";
 
 export class CardObjective {
     constructor(label, difficulty, userContext) {
@@ -75,7 +75,9 @@ export class DistanceObjective extends CardObjective {
     }
 
     getStatusString(userContext) {
-        return (this.getStatus(userContext)/1000).toFixed(2) + " km";
+        let dist = this.getStatus(userContext)/1000;
+        if (userContext.preferredUnits == "Imperial") dist = kilometersToMiles(dist);
+        return (dist).toFixed(2) + (userContext.preferredUnits == "Metric" ? " km" : " mi");
     }
 
     exportToDisk(userContext) {
@@ -97,8 +99,13 @@ export class DistanceObjective extends CardObjective {
         this.isCompleted = data.isCompleted;
     }
 
-    toString() {
-        return (this.distanceGoal / 1000).toFixed(2) + " km"
+    toString(userContext) {
+        let dist = (this.distanceGoal / 1000);
+        
+        if (userContext.preferredUnits == "Imperial")
+            dist = kilometersToMiles(dist);
+        
+            return dist.toFixed(2) + (userContext.preferredUnits == "Metric" ? " km" : " mi");
     }
 }
 
