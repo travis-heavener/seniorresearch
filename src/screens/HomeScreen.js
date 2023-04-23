@@ -61,6 +61,9 @@ const HomeScreen = (props) => {
             if (userContext.cardSlots.daily == null) {
                 const seed = generateDailySeed(); // create seed from Date obj
                 userContext.cardSlots.daily = createBingoCard(userContext, DIFFICULTIES.NORMAL, seed);
+
+                // focus daily card if no other card is focused
+                if (userContext.selectedCard == null) userContext.selectedCard = "daily";
             }
 
             // send user back to signup if they manage to skip the signup screen
