@@ -1,8 +1,14 @@
+import { useContext } from "react";
 import { StyleSheet, Text, View } from "react-native";
+import { Themes } from "../config/Themes";
 import { vh, vw } from "../config/Toolbox";
+import { UserDataContext } from "../config/UserDataManager";
 
 /* Splits text onto two lines if the raw text exceeds props.maxLineLength */
 const ScalingText = (props) => {
+    const userContext = useContext( UserDataContext );
+    const THEME = Themes[ userContext.selectedTheme ].cardDisplay;
+
     const rawText = props.children;
     const numOfWords = rawText.split(" ").length; // number of words
     const { maxLineLength } = props;
@@ -64,7 +70,7 @@ const ScalingText = (props) => {
         ];
     }
 
-    const TextWrap = ({children}) => <Text adjustsFontSizeToFit={true} numberOfLines={1} style={styles.text}>{ children }</Text>
+    const TextWrap = ({children}) => <Text adjustsFontSizeToFit={true} numberOfLines={1} style={[styles.text, {color: THEME.textColor}]}>{ children }</Text>
 
     return (
         <View style={styles.top}>
@@ -85,6 +91,7 @@ const styles = StyleSheet.create({
         maxHeight: vh(10/3), // twice the preset fontSize
         textAlignVertical: "center",
         fontSize: vh(5/3),
+        fontWeight: "500",
         textAlign: "center"
     }
 });

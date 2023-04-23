@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
         fontSize: vh(2),
         fontWeight: "500",
         fontStyle: "italic",
-        color: "whitesmoke"
+        color: "#f9f9f9"
     }
 });
 

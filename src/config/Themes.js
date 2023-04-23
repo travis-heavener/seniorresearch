@@ -22,7 +22,7 @@ export const Themes = {
         },
         cardDisplay: {
             modalBorder: "#333", modalBackground: "#e6e6e6", modalText: "#222",
-            modalReject: "#fff", modalConfirm: "cornflowerblue"
+            modalReject: "#fff", modalConfirm: "cornflowerblue", textColor: "#111"
         },
         profile: {
             userInfo: "#d0d0d0", iconBackground: "cornflowerblue", iconAccent: "#b1cbfc", stats: "#e0e0e0",
@@ -49,20 +49,20 @@ export const Themes = {
             secondary: "#2f2f2f", secondaryAccent: "#252525",
             text: "#f5f5f5", modalText: "#f5f5f5",
             modalBorder: "#080808", modalTop: "#333", modalBottom: "#444",
-            modalConfirm: "cornflowerblue"
+            modalConfirm: "#c7891e"
         },
         tasks: {
             primary: "#f7bcbc", primaryAccent: "#fad9d9",
             secondary: "#e3a6a6", secondaryAccent: "#d39696"
         },
         cards: {
-            checkedTile: "#63e06e", uncheckedTile: "#e8dbcc",
+            checkedTile: "#44c24f", uncheckedTile: "#383838",
             easy: "#44cc3f", normal: "#d6ae47", hard: "#c45147",
             labelText: "#e7e7e7"
         },
         cardDisplay: {
             modalBorder: "#111", modalBackground: "#333", modalText: "#f5f5f5",
-            modalReject: "#444", modalConfirm: "#db9927"
+            modalReject: "#444", modalConfirm: "#db9927", textColor: "#dfdfdf"
         },
         profile: {
             userInfo: "#202020", iconBackground: "#db9927", iconAccent: "#fac76e", stats: "#303030",
@@ -76,7 +76,7 @@ export const Themes = {
         },
         misc: {
             progressBarColor: "#db9927",
-            switchColor: "#84b2fa", switchBorderColor: "#6194e6", buttonText: "whitesmoke"
+            switchColor: "#f0a930", switchBorderColor: "#c7891e", buttonText: "whitesmoke"
         }
     }, 
     earth: {
@@ -102,7 +102,7 @@ export const Themes = {
         },
         cardDisplay: {
             modalBorder: "#333", modalBackground: "#bfb", modalText: "#222",
-            modalReject: "#dfd", modalConfirm: "#11c217"
+            modalReject: "#dfd", modalConfirm: "#11c217", textColor: "#111"
         },
         profile: {
             userInfo: "#88e088", iconBackground: "#48d948", iconAccent: "#84f084", stats: "#99e099",
@@ -142,7 +142,7 @@ export const Themes = {
         },
         cardDisplay: {
             modalBorder: "#b66", modalBackground: "#fbb", modalText: "#222",
-            modalReject: "#fdd", modalConfirm: "#e08779"
+            modalReject: "#fdd", modalConfirm: "#e08779", textColor: "#111"
         },
         profile: {
             userInfo: "#f09999", iconBackground: "#d99999", iconAccent: "#ebb", stats: "#f0b3b3",
@@ -182,7 +182,7 @@ export const Themes = {
         },
         cardDisplay: {
             modalBorder: "#a33", modalBackground: "#faa", modalText: "#222",
-            modalReject: "#fcc", modalConfirm: "#cf7361"
+            modalReject: "#fcc", modalConfirm: "#cf7361", textColor: "#111"
         },
         profile: {
             userInfo: "#f07777", iconBackground: "#e66", iconAccent: "#f99", stats: "#f09a9a",
@@ -222,7 +222,7 @@ export const Themes = {
         },
         cardDisplay: {
             modalBorder: "#aa3", modalBackground: "#ffa", modalText: "#161616",
-            modalReject: "#ffc", modalConfirm: "#d3d36a"
+            modalReject: "#ffc", modalConfirm: "#d3d36a", textColor: "#111"
         },
         profile: {
             userInfo: "#f0f077", iconBackground: "#ee6", iconAccent: "#ff9", stats: "#f0f09c",
