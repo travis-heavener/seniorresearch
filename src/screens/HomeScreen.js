@@ -149,7 +149,7 @@ const HomeScreen = (props) => {
                     // for lazy developers ONLY
                     // userContext.metadata.addDistance(1000);
                     // userContext.metadata.setSteps(userContext.metadata.steps + 1000);
-                    userContext.stats.setXP(23250); // 23,250 is max for 30 levels
+                    // userContext.stats.setXP(23250); // 23,250 is max for 30 levels
 
                     // re-render card display
                     remount();
