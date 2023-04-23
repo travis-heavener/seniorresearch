@@ -17,7 +17,7 @@ const SettingsButton = (props) => {
                     style={[styles.button, {backgroundColor: MISC_THEME.switchColor, borderColor: MISC_THEME.switchBorderColor}]}
                     onPress={props.onPress} activeOpacity={0.8}
                 >
-                    <Text style={styles.buttonText}>GO</Text>
+                    <Text style={[styles.buttonText, {color: MISC_THEME.buttonText}]}>GO</Text>
                 </TouchableOpacity>
             </View>
         </View>
@@ -57,8 +57,7 @@ const styles = StyleSheet.create({
         textAlignVertical: "center",
         textAlign: "center",
         fontSize: vh(2),
-        fontWeight: "600",
-        color: "whitesmoke"
+        fontWeight: "600"
     }
 });
 

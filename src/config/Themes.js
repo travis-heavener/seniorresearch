@@ -36,7 +36,7 @@ export const Themes = {
         },
         misc: {
             progressBarColor: "cornflowerblue",
-            switchColor: "#84b2fa", switchBorderColor: "#6194e6"
+            switchColor: "#84b2fa", switchBorderColor: "#6194e6", buttonText: "whitesmoke"
         }
     },
     dark: {
@@ -76,7 +76,7 @@ export const Themes = {
         },
         misc: {
             progressBarColor: "#db9927",
-            switchColor: "#84b2fa", switchBorderColor: "#6194e6"
+            switchColor: "#84b2fa", switchBorderColor: "#6194e6", buttonText: "whitesmoke"
         }
     }, 
     earth: {
@@ -116,7 +116,7 @@ export const Themes = {
         },
         misc: {
             progressBarColor: "#28bf30",
-            switchColor: "#11c217", switchBorderColor: "#0fa614"
+            switchColor: "#11c217", switchBorderColor: "#0fa614", buttonText: "whitesmoke"
         }
     },
     pink: {
@@ -156,7 +156,7 @@ export const Themes = {
         },
         misc: {
             progressBarColor: "#b07164",
-            switchColor: "#e08779", switchBorderColor: "#b86558"
+            switchColor: "#e08779", switchBorderColor: "#b86558", buttonText: "whitesmoke"
         }
     },
     red: {
@@ -196,10 +196,47 @@ export const Themes = {
         },
         misc: {
             progressBarColor: "#b85540",
-            switchColor: "#e34242", switchBorderColor: "#c42929"
+            switchColor: "#e34242", switchBorderColor: "#c42929", buttonText: "whitesmoke"
         }
     },
-    get gold() { // placeholder for theme (TBI)
-        return this.base;
+    gold: {
+        home: {
+            stopped: "rgb(252, 222, 50)",
+            fast: "rgb(252, 235, 139)"
+        },
+        settings: {
+            primary: "#ffea70", primaryAccent: "#e3cf5d",
+            secondary: "#e8c915", secondaryAccent: "#c2a608",
+            text: "#333", modalText: "#222",
+            modalBorder: "#333", modalTop: "#eee", modalBottom: "#ddd",
+            modalConfirm: "#e8cb2c"
+        },
+        tasks: {
+            primary: "#fce66f", primaryAccent: "#faeda5",
+            secondary: "#f0cb0a", secondaryAccent: "#ccad06"
+        },
+        cards: {
+            checkedTile: "#e8c710", uncheckedTile: "#fcf5ca",
+            easy: "#ffe34a", normal: "#e0c428", hard: "#ba9e02",
+            labelText: "#101010"
+        },
+        cardDisplay: {
+            modalBorder: "#aa3", modalBackground: "#ffa", modalText: "#161616",
+            modalReject: "#ffc", modalConfirm: "#d3d36a"
+        },
+        profile: {
+            userInfo: "#f0f077", iconBackground: "#ee6", iconAccent: "#ff9", stats: "#f0f09c",
+            statsColumn: "#ffc", statsBorder: "#c0c066",
+            themes: "#f8f8b1", text: "#222"
+        },
+        rewards: {
+            background: "#fcfc6f", entryBackground: "#fcfc9a",
+            borderColor: "#553", separatorColor: "#e3e384",
+            text: "#332", unlockedText: "#111", lockedText: "#777"
+        },
+        misc: {
+            progressBarColor: "#c7c706",
+            switchColor: "#f7d623", switchBorderColor: "#d9bc1e", buttonText: "#4a3f04"
+        }
     }
 };
