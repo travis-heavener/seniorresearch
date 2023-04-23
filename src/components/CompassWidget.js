@@ -10,7 +10,8 @@ import { UserDataContext } from "../config/UserDataManager";
 
 // import images
 const MEDIA_ROOT = "../../assets/media/";
-const WRAPPER_SRC = require(MEDIA_ROOT + "compassWrapper.png");
+const WRAPPER_LIGHT_SRC = require(MEDIA_ROOT + "compassWrapperLight.png");
+const WRAPPER_DARK_SRC = require(MEDIA_ROOT + "compassWrapperDark.png");
 const NEEDLE_SRC = require(MEDIA_ROOT + "needle.png");
 
 const CompassWidget = (props) => {
@@ -76,6 +77,9 @@ const CompassWidget = (props) => {
 		outputRange: ["0deg", "360deg"]
 	});
 
+    // toggle color based on theme
+    const wrapperSrc = (userContext.selectedTheme == "dark") ? WRAPPER_LIGHT_SRC : WRAPPER_DARK_SRC;
+
     return (
         // rotating needle
         // <ImageBackground style={styles.wrapperImg} source={WRAPPER_SRC}>
@@ -87,7 +91,7 @@ const CompassWidget = (props) => {
         //     <Image style={[styles.needleImg, {transform: [{rotate: (-alphaRef.current ?? 0) + "rad"}]}]} source={NEEDLE_SRC} />
         // </ImageBackground>
 		<View style={styles.top}>
-			<Animated.Image style={[styles.wrapperImg, {transform: [{rotate: alpha}]}]} source={WRAPPER_SRC} />
+			<Animated.Image style={[styles.wrapperImg, {transform: [{rotate: alpha}]}]} source={wrapperSrc} />
 			<Image style={styles.needleImg} source={NEEDLE_SRC} />
 		</View>
     );
