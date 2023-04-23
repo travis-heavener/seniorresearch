@@ -52,7 +52,7 @@ const SettingsScreen = (props) => {
                     toggle={toggleBatterySaver}
                 />
                 <SettingsSwitch
-                    text="Use metric units"
+                    text="Use Metric units"
                     activityListener={() => userContext.preferredUnits == "Metric"}
                     toggle={toggleUnits}
                 />
