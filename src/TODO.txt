@@ -28,6 +28,7 @@
       - Maybe do away with this or simply increase the iterations
   - Easy card #906016 and normal card #755129 have distance & step objectives in the same row/color
     - Maybe there's an error in the random generation algorithm
+  - It's an issue with the preview build (not following the same logic as the development build???)
 - Font API: https://docs.expo.dev/versions/v48.0.0/sdk/font/#processfontfamilyfontfamily
 - Audio API: https://docs.expo.dev/versions/v48.0.0/sdk/audio/
 - Battery API: https://docs.expo.dev/versions/v48.0.0/sdk/battery/#isbatteryoptimizationenabledasync

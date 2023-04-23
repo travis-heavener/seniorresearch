@@ -8,13 +8,6 @@ export const DIFFICULTIES = {
     HARD: 5
 };
 
-export const OBJECTIVES_COUNT = {
-    DISTANCE: 4,
-    STEPS: 4,
-    FREE: 1,
-    EXPLORE: 16
-};
-
 export class BingoCard {
     constructor(objectivesArray, difficulty, seed, timestamp=Date.now(), hasAwardedCompletion=false) {
         this.grid = objectivesArray;
@@ -200,29 +193,6 @@ export const createBingoCard = (currentUserContext, difficulty=-1, seed=null, ti
     // player activation (ie. find a red car, find water) and
     // automatic activation (ie. step count, distance)
 
-    let objMap = [ // list objective labels and respective weights
-        {label: "steps", weight: 1},
-        {label: "distance", weight: 1},
-        {label: "findSomething", weight: 2}
-    ].map(elem => { // append all labels to an array n times, where n is the weight of each label
-        let labels = [];
-        for (let i = 0; i < elem.weight; i++)
-            labels.push(elem.label);
-        return labels;
-    }).flat(); // flatten to remove arrays returned within the array
-
-    const genEmptyPos = (grid) => {
-        let pos;
-        do {
-            pos = {
-                row: Math.floor( random.next() * 5 ),
-                col: Math.floor( random.next() * 5 )
-            };
-        } while (grid[pos.row][pos.col]);
-
-        return pos;
-    };
-
     // generate 5x5 grid (w/ free space in center)
     let grid = [ new Array(5), new Array(5), new Array(5), new Array(5), new Array(5) ];
     const args = [difficulty, currentUserContext, random.next];
@@ -231,34 +201,18 @@ export const createBingoCard = (currentUserContext, difficulty=-1, seed=null, ti
     // generate free space
     grid[2][2] = new FreeObjective("free", ...args);
 
-    // generate four distance objectives
-    for (let i = 0; i < OBJECTIVES_COUNT.DISTANCE; i++) {
-        let n = 0;
-        let pos = genEmptyPos(grid);
-        
-        while (++n < MAX_RANDOMS && (
-            isInRow("DistanceObjective", pos, grid) // while sharing a row w/ another DistanceObjective
-            || isInCol("DistanceObjective", pos, grid) // while sharing a row w/ another DistanceObjective
-        )) {
-            pos = genEmptyPos(grid);
-        };
-        
-        grid[pos.row][pos.col] = new DistanceObjective("distance", ...args);
-    }
-
-    // generate four steps objectives
-    for (let i = 0; i < OBJECTIVES_COUNT.STEPS; i++) {
-        let n = 0;
-        let pos = genEmptyPos(grid);
-        
-        while (++n < MAX_RANDOMS && (
-            isInRow("StepsObjective", pos, grid) // while sharing a row w/ another DistanceObjective
-            || isInCol("StepsObjective", pos, grid) // while sharing a row w/ another DistanceObjective
-        )) {
-            pos = genEmptyPos(grid);
-        };
-        
-        grid[pos.row][pos.col] = new StepsObjective("steps", ...args);
+    // generate cross pattern for steps & distance objectives
+    let currentSpace = "Distance";
+    for (let r = 0; r < 5; r++) {
+        for (let c = 0; c < 5; c++) {
+            if (r % 2 == c % 2 && !grid[r][c]) { // if the row and column are in pattern & not a free space
+                grid[r][c] = (currentSpace == "Distance")
+                    ? new DistanceObjective("distance", ...args)
+                    : new StepsObjective("steps", ...args);
+                
+                currentSpace = (currentSpace == "Distance") ? "Steps" : "Distance";
+            }
+        }
     }
 
     // fill remaining tiles with explore objectives
