@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect, useCallback } from "react";
 import { useFocusEffect, useIsFocused } from "@react-navigation/native";
-import { View, StyleSheet, Pressable } from "react-native";
+import { View, StyleSheet, Pressable, Image } from "react-native";
 
 // Pedometer + necessary Android permissions imports
 import { Pedometer, DeviceMotion } from "expo-sensors";
@@ -18,6 +18,8 @@ import { Themes } from "../config/Themes";
 import { exportUserData, UserDataContext } from "../config/UserDataManager";
 import { generateDailySeed, latLongDist, vh, vw } from "../config/Toolbox";
 import { createBingoCard, DIFFICULTIES } from "../objectives/BingoCardManager";
+
+const SETTINGS_ICON = require("../../assets/media/settingsWheel.png");
 
 const HomeScreen = (props) => {
     const userContext = useContext( UserDataContext );
@@ -249,7 +251,7 @@ const HomeScreen = (props) => {
 
                 <View style={styles.header}>
                     <Pressable onPress={openSettings}>
-                        <View style={styles.settingsIcon} />
+                        <Image style={styles.settingsIcon} source={SETTINGS_ICON} />
                     </Pressable>
                     <View style={styles.compassWrapper}>
                         <CompassWidget navigation={props.navigation} />
@@ -292,9 +294,11 @@ const styles = StyleSheet.create({
         aspectRatio: 1
     },
     settingsIcon: {
-        height: "100%",
-        aspectRatio: 1,
-        backgroundColor: "red"
+        height: "87.5%",
+        marginHorizontal: "5%",
+        marginTop: "5%",
+        marginBottom: "12.5%",
+        aspectRatio: 1
     },
     body: {
         flex: 0.75,
