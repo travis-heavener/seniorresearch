@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text, DevSettings } from "react-native";
 
 // Pedometer + necessary Android permissions imports
 import SettingsSwitch from "../components/SettingsSwitch";
@@ -37,7 +37,8 @@ const SettingsScreen = (props) => {
     const resetUserData = () => {
         hideResetModal();
         clearUserData(userContext);
-        props.navigation.navigate("Signup");
+        // props.navigation.navigate("Signup");
+        DevSettings.reload();
     };
 
     return (

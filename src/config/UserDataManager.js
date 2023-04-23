@@ -37,10 +37,14 @@ export const UserDataContext = React.createContext({
 
     stats: {
         xp: 0, // xp for user's level (not total & cumulative)
-        setXP: function(n) {  this.xp = n;  },
+        setXP: function(n) {
+            this.xp = 0;
+            this.level = 1;
+            this.addXP(n);
+        },
         addXP: function(n) {
             this.xp += n;
-            while (this.xp >= Settings.XP_CONSTANTS.calculateLevelMax(this.level)) {
+            while (this.xp >= Settings.XP_CONSTANTS.calculateLevelMax(this.level) && this.level < Settings.XP_CONSTANTS.maxLevel) {
                 this.xp -= Settings.XP_CONSTANTS.calculateLevelMax(this.level);
                 this.level++;
             }

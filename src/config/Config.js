@@ -35,10 +35,11 @@ export const Settings = {
         firstBingo: 15,
         genericBingo: 10,
         completion: 50,
-        levelBase: 25, // base xp while at level 1 (to get to level 2)
-        levelIncrement: 25, // xp increment per level
+        maxLevel: 30, // after filling out the 30th level, there isn't a 31
+        levelBase: 0, // base xp while at level 1 (to get to level 2)
+        levelIncrement: 50, // xp increment per level
         calculateLevelMax: function(level) {
-            return this.levelBase + level*this.levelIncrement;
+            return level * this.levelIncrement + this.levelBase;
         }
     },
 	LOCATION_NOISE_THRESH: 25, // in meters, widest accuracy radius of geolocation calls, limits noise
