@@ -34,8 +34,9 @@ export const Themes = {
             borderColor: "#222", separatorColor: "whitesmoke",
             text: "#333", unlockedText: "#111", lockedText: "#777"
         },
-        progressBar: {
-            fillColor: "cornflowerblue"
+        misc: {
+            progressBarColor: "cornflowerblue",
+            switchColor: "#84b2fa", switchBorderColor: "#6194e6"
         }
     },
     dark: {
@@ -73,17 +74,58 @@ export const Themes = {
             borderColor: "#222", separatorColor: "#404040",
             text: "#f0f0f0", unlockedText: "#eee", lockedText: "#aaa"
         },
-        progressBar: {
-            fillColor: "#db9927"
+        misc: {
+            progressBarColor: "#db9927",
+            switchColor: "#84b2fa", switchBorderColor: "#6194e6"
         }
     }, 
-    get earth() { // placeholder for theme (TBI)
-        return this.base;
+    earth: {
+        home: {
+            stopped: "rgb(19, 148, 25)",
+            fast: "rgb(69, 222, 76)"
+        },
+        settings: {
+            primary: "#6be86e", primaryAccent: "#4db34f",
+            secondary: "#188c1b", secondaryAccent: "#117314",
+            text: "#031c0a", modalText: "#222",
+            modalBorder: "#333", modalTop: "#eee", modalBottom: "#ddd",
+            modalConfirm: "#11c217"
+        },
+        tasks: {
+            primary: "#9cd69e", primaryAccent: "#c0f0c1",
+            secondary: "#6cb86e", secondaryAccent: "#509452"
+        },
+        cards: {
+            checkedTile: "#63e06e", uncheckedTile: "#c1e3c1",
+            easy: "#44cc3f", normal: "#d6ae47", hard: "#c45147",
+            labelText: "#161616"
+        },
+        cardDisplay: {
+            modalBorder: "#333", modalBackground: "#bfb", modalText: "#222",
+            modalReject: "#dfd", modalConfirm: "#11c217"
+        },
+        profile: {
+            userInfo: "#88e088", iconBackground: "#48d948", iconAccent: "#84f084", stats: "#99e099",
+            statsColumn: "#cfc", statsBorder: "#88d088",
+            themes: "#aae0aa", text: "#222"
+        },
+        rewards: {
+            background: "#aea", entryBackground: "#cfc",
+            borderColor: "#252", separatorColor: "#beb",
+            text: "#131", unlockedText: "#111", lockedText: "#777"
+        },
+        misc: {
+            progressBarColor: "#28bf30",
+            switchColor: "#11c217", switchBorderColor: "#0fa614"
+        }
     },
     get pink() { // placeholder for theme (TBI)
         return this.base;
     },
     get red() { // placeholder for theme (TBI)
+        return this.base;
+    },
+    get gold() { // placeholder for theme (TBI)
         return this.base;
     }
 };

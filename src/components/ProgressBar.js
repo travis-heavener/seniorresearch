@@ -6,7 +6,7 @@ import { UserDataContext } from "../config/UserDataManager";
 
 const ProgressBar = (props) => {
     const userContext = useContext( UserDataContext );
-    const THEME = Themes[ userContext.selectedTheme ].progressBar;
+    const THEME = Themes[ userContext.selectedTheme ].misc;
 
     const {max, min, current} = props;
     let percentage = current / (max - min) * 100; // 0 being at min & 100 being at max
@@ -29,7 +29,7 @@ const ProgressBar = (props) => {
 
     return (
         <View style={[styles.top, {width: props.width, height: props.height}]}>
-            <Animated.View style={[styles.blob, {transform: [{translateX: xTranslation}], backgroundColor: THEME.fillColor}]}>
+            <Animated.View style={[styles.blob, {transform: [{translateX: xTranslation}], backgroundColor: THEME.progressBarColor}]}>
                 <Text numberOfLines={1} adjustsFontSizeToFit={true} style={styles.readout}>{ props.readout }</Text>
             </Animated.View>
         </View>

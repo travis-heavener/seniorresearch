@@ -7,12 +7,16 @@ import { UserDataContext } from "../config/UserDataManager";
 const SettingsButton = (props) => {
     const userContext = useContext( UserDataContext );
     const THEME = Themes[ userContext.selectedTheme ].settings; // select theme
+    const MISC_THEME = Themes[ userContext.selectedTheme ].misc; // select theme
 
     return (
         <View style={[styles.body, {borderBottomColor: THEME.primaryAccent}]}>
             <Text style={[styles.desc, {color: THEME.text}]}>{props.text}</Text>
             <View style={styles.buttonContainer}>
-                <TouchableOpacity style={styles.button} onPress={props.onPress} activeOpacity={0.8}>
+                <TouchableOpacity
+                    style={[styles.button, {backgroundColor: MISC_THEME.switchColor, borderColor: MISC_THEME.switchBorderColor}]}
+                    onPress={props.onPress} activeOpacity={0.8}
+                >
                     <Text style={styles.buttonText}>GO</Text>
                 </TouchableOpacity>
             </View>
@@ -43,10 +47,8 @@ const styles = StyleSheet.create({
     button: {
         width: "100%",
         height: "63.5%",
-        backgroundColor: "#84b2fa",
         borderWidth: vh(0.36),
-        borderRadius: vh(50),
-        borderColor: "#6194e6"
+        borderRadius: vh(50)
     },
     buttonText: {
         flex: 1,

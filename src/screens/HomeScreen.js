@@ -149,7 +149,7 @@ const HomeScreen = (props) => {
                     // for lazy developers ONLY
                     // userContext.metadata.addDistance(1000);
                     // userContext.metadata.setSteps(userContext.metadata.steps + 1000);
-                    // userContext.stats.addXP(150);
+                    // userContext.stats.addXP(123775); // 123,775 is to reach lvl 99 with no remainder
 
                     // re-render card display
                     remount();

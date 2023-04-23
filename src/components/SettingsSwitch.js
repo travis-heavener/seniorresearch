@@ -10,6 +10,7 @@ import { Themes } from "../config/Themes";
 const SettingsSwitch = (props) => {
     const userContext = useContext( UserDataContext );
     const THEME = Themes[ userContext.selectedTheme ].settings; // select theme
+    const MISC_THEME = Themes[ userContext.selectedTheme ].misc; // select theme
 
     const toggle = () => {
         // trigger animation
@@ -31,7 +32,7 @@ const SettingsSwitch = (props) => {
             <TouchableOpacity style={styles.switch} onPress={toggle} activeOpacity={1}>
                 <View style={styles.switchBody}>
                     <Animated.View style={{flex: toggleAnim}} />
-                    <View style={styles.switchBlob} />
+                    <View style={[styles.switchBlob, {backgroundColor: MISC_THEME.switchColor, borderColor: MISC_THEME.switchBorderColor}]} />
                 </View>
             </TouchableOpacity>
         </View>
@@ -67,9 +68,7 @@ const styles = StyleSheet.create({
     switchBlob: {
         height: "100%",
         aspectRatio: 1,
-        backgroundColor: "#84b2fa",
         borderRadius: 1000,
-        borderColor: "#6194e6",
         borderWidth: vh(0.36)
     }
 });

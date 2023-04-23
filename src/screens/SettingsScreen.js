@@ -62,7 +62,7 @@ const SettingsScreen = (props) => {
                     onPress={showResetModal}
                 />
             </View>
-            <View style={[styles.dropdownBubble, {borderColor: THEME.primary}]} />
+            <View style={[styles.dropdownBubble, {borderColor: THEME.primaryAccent}]} />
 
             <TextConfirmModal isModalVisible={isResetModalShown} confirm={resetUserData} reject={hideResetModal} />
 		</View>
@@ -94,11 +94,13 @@ const styles = StyleSheet.create({
     },
     dropdownBubble: {
         width: vw(10),
-        aspectRatio: 1,
-        marginTop: vh(-1.5),
+        height: vh(3),
+        marginTop: vh(0),
         alignSelf: "center",
-        borderRadius: vw(5),
-        borderWidth: vh(1)
+        borderBottomLeftRadius: vw(5),
+        borderBottomRightRadius: vw(5),
+        borderWidth: vh(1),
+        borderTopWidth: 0
     }
 });
 
