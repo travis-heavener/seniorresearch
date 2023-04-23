@@ -174,7 +174,7 @@ const ProfileScreen = (props) => {
 
                 <Pressable style={[styles.absolute, {display: areIconsVisible ? "flex" : "none"}]} onPress={() => setIconsVisibility(false)} />
                 {/* icon dropdown (putting this here makes it overlay other elements w/o zIndex & elevation CSS) */}
-                <View style={[styles.iconDropdown, {display: areIconsVisible ? "flex" : "none"}]}>
+                <View style={[styles.iconDropdown, {display: areIconsVisible ? "flex" : "none", opacity: (areIconsVisible+0)}]}>
                     <FlatList
                         data={getUnlockedIcons(userContext.stats.level)}
                         renderItem={({item}) => generateUserIcon(item)}
