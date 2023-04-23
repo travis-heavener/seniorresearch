@@ -119,11 +119,85 @@ export const Themes = {
             switchColor: "#11c217", switchBorderColor: "#0fa614"
         }
     },
-    get pink() { // placeholder for theme (TBI)
-        return this.base;
+    pink: {
+        home: {
+            stopped: "rgb(237, 182, 171)",
+            fast: "rgb(247, 210, 203)"
+        },
+        settings: {
+            primary: "#f2c3bb", primaryAccent: "#d9a198",
+            secondary: "#d68f85", secondaryAccent: "#b56d62",
+            text: "#031c0a", modalText: "#222",
+            modalBorder: "#333", modalTop: "#eee", modalBottom: "#ddd",
+            modalConfirm: "#e08779"
+        },
+        tasks: {
+            primary: "#f7bfb5", primaryAccent: "#f7d6d0",
+            secondary: "#d47d70", secondaryAccent: "#b86558"
+        },
+        cards: {
+            checkedTile: "#de897a", uncheckedTile: "#f7d6d0",
+            easy: "#e6a79c", normal: "#cc887c", hard: "#b07164",
+            labelText: "#161616"
+        },
+        cardDisplay: {
+            modalBorder: "#b66", modalBackground: "#fbb", modalText: "#222",
+            modalReject: "#fdd", modalConfirm: "#e08779"
+        },
+        profile: {
+            userInfo: "#f09999", iconBackground: "#d99999", iconAccent: "#ebb", stats: "#f0b3b3",
+            statsColumn: "#fdd", statsBorder: "#d08888",
+            themes: "#f8c1c1", text: "#222"
+        },
+        rewards: {
+            background: "#fcc", entryBackground: "#fdd",
+            borderColor: "#755", separatorColor: "#ecc",
+            text: "#433", unlockedText: "#111", lockedText: "#777"
+        },
+        misc: {
+            progressBarColor: "#b07164",
+            switchColor: "#e08779", switchBorderColor: "#b86558"
+        }
     },
-    get red() { // placeholder for theme (TBI)
-        return this.base;
+    red: {
+        home: {
+            stopped: "rgb(201, 91, 75)",
+            fast: "rgb(247, 138, 121)"
+        },
+        settings: {
+            primary: "#fc8686", primaryAccent: "#f26b6b",
+            secondary: "#cf4444", secondaryAccent: "#b33737",
+            text: "#031c0a", modalText: "#222",
+            modalBorder: "#333", modalTop: "#eee", modalBottom: "#ddd",
+            modalConfirm: "#d43535"
+        },
+        tasks: {
+            primary: "#f79688", primaryAccent: "#fab8af",
+            secondary: "#cc5e4e", secondaryAccent: "#a14032"
+        },
+        cards: {
+            checkedTile: "#e8644d", uncheckedTile: "#fcc7bd",
+            easy: "#ff6954", normal: "#e04d38", hard: "#cf2811",
+            labelText: "#101010"
+        },
+        cardDisplay: {
+            modalBorder: "#a33", modalBackground: "#faa", modalText: "#222",
+            modalReject: "#fcc", modalConfirm: "#cf7361"
+        },
+        profile: {
+            userInfo: "#f07777", iconBackground: "#e66", iconAccent: "#f99", stats: "#f09a9a",
+            statsColumn: "#fcc", statsBorder: "#c06666",
+            themes: "#f8b1b1", text: "#222"
+        },
+        rewards: {
+            background: "#fc886f", entryBackground: "#fcab9a",
+            borderColor: "#533", separatorColor: "#e39584",
+            text: "#422", unlockedText: "#111", lockedText: "#777"
+        },
+        misc: {
+            progressBarColor: "#b85540",
+            switchColor: "#e34242", switchBorderColor: "#c42929"
+        }
     },
     get gold() { // placeholder for theme (TBI)
         return this.base;
