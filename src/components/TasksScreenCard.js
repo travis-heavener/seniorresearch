@@ -13,12 +13,15 @@ import ScalingText from "./ScalingText";
 const MEDIA_ROOT = "../../assets/media/";
 const CARET_SRC = require(MEDIA_ROOT + "caretDown.png");
 
-const TILE_BORDER_WIDTH = 0; //vh(0.26);
-
 const TasksScreenCard = (props) => {
     const userContext = useContext( UserDataContext );
     const THEME = Themes[ userContext.selectedTheme ].tasks; // select theme
     const CARDS_THEME = Themes[ userContext.selectedTheme ].cards; // select cards theme
+
+    const bodyBackgroundColor = props.cardName == "custom1" ? CARDS_THEME.easy
+        : props.cardName == "custom2" ? CARDS_THEME.normal
+        : props.cardName == "custom3" ? CARDS_THEME.hard
+        : THEME.primary; // for daily card
 
     const [isSelected, setSelected] = useState(false);
     const [isContentOpen, setContentOpen] = useState(false);
@@ -46,7 +49,7 @@ const TasksScreenCard = (props) => {
 	useEffect(
 		() => {
 			Animated.timing(heightAnim, {
-				toValue: isContentOpen ? 0 : -vh(8),
+				toValue: isContentOpen ? 0 : -vh(6),
 				duration: 250,
 				useNativeDriver: true
 			}).start();
@@ -123,10 +126,10 @@ const TasksScreenCard = (props) => {
         };
         
         return (
-            <Animated.View style={[styles.top, {height: vh(8 + 42*(isContentOpen+0))}]}>
+            <Animated.View style={[styles.top, {height: vh(7.5 + 42*(isContentOpen+0))}]}>
                 <TouchableOpacity
                     onPress={toggleDisplay} activeOpacity={1}
-                    style={[styles.body, {backgroundColor: THEME.primary}]}
+                    style={[styles.body, {backgroundColor: bodyBackgroundColor}]}
                 >
                     <View style={styles.leftView}>
                         {/* <Text style={styles.titleText}>{ (props.cardName == "daily") ? "Daily" : "Custom" } Card</Text> */}
@@ -180,7 +183,7 @@ const TasksScreenCard = (props) => {
         };
 
         return (
-            <View style={styles.body}>
+            <View style={[styles.body, {backgroundColor: bodyBackgroundColor}]}>
                 <View style={styles.leftView}>
                     <Text style={styles.seedText}>No Card</Text>
                 </View>
@@ -201,9 +204,9 @@ const styles = StyleSheet.create({
     },
     body: {
         width: vw(100),
-        height: vh(8),
+        height: vh(7.5),
         paddingHorizontal: "2%",
-        borderColor: "#383838",
+        borderColor: "#303030",
         borderBottomWidth: vh(0.26),
         backgroundColor: "#f7bcbc",
         flexDirection: "row"
