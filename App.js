@@ -78,7 +78,7 @@ const App = () => {
     if (hasLoaded) {
         return (
             <NavigationContainer>
-                <CreateStack initialRouteName={userContext.stats.isNewUser ? "Signup" : "Home"} />
+                <CreateStack initialRouteName="Home" />
             </NavigationContainer>
         );
     } else {

@@ -60,6 +60,12 @@ const HomeScreen = (props) => {
                 const seed = generateDailySeed(); // create seed from Date obj
                 userContext.cardSlots.daily = createBingoCard(userContext, DIFFICULTIES.NORMAL, seed);
             }
+
+            // send user back to signup if they manage to skip the signup screen
+            if (userContext.stats.isNewUser) {
+                props.navigation.navigate("Signup");
+                console.log("Navigating to signup screen...");
+            }
             
             setHasStarted(true);
         } )();
@@ -114,7 +120,7 @@ const HomeScreen = (props) => {
                     // send user back to signup if they manage to skip the signup screen
                     if (userContext.stats.isNewUser) {
                         props.navigation.navigate("Signup");
-                        console.log("How did you skip the signup screen?!\nReveni, asine!");
+                        console.log("Navigating to signup screen...");
                     }
 
                     // update timestamp
