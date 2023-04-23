@@ -25,7 +25,7 @@ export const Themes = {
             modalReject: "#fff", modalConfirm: "cornflowerblue"
         },
         profile: {
-            userInfo: "#d0d0d0", iconBackground: "cornflowerblue", stats: "#e0e0e0",
+            userInfo: "#d0d0d0", iconBackground: "cornflowerblue", iconAccent: "#b1cbfc", stats: "#e0e0e0",
             statsColumn: "#f0f0f0", statsBorder: "#d0d0d0",
             themes: "#e8e8e8", text: "#222"
         },
@@ -64,7 +64,7 @@ export const Themes = {
             modalReject: "#444", modalConfirm: "#db9927"
         },
         profile: {
-            userInfo: "#202020", iconBackground: "#db9927", stats: "#303030",
+            userInfo: "#202020", iconBackground: "#db9927", iconAccent: "#fac76e", stats: "#303030",
             statsColumn: "#505050", statsBorder: "#1a1a1a",
             themes: "#393939", text: "#eee"
         },
