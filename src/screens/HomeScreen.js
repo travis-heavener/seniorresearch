@@ -13,19 +13,16 @@ import CardDisplayGrid from "../components/CardDisplayGrid";
 import BackgroundGradient from "../components/BackgroundGradient";
 import GestureWrapper from "../components/GestureWrapper";
 
-import { Settings, PermsContext } from "../config/Config";
+import { PermsContext } from "../config/Config";
 import { Themes } from "../config/Themes";
-import { exportUserData, UserDataContext } from "../config/UserDataManager";
-import { generateDailySeed, vh, vw } from "../config/Toolbox";
-import { createBingoCard, DIFFICULTIES } from "../objectives/BingoCardManager";
-import { handleAccelerometerData, handleLocationData } from "../config/SensorsManager";
-import { eventEmitter, handleAppTick } from "../config/Main";
+import { UserDataContext } from "../config/UserDataManager";
+import { vh, vw } from "../config/Toolbox";
+import { eventEmitter } from "../config/Main";
 
 const SETTINGS_ICON = require("../../assets/media/settingsWheel.png");
 
 const HomeScreen = (props) => {
     const userContext = useContext( UserDataContext );
-    const permsContext = useContext( PermsContext );
     const THEME = Themes[ userContext.selectedTheme ].home; // select theme
 
     // remount (USE SPARINGLY)
@@ -35,112 +32,17 @@ const HomeScreen = (props) => {
     // forces a remount on screen load
     useIsFocused();
 
-    const [hasStarted, setHasStarted] = useState(false);
-
-    // initial, on-load events (empty triggers array to act as componentDidMount)
-    useEffect(() => {
-        ( async () => {
-            if (hasStarted) return;
-
-            // request permissions
-            let perms = await permsContext.requestPermissions();
-
-            // start pedometer
-            if (perms.ACTIVITY_RECOGNITION) {
-                Pedometer.watchStepCount( ({steps}) => userContext.metadata.setSteps(steps) );
-            } else {
-				console.log("Missing pedometer permissions");
-			}
-
-            // accelerometer interval
-            DeviceMotion.setUpdateInterval(
-                Settings.sensorUpdateIntervals[ userContext.batterySaverStatus ].deviceMotion
-            );
-
-            // verify that daily card is not null (create one if it is)
-            if (userContext.cardSlots.daily == null) {
-                const seed = generateDailySeed(); // create seed from Date obj
-                userContext.cardSlots.daily = createBingoCard(userContext, DIFFICULTIES.NORMAL, seed);
-
-                // focus daily card if no other card is focused
-                if (userContext.selectedCard == null) userContext.selectedCard = "daily";
-            }
-
-            // send user back to signup if they manage to skip the signup screen
-            if (userContext.stats.isNewUser) {
-                props.navigation.navigate("Signup");
-                console.log("Navigating to signup screen...");
-            }
-
-            setHasStarted(true);
-        } )();
-    });
-
     // initialize location reading (every time the screen is FOCUSED & has permissions)
     useFocusEffect(
         useCallback(
             () => {
-                // prevent trying to listen before permissions granted
-				if (!permsContext.hasRequestedPermissions) return () => {};
-
-				// prevent trying to listen without permissions after requesting
-				if (!permsContext.permissions.ACCESS_COARSE_LOCATION || !permsContext.permissions.ACCESS_FINE_LOCATION) {
-					console.log("Missing location permissions");
-					return () => {};
-				}
-
-                // initialize GPS polling
-				const { delta, accuracy, minTimeElapsed } = Settings.sensorUpdateIntervals[ userContext.batterySaverStatus ].GPS;
-
-				let subscription;
-                let getListener = async () => {
-                    subscription = await Location.watchPositionAsync(
-                        {accuracy: accuracy, distanceInterval: delta, timeInterval: minTimeElapsed},
-                        (loc) => handleLocationData(loc, userContext)
-                    );
-                };
-                
-                getListener();
-
-                // initialize card update interval & autosave interval
-                handleAppTick(userContext); // initial all to load in immediately
-                userContext.setCardUpdateInterval(
-                    setInterval(
-                        () => handleAppTick(userContext),
-                        Settings.sensorUpdateIntervals[ userContext.batterySaverStatus ].taskCompletionCheck
-                    )
-                );
-
                 // event emitters
                 eventEmitter.removeAllListeners("remountHome"); // remove existing listeners
                 eventEmitter.addListener("remountHome", () => { // add new listener
-                    // console.log("remounting home");
                     remount();
                 });
-
-                const removeListeners = () => {
-                    subscription.remove(); // remove GPS listener
-                    userContext.clearCardUpdateInterval(); // remove card update interval
-                };
-
-                return () => { subscription && removeListeners() };
-            }, [props, userContext.batterySaverStatus, permsContext.hasRequestedPermissions]
+            }, [props]
         )
-    );
-    
-    // initialize devicemotion readings (every time the screen is FOCUSED)
-    useFocusEffect(
-        useCallback(() => {
-			exportUserData(userContext); // save data everytime screen focuses
-
-			// reset device accelerometer timestamp delta
-			// reason: background would fade to green as if speed was really fast because timestamp recording would pause
-			userContext.metadata.setAccelDelta(Date.now());
-			
-			let list = DeviceMotion.addListener(data => handleAccelerometerData(data, userContext));
-
-			return () => list.remove();
-		}, [props])
     );
 
     // button functions

@@ -11,6 +11,8 @@ import { clearUserData, UserDataContext } from "../config/UserDataManager";
 import { vh, vw } from "../config/Toolbox";
 import SettingsButton from "../components/SettingsButton";
 import TextConfirmModal from "../components/TextConfirmModal";
+import { eventEmitter, restartAppTick, startAppTick } from "../config/Main";
+import { restartLocation } from "../config/SensorsManager";
 
 const SettingsScreen = (props) => {
     const userContext = useContext( UserDataContext );
@@ -26,11 +28,14 @@ const SettingsScreen = (props) => {
 
     const toggleBatterySaver = () => {
         userContext.toggleBatterySaver();
+        restartLocation(userContext);
+        restartAppTick(userContext);
         forceRemount();
     };
 
     const toggleUnits = () => {
         userContext.togglePreferredUnits();
+        eventEmitter.emit("remountHome");
         forceRemount();
     };
 
@@ -38,7 +43,7 @@ const SettingsScreen = (props) => {
         hideResetModal();
         clearUserData(userContext);
         // props.navigation.navigate("Signup");
-        DevSettings.reload();
+        DevSettings.reload(); // reload development app, NOT FOR PREVIEW OR RELEASE
     };
 
     return (

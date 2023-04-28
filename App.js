@@ -16,7 +16,8 @@ import { Easing, Image } from "react-native";
 import ProfileScreen from "./src/screens/ProfileScreen";
 import RewardsScreen from "./src/screens/RewardsScreen";
 import SignupScreen from "./src/screens/SignupScreen";
-import { handleAppLoad } from "./src/config/Main";
+import { handleAppLoad, showDebugLogs } from "./src/config/Main";
+import { PermsContext } from "./src/config/Config";
 const LOADING_IMG = require("./assets/splash.png");
 
 const Stack = createStackNavigator();
@@ -67,18 +68,28 @@ const App = () => {
     // load data
     const [hasLoaded, setHasLoaded] = React.useState(false);
     const userContext = React.useContext(UserDataContext);
+    const permsContext = React.useContext(PermsContext);
 
-    // wait for data to load
+    const debugLog = (...text) => {
+        if (showDebugLogs)
+            console.log("[App.js]", ...text);
+    };
+
+    // wait for data & permissions to load
     React.useEffect(() => {
         loadUserData(userContext).then(() => {
-            setHasLoaded(true)
+            debugLog("User Context Loaded!");
+            permsContext.requestPermissions().then(() => {
+                debugLog("Permissions Loaded!");
+                setHasLoaded(true);
+            });
         });
     }, []);
 
     // show loading screen while data waits to be loaded
     if (hasLoaded) {
         // start main function
-        handleAppLoad();
+        handleAppLoad(userContext, permsContext.permissions);
 
         return (
             <NavigationContainer>

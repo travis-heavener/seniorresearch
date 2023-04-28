@@ -1,5 +1,50 @@
 import { Settings } from "./Config";
 import { latLongDist } from "./Toolbox";
+import * as Location from "expo-location";
+import { DeviceMotion, Pedometer } from "expo-sensors";
+
+/******** START SENSORS ********/
+
+let locationListener = null;
+let pedometerListener = null;
+let deviceMotionListener = null;
+
+export const restartLocation = async (userContext) => {
+    locationListener?.remove(); // remove listener, if applicable
+
+    const { delta, accuracy, minTimeElapsed } = Settings.sensorUpdateIntervals[ userContext.batterySaverStatus ].GPS;
+
+    locationListener = await Location.watchPositionAsync(
+        {accuracy: accuracy, distanceInterval: delta, timeInterval: minTimeElapsed},
+        (loc) => {
+            handleLocationData(loc, userContext);
+        }
+    );
+
+    return locationListener;
+};
+
+export const restartPedometer = (userContext) => {
+    pedometerListener?.remove(); // remove listener, if applicable
+
+    pedometerListener = Pedometer.watchStepCount(({steps}) => {
+        userContext.metadata.setSteps(steps);
+    });
+
+    return pedometerListener;
+};
+
+export const restartDeviceMotion = (userContext) => {
+    deviceMotionListener?.remove();
+
+    deviceMotionListener = DeviceMotion.addListener(data => {
+        handleAccelerometerData(data, userContext)
+    });
+
+    return deviceMotionListener;
+};
+
+/******** HANDLE SENSOR DATA ********/
 
 export const handleLocationData = (loc, userContext) => {
     // determine if new position is noisy

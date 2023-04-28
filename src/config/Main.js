@@ -1,29 +1,65 @@
 import EventEmitter from "eventemitter3";
-import { DeviceEventEmitter } from "react-native";
 import { createBingoCard, DIFFICULTIES } from "../objectives/BingoCardManager";
+import { Settings } from "./Config";
+import { restartDeviceMotion, restartLocation, restartPedometer } from "./SensorsManager";
 import { generateDailySeed } from "./Toolbox";
 import { exportUserData } from "./UserDataManager";
 
-/********* EVENT EMITTERS *********/
+/********* CONSTANTS *********/
 
 export const eventEmitter = new EventEmitter();
+export const showDebugLogs = false;
+
+const debugLog = (...text) => {
+    if (showDebugLogs)
+        console.log("[Main.js]", ...text);
+};
 
 /************************************/
 
-export const handleAppLoad = (userContext) => {
-    console.log("Start-up functions run now");
+export const handleAppLoad = async (userContext, perms) => {
+    debugLog("Start-up functions run now");
+
+    // start pedometer
+    if (perms.ACTIVITY_RECOGNITION) {
+        restartPedometer(userContext);
+    } else {
+        debugLog("Missing pedometer permissions");
+    }
+
+    // start accelerometer
+    restartDeviceMotion(userContext);
+
+    // start location polling
+    restartLocation(userContext);
 
     // initialize app tick function
+    restartAppTick(userContext);
+};
+
+let appTickInterval = null;
+export const restartAppTick = (userContext) => {
+    debugLog("Starting new app function");
+    if (appTickInterval != null)
+        clearInterval(appTickInterval);
     
+    // initial call to load in immediately
+    handleAppTick(userContext);
+    appTickInterval = setInterval(
+        () => {
+            handleAppTick(userContext);
+        },
+        Settings.sensorUpdateIntervals[ userContext.batterySaverStatus ].taskCompletionCheck
+    );
 };
 
 export const handleAppTick = (userContext) => {
-    console.log("Game tick elapsed");
+    debugLog("Game tick elapsed", (new Date()).toTimeString());
 
     // send user back to signup if they manage to skip the signup screen
     if (userContext.stats.isNewUser) {
         props.navigation.navigate("Signup");
-        console.log("Navigating to signup screen...");
+        debugLog("Navigating to signup screen...");
     }
 
     // update timestamp
