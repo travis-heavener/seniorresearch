@@ -5,7 +5,7 @@ import * as Location from "expo-location";
 
 /* ======= constants ======= */
 
-export const showDebugLogs = true;
+export const showDebugLogs = false;
 export const useLazyDevMode = false;
 
 /* ======= settings ======= */

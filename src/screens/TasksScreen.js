@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text, Pressable } from "react-native";
 
 import { Themes } from "../config/Themes";
 import { UserDataContext } from "../config/UserDataManager";
@@ -21,7 +21,10 @@ const TasksScreen = (props) => {
     const [focusedCard, setFocusedCard] = useState(null);
     
     return (
-		<View style={[styles.body, {backgroundColor: THEME.primaryAccent}]}>
+        <View style={{flex: 1}}>
+            <Pressable style={styles.absolute} onPress={() => props.navigation.goBack()} />
+            
+            <View style={[styles.body, {backgroundColor: THEME.primaryAccent}]}>
             <View style={[styles.header, {backgroundColor: THEME.secondary, borderColor: THEME.secondaryAccent}]}>
                 <Text style={[styles.headerText, {color: THEME.text}]}>Active Cards</Text>
             </View>
@@ -34,11 +37,19 @@ const TasksScreen = (props) => {
                 {/* <TasksScreenCard remount={forceRemount} cardName="daily" />
                 <TasksScreenCard remount={forceRemount} cardName="custom1" />
                 <TasksScreenCard remount={forceRemount} cardName="custom2" /> */}
+            </View>
 		</View>
 	);
 };
 
 const styles = StyleSheet.create({
+    absolute: {
+        position: "absolute",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0
+    },
     body: {
         width: vw(100),
 		height: vh(80), // 7.5 from the header, 8 + 8 for two unfocused cards & 50 from a focused card (without counting borders)

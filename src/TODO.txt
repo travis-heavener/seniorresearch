@@ -1,7 +1,6 @@
 - Move permissions stuff from Config.js to new PermissionsManager.js
   - Handle permission rejection
 - Make data exporting/saving **better**
-  - Every time a setting changes
   - Encrypt data or something when saving to disk
 - Advanced battery saver??
   - Control various settings for each battery-saver-controlled part
@@ -11,7 +10,6 @@
   - ie. "Novice", "Amateur" (gets flagged on school WiFi lol), "Champion", "Olympian"
 - Revisit card & objective random generation to improve performance (ie. generateEmptyPos method w/o a while loop)
   - Measure how long it takes to generate a card to see if more random iterations can be added
-- Add screen closure function to tapping background of transparent modal screens
 - Fix card generation w/ explore objectives
   - 4/19 daily card (#290573) generates two "Pond" objectives in bottom row at positions 3 & 5
     - There's no way it made it through all 50 or whatever random iterations that's crazy

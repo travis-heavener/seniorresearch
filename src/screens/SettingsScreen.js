@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { View, StyleSheet, Text, DevSettings } from "react-native";
+import { View, StyleSheet, Text, DevSettings, Pressable } from "react-native";
 
 // Pedometer + necessary Android permissions imports
 import SettingsSwitch from "../components/SettingsSwitch";
@@ -48,6 +48,8 @@ const SettingsScreen = (props) => {
 
     return (
 		<View style={styles.top}>
+            <Pressable style={styles.absolute} onPress={() => props.navigation.goBack()} />
+
 			<View style={[styles.header, {backgroundColor: THEME.secondary, borderColor: THEME.secondaryAccent}]}>
                 <Text style={[styles.headerText, {color: THEME.text}]} adjustsFontSizeToFit>Settings</Text>
             </View>
@@ -76,6 +78,13 @@ const SettingsScreen = (props) => {
 };
 
 const styles = StyleSheet.create({
+    absolute: {
+        position: "absolute",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0
+    },
     top: {
         flex: 1
     },
