@@ -94,18 +94,6 @@ export const UserDataContext = React.createContext({
     },
     selectedCard: null,
     setSelectedCard: function(n) {  this.selectedCard = n;  },
-    cardUpdateInterval: null,
-    setCardUpdateInterval: function(n) {
-        if (this.cardUpdateInterval !== null) {
-            console.log("A card interval is already set, clearing current interval");
-            this.clearCardUpdateInterval();
-        }
-        this.cardUpdateInterval = n;
-    },
-    clearCardUpdateInterval: function() {
-        clearInterval(this.cardUpdateInterval);
-        this.cardUpdateInterval = null;
-    },
     
     selectedIcon: "Brown Panda",
     setSelectedIcon: function(n) {  this.selectedIcon = n; },
