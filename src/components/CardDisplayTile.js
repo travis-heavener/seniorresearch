@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { Pressable, StyleSheet } from "react-native";
 import { Themes } from "../config/Themes";
+import { vh } from "../config/Toolbox";
 import { UserDataContext } from "../config/UserDataManager";
 import ScalingText from "./ScalingText";
 
@@ -16,7 +17,7 @@ const CardDisplayTile = (props) => {
             style={[
                 styles.tile, // default styling
                 {backgroundColor: obj.isCompleted ? THEME.checkedTile : THEME.uncheckedTile}, // checked color
-                (row == 0) ? {borderTopWidth: 2} : {}, (col == 0) ? {borderLeftWidth: 2} : {} // borders for top/left
+                (row == 0) ? {borderTopWidth: vh(0.26)} : {}, (col == 0) ? {borderLeftWidth: vh(0.26)} : {} // borders for top/left
             ]}
         >
             {/* <Text numberOfLines={1} adjustsFontSizeToFit={true} style={styles.tileText}>{obj.toString()}</Text> */}
@@ -32,7 +33,7 @@ const styles = StyleSheet.create({
         flex: 1/5,
         justifyContent: "center",
         borderColor: "black",
-        borderRightWidth: 2,
-        borderBottomWidth: 2
+        borderRightWidth: vh(0.26),
+        borderBottomWidth: vh(0.26)
     }
 });
