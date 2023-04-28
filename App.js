@@ -16,6 +16,7 @@ import { Easing, Image } from "react-native";
 import ProfileScreen from "./src/screens/ProfileScreen";
 import RewardsScreen from "./src/screens/RewardsScreen";
 import SignupScreen from "./src/screens/SignupScreen";
+import { handleAppLoad } from "./src/config/Main";
 const LOADING_IMG = require("./assets/splash.png");
 
 const Stack = createStackNavigator();
@@ -76,6 +77,9 @@ const App = () => {
 
     // show loading screen while data waits to be loaded
     if (hasLoaded) {
+        // start main function
+        handleAppLoad();
+
         return (
             <NavigationContainer>
                 <CreateStack initialRouteName="Home" />

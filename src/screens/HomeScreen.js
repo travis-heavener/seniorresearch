@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect, useCallback } from "react";
 import { useFocusEffect, useIsFocused } from "@react-navigation/native";
-import { View, StyleSheet, Pressable, Image, DeviceEventEmitter } from "react-native";
+import { View, StyleSheet, Pressable, Image } from "react-native";
 
 // Pedometer + necessary Android permissions imports
 import { Pedometer, DeviceMotion } from "expo-sensors";
@@ -16,8 +16,10 @@ import GestureWrapper from "../components/GestureWrapper";
 import { Settings, PermsContext } from "../config/Config";
 import { Themes } from "../config/Themes";
 import { exportUserData, UserDataContext } from "../config/UserDataManager";
-import { generateDailySeed, latLongDist, vh, vw } from "../config/Toolbox";
+import { generateDailySeed, vh, vw } from "../config/Toolbox";
 import { createBingoCard, DIFFICULTIES } from "../objectives/BingoCardManager";
+import { handleAccelerometerData, handleLocationData } from "../config/SensorsManager";
+import { eventEmitter, handleAppTick } from "../config/Main";
 
 const SETTINGS_ICON = require("../../assets/media/settingsWheel.png");
 
@@ -45,9 +47,7 @@ const HomeScreen = (props) => {
 
             // start pedometer
             if (perms.ACTIVITY_RECOGNITION) {
-                Pedometer.watchStepCount(res => {
-                    userContext.metadata.setSteps( res.steps )
-                });
+                Pedometer.watchStepCount( ({steps}) => userContext.metadata.setSteps(steps) );
             } else {
 				console.log("Missing pedometer permissions");
 			}
@@ -71,7 +71,7 @@ const HomeScreen = (props) => {
                 props.navigation.navigate("Signup");
                 console.log("Navigating to signup screen...");
             }
-            
+
             setHasStarted(true);
         } )();
     });
@@ -80,10 +80,8 @@ const HomeScreen = (props) => {
     useFocusEffect(
         useCallback(
             () => {
-                // remove any residual theme listeners
-                DeviceEventEmitter.removeAllListeners("event.updateTheme");
-
-				if (!permsContext.hasRequestedPermissions) return () => {}; // prevent trying to listen before permissions granted
+                // prevent trying to listen before permissions granted
+				if (!permsContext.hasRequestedPermissions) return () => {};
 
 				// prevent trying to listen without permissions after requesting
 				if (!permsContext.permissions.ACCESS_COARSE_LOCATION || !permsContext.permissions.ACCESS_FINE_LOCATION) {
@@ -91,90 +89,38 @@ const HomeScreen = (props) => {
 					return () => {};
 				}
 
+                // initialize GPS polling
 				const { delta, accuracy, minTimeElapsed } = Settings.sensorUpdateIntervals[ userContext.batterySaverStatus ].GPS;
-				const thresh = Settings.LOCATION_NOISE_THRESH;
 
 				let subscription;
                 let getListener = async () => {
-                    subscription = await Location.watchPositionAsync({accuracy: accuracy, distanceInterval: delta, timeInterval: minTimeElapsed}, loc => {
-                        // determine if new position is noisy
-						if (loc.coords.accuracy > thresh) return; // console.log(loc.coords.accuracy);
-						
-						// if this is the first non-noisy reading, append it and stop further calculation
-						let current = {lat: loc.coords.latitude, long: loc.coords.longitude, acc: loc.coords.accuracy};
-						let last = userContext.metadata.GPS.current; // this hasn't been updated, so treat the 'current' as last
-
-						if (userContext.metadata.GPS.last.acc == -1) {
-							userContext.metadata.GPS.updatePos(current);
-							return;
-						}
-
-						// if there is a previous coordinate, then we have some math do to !
-						let dist = latLongDist(last.lat, last.long, current.lat, current.long);
-
-						// console.log("Delta: " + delta + "\t Distance: " + dist.toFixed(3) + "\t Acc: " + current.acc.toFixed(3));
-						// console.warn("Delta: " + delta + "\t Distance: " + dist.toFixed(3) + "\t Acc: " + current.acc.toFixed(3));
-						userContext.metadata.addDistance(dist);
-
-						// overwrite last pos and set current
-						userContext.metadata.GPS.updatePos(current);
-                    });
+                    subscription = await Location.watchPositionAsync(
+                        {accuracy: accuracy, distanceInterval: delta, timeInterval: minTimeElapsed},
+                        (loc) => handleLocationData(loc, userContext)
+                    );
                 };
                 
                 getListener();
 
-                // main game loop
-                function gameLoop() {
-                    // send user back to signup if they manage to skip the signup screen
-                    if (userContext.stats.isNewUser) {
-                        props.navigation.navigate("Signup");
-                        console.log("Navigating to signup screen...");
-                    }
-
-                    // update timestamp
-                    const {lastTimestamp, currentTimestamp} = userContext.setTimestamp( Date.now() ); // returns old & current
-                    const lastDate = new Date(lastTimestamp), currentDate = new Date(currentTimestamp);
-
-                    // verify that daily card is not null (create one if it is)
-                    // OR the date has changed (create a new daily card based on this date)
-                    if (userContext.cardSlots.daily == null || lastDate.getDate() !== currentDate.getDate()) {
-                        const seed = generateDailySeed(); // create seed from Date obj
-                        userContext.cardSlots.daily = createBingoCard(userContext, DIFFICULTIES.NORMAL, seed);
-                    }
-
-                    // check cards
-                    for (let card of Object.values(userContext.cardSlots))
-                        card?.runCompletionChecks(userContext);
-
-                    // for lazy developers ONLY
-                    // userContext.metadata.addDistance(1000);
-                    // userContext.metadata.setSteps(userContext.metadata.steps + 1000);
-                    // userContext.stats.setXP(23250); // 23,250 is max for 30 levels
-
-                    // re-render card display
-                    remount();
-
-                    // export data
-                    exportUserData(userContext);
-                }
-
                 // initialize card update interval & autosave interval
-                gameLoop(); // initial all to load in immediately
+                handleAppTick(userContext); // initial all to load in immediately
                 userContext.setCardUpdateInterval(
                     setInterval(
-                        gameLoop,
+                        () => handleAppTick(userContext),
                         Settings.sensorUpdateIntervals[ userContext.batterySaverStatus ].taskCompletionCheck
                     )
                 );
 
+                // event emitters
+                eventEmitter.removeAllListeners("remountHome"); // remove existing listeners
+                eventEmitter.addListener("remountHome", () => { // add new listener
+                    // console.log("remounting home");
+                    remount();
+                });
+
                 const removeListeners = () => {
                     subscription.remove(); // remove GPS listener
                     userContext.clearCardUpdateInterval(); // remove card update interval
-
-                    // ADD listener for theme changes from profile screen
-                    DeviceEventEmitter.addListener("event.updateTheme", (theme) => {
-                        remount(); // update theme on this screen
-                    });
                 };
 
                 return () => { subscription && removeListeners() };
@@ -185,60 +131,14 @@ const HomeScreen = (props) => {
     // initialize devicemotion readings (every time the screen is FOCUSED)
     useFocusEffect(
         useCallback(() => {
-			// unblur the screen
-			// setBlurred(false);
-
-			// save data everytime screen focuses
-			exportUserData(userContext);
+			exportUserData(userContext); // save data everytime screen focuses
 
 			// reset device accelerometer timestamp delta
 			// reason: background would fade to green as if speed was really fast because timestamp recording would pause
 			userContext.metadata.setAccelDelta(Date.now());
 			
-			let list = DeviceMotion.addListener(data => {
-				if (data.acceleration == undefined || data.rotation == undefined) return;
-				userContext.metadata.setAcceleration(data.acceleration);
+			let list = DeviceMotion.addListener(data => handleAccelerometerData(data, userContext));
 
-				let { beta, gamma, alpha } = data.rotation; // beta -> x, gamma -> y, alpha -> z
-				
-				let accel = data.acceleration;
-				let { accelDelta } = userContext.metadata;
-
-				let delta = (Date.now() - accelDelta) / 1000;
-				
-				userContext.metadata.setAccelDelta(Date.now());
-				
-				// normalize local device coordinate axes to where device is flat and facing north
-				let cg = Math.cos(gamma), ca = Math.cos(alpha), cb = Math.cos(beta); // to optimize calculations a bit
-				let sg = Math.sin(gamma), sa = Math.sin(alpha), sb = Math.sin(beta); // to optimize calculations a bit
-				
-				let R = [
-					[cg*sa, sb*sg*sa+cb*ca, cb*sg*sa-sb*ca],
-					[cg*ca, sb*sg*ca-cb*sa, cb*sg*ca+sb*sa],
-					[-sg, sb*cg, cb*cg]
-				];
-
-				// multiply matrices
-				let M = [accel.x, accel.y, accel.z];
-				let res = {
-					x: R[0][0]*M[0] + R[0][1]*M[1] + R[0][2]*M[2],
-					y: R[1][0]*M[0] + R[1][1]*M[1] + R[1][2]*M[2],
-					z: R[2][0]*M[0] + R[2][1]*M[1] + R[2][2]*M[2]
-				};
-
-				// with this normalized acceleration, calculate velocity
-				const format = n => Math.sign(n) * Math.floor( Math.abs(n) * 40 ) / 40; // round off a bit
-				const damper = delta * 0.6; // the velocity tends to get too high and not fall -- this aims to fix that
-
-				let current = userContext.metadata.velocity;
-				let vel = {
-					x: format(current.x*damper + res.x*delta),
-					y: format(current.y*damper + res.y*delta),
-					z: format(current.z*damper + res.z*delta)
-				};
-				
-				userContext.metadata.setVelocity(vel);
-			});
 			return () => list.remove();
 		}, [props])
     );
@@ -270,7 +170,7 @@ const HomeScreen = (props) => {
                 </View>
 
                 <View style={styles.body}>
-                    <CardDisplayGrid remountStatus={__remountStatus} />
+                    <CardDisplayGrid />
                 </View>
 
                 <View style={styles.bottomButtons}>

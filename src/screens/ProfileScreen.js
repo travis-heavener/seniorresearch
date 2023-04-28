@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { BackHandler, DeviceEventEmitter, Image, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { BackHandler, Image, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Settings } from "../config/Config";
 import { Themes } from "../config/Themes";
 import { formatCommas, vh, vw } from "../config/Toolbox";
@@ -8,6 +8,7 @@ import { exportUserData, UserDataContext } from "../config/UserDataManager";
 import ProgressBar from "../components/ProgressBar";
 import { getUnlockedIcons, getUnlockedThemes, iconLookup } from "../config/RewardsManager";
 import { FlatList } from "react-native-gesture-handler";
+import { eventEmitter } from "../config/Main";
 
 const CHECK_IMG = require("../../assets/media/check.png");
 const CARET_IMG = require("../../assets/media/caretDown.png");
@@ -56,7 +57,7 @@ const ProfileScreen = (props) => {
         const onPress = () => {
             userContext.setSelectedTheme(theme.id);
             exportUserData(userContext);
-            DeviceEventEmitter.emit("event.updateTheme", {theme: theme.id});
+            eventEmitter.emit("remountHome");
             remount();
         };
         

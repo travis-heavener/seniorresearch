@@ -1,18 +1,16 @@
 import { useIsFocused } from "@react-navigation/native";
-import { useContext, useEffect, useState } from "react";
-import { Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useContext, useState } from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Themes } from "../config/Themes";
 import { vw, vh } from "../config/Toolbox";
 import { exportUserData, UserDataContext } from "../config/UserDataManager";
 import { DIFFICULTIES } from "../objectives/BingoCardManager";
+import CardDisplayTile from "./CardDisplayTile";
 import CardSelectModal from "./CardSelectModal";
 import ObjectiveConfirmModal from "./ObjectiveConfirmModal";
-import ScalingText from "./ScalingText";
 
 const CardDisplayGrid = (props) => {
     const [isModalVisible, setModalVisibility] = useState(false);
-	const [__remountStatus, __setRemountStatus] = useState(false);
-	const remount = () => __setRemountStatus(!__remountStatus); // triggers a remount of the grid to re-render components
 
     // card objective modal
     const [objModalData, setObjModalData] = useState({isModalVisible: false, reject: null, confirm: null, obj: null});
@@ -23,9 +21,6 @@ const CardDisplayGrid = (props) => {
     
     // triggers a remount every time the screen is refocused
     useIsFocused();
-
-    // triggers a remount every time it's told by props
-    useEffect(remount, [props.remountStatus]);
 
     // card selection modal
     const selectCard = () => setModalVisibility(true);
@@ -63,24 +58,13 @@ const CardDisplayGrid = (props) => {
                     if (obj.triggerPlayerCompletion) obj.triggerPlayerCompletion(); // trigger player completion, if available
                     card.runCompletionChecks(userContext); // check for bingo completions
                     exportUserData(userContext); // export data because saving data is important
-                    closeObjModal(); // close the modal
-                    remount(); // remount the component
+                    closeObjModal(); // close the modal & remount
                 },
                 reject: () => closeObjModal() // just close the modal
             });
 
             row.push(
-                <Pressable
-                    onPress={onPress} key={c}
-                    style={[
-                        styles.tile, // default styling
-                        {backgroundColor: (obj.isCompleted ? THEME.checkedTile : THEME.uncheckedTile)}, // checked color
-                        (r == 0) ? {borderTopWidth: 2} : {}, (c == 0) ? {borderLeftWidth: 2} : {} // borders for top/left
-                    ]}
-                >
-                    {/* <Text numberOfLines={1} adjustsFontSizeToFit={true} style={styles.tileText}>{obj.toString()}</Text> */}
-                    <ScalingText maxLineLength={12}>{ obj.toString(userContext) }</ScalingText>
-                </Pressable>
+                <CardDisplayTile key={c} onPress={onPress} row={r} col={c} obj={obj} />
             );
         }
 
@@ -88,11 +72,7 @@ const CardDisplayGrid = (props) => {
     };
 
     const generateCardGrid = (card) => [
-        generateRow(0, card),
-        generateRow(1, card),
-        generateRow(2, card),
-        generateRow(3, card),
-        generateRow(4, card)
+        generateRow(0, card), generateRow(1, card), generateRow(2, card), generateRow(3, card), generateRow(4, card)
     ];
 
     return (
@@ -137,6 +117,13 @@ const styles = StyleSheet.create({
         aspectRatio: 1.2, // same as TasksScreenCard's grid
         borderColor: "black"
     },
+    tile: {
+        flex: 1/5,
+        justifyContent: "center",
+        borderColor: "black",
+        borderRightWidth: 2,
+        borderBottomWidth: 2
+    },
     titleWrapper: {
         marginBottom: vh(1/2),
         flexDirection: "row",
@@ -158,12 +145,5 @@ const styles = StyleSheet.create({
     row: {
         flex: 1/5,
         flexDirection: "row"
-    },
-    tile: {
-        flex: 1/5,
-        justifyContent: "center",
-        borderColor: "black",
-        borderRightWidth: 2,
-        borderBottomWidth: 2
     }
 });
