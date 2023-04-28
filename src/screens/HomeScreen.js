@@ -25,14 +25,14 @@ const HomeScreen = (props) => {
     const userContext = useContext( UserDataContext );
     const THEME = Themes[ userContext.selectedTheme ].home; // select theme
 
-    // remount (USE SPARINGLY)
+    // remount
     const [__remountStatus, __setRemountStatus] = useState(0);
     const remount = () => __setRemountStatus(Math.random());
     
     // forces a remount on screen load
     useIsFocused();
 
-    // initialize location reading (every time the screen is FOCUSED & has permissions)
+    // on screen focus
     useFocusEffect(
         useCallback(
             () => {
@@ -41,6 +41,14 @@ const HomeScreen = (props) => {
                 eventEmitter.addListener("remountHome", () => { // add new listener
                     remount();
                 });
+
+                // navigation listener
+                eventEmitter.removeAllListeners("navigate"); // remove existing listeners
+                eventEmitter.addListener("navigate", name => props.navigation.navigate(name) );
+
+                // send users back to signup if they somehow skip it
+                if (userContext.stats.isNewUser)
+                    props.navigation.navigate("Signup");
             }, [props]
         )
     );

@@ -3,6 +3,11 @@ import { PermissionsAndroid } from "react-native";
 
 import * as Location from "expo-location";
 
+/* ======= constants ======= */
+
+export const showDebugLogs = true;
+export const useLazyDevMode = false;
+
 /* ======= settings ======= */
 
 export const Settings = {

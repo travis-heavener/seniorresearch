@@ -1,6 +1,6 @@
 import React from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Settings } from "./Config";
+import { Settings, showDebugLogs } from "./Config";
 import { DistanceObjective, ExploreObjective, FreeObjective, StepsObjective } from "../objectives/CardObjectives";
 import { BingoCard } from "../objectives/BingoCardManager";
 
@@ -242,7 +242,8 @@ export const exportUserData = async (userContext) => {
 export const clearUserData = async (userContext) => {
     try {
 		await AsyncStorage.removeItem("com.heavener-sr.user-data");
-        console.log("Cleared async storage");
+        
+        if (showDebugLogs) console.log("[UserDataManager.js] Cleared async storage");
 	} catch (e) {
 		console.log(e);
 	}
@@ -261,7 +262,7 @@ export const clearUserData = async (userContext) => {
     userContext.stats.setXP( 0 );
     userContext.stats.setLevel( 1 );
     userContext.stats.setDailySkips( 0 );
-    userContext.stats.setIsNewUser( false );
+    userContext.stats.setIsNewUser( true );
     userContext.stats.setUsername( "Player" );
 
     userContext.cardSlots.daily = null;
@@ -272,5 +273,5 @@ export const clearUserData = async (userContext) => {
 
     userContext.setTimestamp( Date.now() );
 
-    console.log("User data cleared!");
+    if (showDebugLogs) console.log("[UserDataManager.js] User data cleared!");
 };

@@ -1,5 +1,7 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { BackHandler, Pressable, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { handleAppLoad, handleAppTick, stopAppTick } from "../config/Main";
 import { vh, vw } from "../config/Toolbox";
 import { UserDataContext } from "../config/UserDataManager";
 
@@ -10,6 +12,14 @@ const SignupScreen = (props) => {
 
     const [fieldText, setFieldText] = useState("Player");
     const textInputRef = useRef();
+
+    // stop app tick function when this screen is focused and restart when unfocused
+    useFocusEffect(
+        useCallback(() => {
+            stopAppTick();
+            return () => handleAppTick(userContext);
+        }, [props])
+    );
 
     const submit = () => {
         if (fieldText.length < MIN_LENGTH || fieldText.length > MAX_LENGTH) {
@@ -63,6 +73,7 @@ const styles = StyleSheet.create({
     signupBody: {
         width: vw(75),
         height: vh(40),
+        marginBottom: vh(10),
         padding: "5%",
         alignSelf: "center",
         alignItems: "center",

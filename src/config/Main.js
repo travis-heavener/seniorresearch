@@ -1,6 +1,6 @@
 import EventEmitter from "eventemitter3";
 import { createBingoCard, DIFFICULTIES } from "../objectives/BingoCardManager";
-import { Settings } from "./Config";
+import { Settings, showDebugLogs, useLazyDevMode } from "./Config";
 import { restartDeviceMotion, restartLocation, restartPedometer } from "./SensorsManager";
 import { generateDailySeed } from "./Toolbox";
 import { exportUserData } from "./UserDataManager";
@@ -8,7 +8,6 @@ import { exportUserData } from "./UserDataManager";
 /********* CONSTANTS *********/
 
 export const eventEmitter = new EventEmitter();
-export const showDebugLogs = false;
 
 const debugLog = (...text) => {
     if (showDebugLogs)
@@ -39,7 +38,7 @@ export const handleAppLoad = async (userContext, perms) => {
 
 let appTickInterval = null;
 export const restartAppTick = (userContext) => {
-    debugLog("Starting new app function");
+    debugLog("Starting new tick function");
     if (appTickInterval != null)
         clearInterval(appTickInterval);
     
@@ -53,13 +52,19 @@ export const restartAppTick = (userContext) => {
     );
 };
 
+export const stopAppTick = () => {
+    debugLog("Stopping tick function");
+    clearInterval(appTickInterval);
+    appTickInterval = null;
+};
+
 export const handleAppTick = (userContext) => {
     debugLog("Game tick elapsed", (new Date()).toTimeString());
 
     // send user back to signup if they manage to skip the signup screen
     if (userContext.stats.isNewUser) {
-        props.navigation.navigate("Signup");
         debugLog("Navigating to signup screen...");
+        eventEmitter.emit("navigate", "Signup");
     }
 
     // update timestamp
@@ -78,9 +83,11 @@ export const handleAppTick = (userContext) => {
         card?.runCompletionChecks(userContext);
 
     // for lazy developers ONLY
-    userContext.metadata.addDistance(1000);
-    // userContext.metadata.setSteps(userContext.metadata.steps + 1000);
-    // userContext.stats.setXP(23250); // 23,250 is max for 30 levels
+    if (useLazyDevMode) {
+        userContext.metadata.addDistance(1000);
+        // userContext.metadata.setSteps(userContext.metadata.steps + 1000);
+        userContext.stats.setXP(23250); // 23,250 is max for 30 levels
+    }
 
     // export data
     exportUserData(userContext);

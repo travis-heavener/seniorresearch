@@ -11,7 +11,7 @@ import { clearUserData, UserDataContext } from "../config/UserDataManager";
 import { vh, vw } from "../config/Toolbox";
 import SettingsButton from "../components/SettingsButton";
 import TextConfirmModal from "../components/TextConfirmModal";
-import { eventEmitter, restartAppTick, startAppTick } from "../config/Main";
+import { eventEmitter, restartAppTick, startAppTick, stopAppTick } from "../config/Main";
 import { restartLocation } from "../config/SensorsManager";
 
 const SettingsScreen = (props) => {
@@ -39,11 +39,11 @@ const SettingsScreen = (props) => {
         forceRemount();
     };
 
-    const resetUserData = () => {
-        hideResetModal();
-        clearUserData(userContext);
-        // props.navigation.navigate("Signup");
-        DevSettings.reload(); // reload development app, NOT FOR PREVIEW OR RELEASE
+    const resetUserData = async () => {
+        stopAppTick(); // this prevents other components from trying to update, causing an error
+        hideResetModal(); // hide pop-up modal
+        await clearUserData(userContext); // reset all data
+        eventEmitter.emit("navigate", "Signup"); // navigate to signup screen
     };
 
     return (

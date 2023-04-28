@@ -1,5 +1,5 @@
 import { createStackNavigator } from "@react-navigation/stack";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, useFocusEffect } from "@react-navigation/native";
 
 // see https://reactnavigation.org/docs/stack-navigator/
 import "react-native-gesture-handler"; // tl;dr this is important
@@ -16,8 +16,8 @@ import { Easing, Image } from "react-native";
 import ProfileScreen from "./src/screens/ProfileScreen";
 import RewardsScreen from "./src/screens/RewardsScreen";
 import SignupScreen from "./src/screens/SignupScreen";
-import { handleAppLoad, showDebugLogs } from "./src/config/Main";
-import { PermsContext } from "./src/config/Config";
+import { handleAppLoad } from "./src/config/Main";
+import { PermsContext, showDebugLogs } from "./src/config/Config";
 const LOADING_IMG = require("./assets/splash.png");
 
 const Stack = createStackNavigator();
@@ -67,6 +67,9 @@ const CreateStack = ({initialRouteName}) => (
 const App = () => {
     // load data
     const [hasLoaded, setHasLoaded] = React.useState(false);
+    const [__remountStatus, __setRemountStatus] = React.useState(false);
+    const remount = () => __setRemountStatus(!__remountStatus);
+
     const userContext = React.useContext(UserDataContext);
     const permsContext = React.useContext(PermsContext);
 
@@ -86,13 +89,19 @@ const App = () => {
         });
     }, []);
 
+    // eventEmitter.removeAllListeners("restartApp");
+    // eventEmitter.addListener("restartApp", () => {
+    //     remount();
+    //     debugLog("Restart");
+    // });
+
     // show loading screen while data waits to be loaded
     if (hasLoaded) {
         // start main function
         handleAppLoad(userContext, permsContext.permissions);
 
         return (
-            <NavigationContainer>
+            <NavigationContainer key={__remountStatus}>
                 <CreateStack initialRouteName="Home" />
             </NavigationContainer>
         );
