@@ -18,6 +18,7 @@ import { Themes } from "../config/Themes";
 import { UserDataContext } from "../config/UserDataManager";
 import { vh, vw } from "../config/Toolbox";
 import { eventEmitter } from "../config/Main";
+import SwipeNavWrapper from "../components/SwipeNavWrapper";
 
 const SETTINGS_ICON = require("../../assets/media/settingsWheel.png");
 
@@ -60,9 +61,7 @@ const HomeScreen = (props) => {
     const openSettings = () => props.navigation.navigate("Settings");
 
 	return (
-        <GestureWrapper gestureDistance={50} angleThresh={25}
-            onSwipeDown={openSettings} onSwipeLeft={openProfile} onSwipeRight={openRewards} onSwipeUp={openTasks}
-        >
+        <SwipeNavWrapper>
             <View style={styles.top}>
                 <BackgroundGradient />
                 {/* user profile modal instead of screen */}
@@ -89,7 +88,7 @@ const HomeScreen = (props) => {
                     <HomeScreenButton type="Rewards" flex={.75} onPress={openRewards} />
                 </View>
             </View>
-        </GestureWrapper>
+        </SwipeNavWrapper>
 	);
 };
 
