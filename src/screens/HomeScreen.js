@@ -61,34 +61,30 @@ const HomeScreen = (props) => {
     const openSettings = () => props.navigation.navigate("Settings");
 
 	return (
-        <SwipeNavWrapper>
-            <View style={styles.top}>
-                <BackgroundGradient />
-                {/* user profile modal instead of screen */}
+        <View style={styles.top}>
+			<BackgroundGradient />
+			{/* background blur -- https://github.com/Kureev/react-native-blur */}
+			{/* <BlurView blurAmount={3} blurType="light" style={[styles.absolute, {display: (isBlurred ? "flex" : "none")}]} /> */}
 
-                {/* background blur -- https://github.com/Kureev/react-native-blur */}
-                {/* <BlurView blurAmount={3} blurType="light" style={[styles.absolute, {display: (isBlurred ? "flex" : "none")}]} /> */}
+			<View style={styles.header}>
+				<Pressable onPress={openSettings}>
+					<Image style={styles.settingsIcon} source={SETTINGS_ICON} />
+				</Pressable>
+				<View style={styles.compassWrapper}>
+					<CompassWidget />
+				</View>
+			</View>
 
-                <View style={styles.header}>
-                    <Pressable onPress={openSettings}>
-                        <Image style={styles.settingsIcon} source={SETTINGS_ICON} />
-                    </Pressable>
-                    <View style={styles.compassWrapper}>
-                        <CompassWidget navigation={props.navigation} />
-                    </View>
-                </View>
+			<View style={styles.body}>
+				<CardDisplayGrid />
+			</View>
 
-                <View style={styles.body}>
-                    <CardDisplayGrid />
-                </View>
-
-                <View style={styles.bottomButtons}>
-                    <HomeScreenButton type="Profile" flex={.75} onPress={openProfile} />
-                    <HomeScreenButton type="Tasks" flex={.95} onPress={openTasks} />
-                    <HomeScreenButton type="Rewards" flex={.75} onPress={openRewards} />
-                </View>
-            </View>
-        </SwipeNavWrapper>
+			<View style={styles.bottomButtons}>
+				<HomeScreenButton type="Profile" flex={.75} onPress={openProfile} />
+				<HomeScreenButton type="Tasks" flex={.95} onPress={openTasks} />
+				<HomeScreenButton type="Rewards" flex={.75} onPress={openRewards} />
+			</View>
+		</View>
 	);
 };
 

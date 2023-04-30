@@ -66,7 +66,7 @@ const CompassWidget = (props) => {
             });
 
             return () => list.remove();
-        }, [props.navigation.isFocused()])
+        }, [props])
     );
 
 	const rotateAnim = useRef(new Animated.Value(0)).current;

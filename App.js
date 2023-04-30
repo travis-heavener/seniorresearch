@@ -18,6 +18,7 @@ import RewardsScreen from "./src/screens/RewardsScreen";
 import SignupScreen from "./src/screens/SignupScreen";
 import { handleAppLoad } from "./src/config/Main";
 import { PermsContext, showDebugLogs } from "./src/config/Config";
+import SwipeNavigator from "./src/screens/SwipeNavigator";
 const LOADING_IMG = require("./assets/splash.png");
 
 const Stack = createStackNavigator();
@@ -47,7 +48,7 @@ const opts = {
 
 const CreateStack = ({initialRouteName}) => (
     <Stack.Navigator initialRouteName={initialRouteName}>
-        <Stack.Screen name="Home" component={HomeScreen} options={opts} />
+        {/* <Stack.Screen name="Home" component={HomeScreen} options={opts} />
         <Stack.Screen name="Settings" component={SettingsScreen} options={{
             ...opts, cardStyleInterpolator: fromVert, gestureDirection: "vertical-inverted", presentation: "transparentModal"
         }} />
@@ -59,8 +60,9 @@ const CreateStack = ({initialRouteName}) => (
         }} />
         <Stack.Screen name="Profile" component={ProfileScreen} options={{
             ...opts, cardStyleInterpolator: fromHoriz, gestureDirection: "horizontal-inverted", presentation: "transparentModal"
-        }} />
+        }} /> */}
         <Stack.Screen name="Signup" component={SignupScreen} options={{headerShown: false, gestureEnabled: false}} />
+		<Stack.Screen name="Main" component={SwipeNavigator} options={{headerShown: false, gestureEnabled: false}} />
     </Stack.Navigator>
 );
 

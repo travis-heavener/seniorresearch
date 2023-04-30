@@ -32,7 +32,7 @@ const SignupScreen = (props) => {
 
         textInputRef.current.blur();
 
-        props.navigation.navigate("Home");
+        props.navigation.navigate("Main");
     };
 
     // android back button functionality (on screen focus)
