@@ -19,6 +19,7 @@
   - It's an issue with the preview build (not following the same logic as the development build???)
 - Add debugLog & boolean value to Toolbox.js
   - Take argument about which file is printing to console (or obtain dynamically somehow)
+- Username change button (edit icon next to name w/ pop-up modal)
 - Font API: https://docs.expo.dev/versions/v48.0.0/sdk/font/#processfontfamilyfontfamily
 - Audio API: https://docs.expo.dev/versions/v48.0.0/sdk/audio/
 - Battery API: https://docs.expo.dev/versions/v48.0.0/sdk/battery/#isbatteryoptimizationenabledasync
