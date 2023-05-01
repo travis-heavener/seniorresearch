@@ -107,6 +107,7 @@ const SwipeNavigator = (props) => {
 				const {x0, y0, dx, dy} = gestureState;
 
                 let dir = getSwipeOrigin(x0, y0); // determine direction of swipe
+                let shouldNavRemount = true; // if the new screen should cause a remount (overriden if a swipe is incomplete and doesn't nav a new screen)
 
 				if (dir == "left" && dx > vw(SWIPE_THRESH))
 					navContext.setFocusedScreen("left");
@@ -116,15 +117,17 @@ const SwipeNavigator = (props) => {
 					navContext.setFocusedScreen("top");
 				else if (dir == "bottom" && dy < -vh(SWIPE_THRESH))
 					navContext.setFocusedScreen("bottom");
-
+                else
+                    shouldNavRemount = false;
+                
                 // update positional shift for components/screens
-                animateNav();
+                animateNav(null, shouldNavRemount);
 			}
 		})
 	).current;
 
     /** Shorthand to navigate between screens w/ animation */
-    const animateNav = (screenPos) => {
+    const animateNav = (screenPos, shouldRemount=true) => {
         // navigate normally to screen
         if (screenPos) navContext.setFocusedScreen(screenPos);
         navContext.setIsAnimating(true); // lock animations
@@ -140,7 +143,7 @@ const SwipeNavigator = (props) => {
             navContext.setIsAnimating(false);
 
             // remount all child screens on focusing home screen
-            if (navContext.focusedScreen == "center")
+            if (navContext.focusedScreen == "center" && shouldRemount)
                 massRemount();
         }, ANIM_TIMING);
     };
