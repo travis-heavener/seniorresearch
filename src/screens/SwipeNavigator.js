@@ -11,7 +11,7 @@ import { useIsFocused } from "@react-navigation/native";
 // touch margins
 const H_MARGIN = vw(25); // the borders that swipe navigation gestures are picked up by
 const V_MARGIN = vh(40); // the borders that swipe navigation gestures are picked up by
-const SWIPE_THRESH = 33; // n% of vw/vh must be swiped across to switch to next screen on release
+const SWIPE_THRESH = 25; // n% of vw/vh must be swiped across to switch to next screen on release
 const TOUCH_THRESH = 10; // px, how much displacement a swipe should be considered by
 const ANIM_TIMING = 125; // ms, how long animations should be when using navigate function
 
