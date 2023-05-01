@@ -47,7 +47,7 @@ const opts = {
 };
 
 const CreateStack = ({initialRouteName}) => (
-    <Stack.Navigator initialRouteName={initialRouteName}>
+    <Stack.Navigator initialRouteName={initialRouteName} screenOptions={{ unmountOnBlur: false }}>
         {/* <Stack.Screen name="Home" component={HomeScreen} options={opts} />
         <Stack.Screen name="Settings" component={SettingsScreen} options={{
             ...opts, cardStyleInterpolator: fromVert, gestureDirection: "vertical-inverted", presentation: "transparentModal"
@@ -104,7 +104,7 @@ const App = () => {
 
         return (
             <NavigationContainer key={__remountStatus}>
-                <CreateStack initialRouteName="Home" />
+                <CreateStack initialRouteName="Main" />
             </NavigationContainer>
         );
     } else {

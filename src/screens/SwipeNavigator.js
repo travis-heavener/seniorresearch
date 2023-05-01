@@ -5,7 +5,7 @@ import ProfileScreen from "./ProfileScreen";
 import HomeScreen from "./HomeScreen";
 import TasksScreen from "./TasksScreen";
 import SettingsScreen from "./SettingsScreen";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import GestureRecognizer from "react-native-swipe-gestures";
 
 // touch margins
@@ -15,6 +15,12 @@ const V_MARGIN = vh(12);
 const TOUCH_THRESH = 10;
 
 const SwipeNavigator = (props) => {
+	const [focusedScreen, _setFocusedScreen] = useState("Center");
+	const [position, setPosition] = useState(new Animated.ValueXY({x: 0, y: 0}));
+
+	const setFocusedScreen = (screen) => {
+		_setFocusedScreen(screen);
+	};
 	const [__remountStatus, __setRemountStatus] = useState(false);
 	const remount = () => __setRemountStatus(!__remountStatus);
 
@@ -33,9 +39,9 @@ const SwipeNavigator = (props) => {
 					(y0 > vh() - V_MARGIN) ? "Bottom" : null
 
 				if (dir == "Left" || dir == "Right") {
-					position.setValue({x: dx, y: 0});
+					setPosition({x: dx, y: 0});
 				} else if (dir == "Bottom" || dir == "Top") {
-					position.setValue({x: 0, y: dy});
+					setPosition({x: 0, y: dy});
 				}
 			},
 			onPanResponderRelease: (e, gestureState) => { // handle panResponder release
@@ -49,20 +55,20 @@ const SwipeNavigator = (props) => {
 
 				if (dir == "Left" && dx > vw(67)) {
 					console.log("switching to left screen");
+					setFocusedScreen("Left");
 				} else if (dir == "Right" && dx < -vw(67)) {
 					console.log("switching to right screen");
+					setFocusedScreen("Right");
 				} else if (dir == "Top" && dy > vh(67)) {
 					console.log("switching to top screen");
+					setFocusedScreen("Top");
 				} else if (dir == "Bottom" && dy < -vh(67)) {
 					console.log("switching to bottom screen");
+					setFocusedScreen("Bottom");
 				}
-
-				position.setValue({x: 0, y: 0});
 			}
 		})
 	).current;
-
-	const position = new Animated.ValueXY({x: 0, y: 0});
 
 	const OffsetWrapper = (props) => {
 		const offsetX = props.offsetX ?? 0;
@@ -71,19 +77,22 @@ const SwipeNavigator = (props) => {
 		const transform = [
 			{
 				translateX: position.x.interpolate({
-					inputRange: (offsetX > 0) ? [-offsetX, 0, offsetX] : [offsetX, 0, -offsetX],
-					outputRange: (offsetX > 0) ? [0, offsetX, 2*offsetX] : [2*offsetX, offsetX, 0]
+					inputRange: [-vw(), 0, 2*vw()],
+					outputRange: [-vw() + offsetX, offsetX, 2*vw() + offsetX],
+					extrapolate: "clamp",
+					useNativeDriver: true
 				})
 			},
 			{
 				translateY: position.y.interpolate({
-					inputRange: (offsetY > 0) ? [-offsetY, 0, offsetY] : [offsetY, 0, -offsetY],
-					outputRange: (offsetY > 0) ? [0, offsetY, 2*offsetY] : [2*offsetY, offsetY, 0]
+					inputRange: [-vh(), 0, 2*vh()],
+					outputRange: [-vh() + offsetY, offsetY, 2*vh() + offsetY],
+					extrapolate: "clamp",
+					useNativeDriver: true
 				})
 			}
 		];
-
-		console.log(transform)
+		console.log(position);
 
 		return (
 			<Animated.View style={{...styles.absolute, transform: transform, pointerEvents: "none"}}>
