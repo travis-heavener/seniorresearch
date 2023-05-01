@@ -108,7 +108,7 @@ const ProfileScreen = (props) => {
 
     return (
         <View style={{flex: 1}}>
-            <Pressable style={styles.absolute} onPress={() => props.navigation.goBack()} />
+            <Pressable style={styles.absolute} onPress={() => props.navigate("Home")} />
 
             {/* content itself */}
             <View style={[styles.body, {transform: [{translateX: 0}]}]}>

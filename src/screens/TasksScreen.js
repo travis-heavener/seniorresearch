@@ -22,7 +22,7 @@ const TasksScreen = (props) => {
     
     return (
         <View style={{flex: 1}}>
-            <Pressable style={styles.absolute} onPress={() => props.navigation.goBack()} />
+            <Pressable style={styles.absolute} onPress={() => props.navigate("Home")} />
             
             <View style={[styles.body, {backgroundColor: THEME.primaryAccent}]}>
             <View style={[styles.header, {backgroundColor: THEME.secondary, borderColor: THEME.secondaryAccent}]}>

@@ -45,20 +45,20 @@ const HomeScreen = (props) => {
 
                 // navigation listener
                 eventEmitter.removeAllListeners("navigate"); // remove existing listeners
-                eventEmitter.addListener("navigate", name => props.navigation.navigate(name) );
+                eventEmitter.addListener("navigate", name => props.navigate(name) );
 
                 // send users back to signup if they somehow skip it
                 if (userContext.stats.isNewUser)
-                    props.navigation.navigate("Signup");
+                    props.navigate("Signup");
             }, [props]
         )
     );
 
     // button functions
-    const openProfile = () => props.navigation.navigate("Profile");
-    const openTasks = () => props.navigation.navigate("Tasks");
-    const openRewards = () => props.navigation.navigate("Rewards");
-    const openSettings = () => props.navigation.navigate("Settings");
+    const openProfile = () => props.navigate("Profile");
+    const openTasks = () => props.navigate("Tasks");
+    const openRewards = () => props.navigate("Rewards");
+    const openSettings = () => props.navigate("Settings");
 
 	return (
         <View style={styles.top}>
