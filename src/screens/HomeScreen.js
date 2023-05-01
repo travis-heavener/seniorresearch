@@ -2,23 +2,16 @@ import React, { useState, useContext, useEffect, useCallback } from "react";
 import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 import { View, StyleSheet, Pressable, Image } from "react-native";
 
-// Pedometer + necessary Android permissions imports
-import { Pedometer, DeviceMotion } from "expo-sensors";
-import * as Location from "expo-location";
-
 // components & modals
 import HomeScreenButton from "../components/HomeScreenButton";
 import CompassWidget from "../components/CompassWidget";
 import CardDisplayGrid from "../components/CardDisplayGrid";
 import BackgroundGradient from "../components/BackgroundGradient";
-import GestureWrapper from "../components/GestureWrapper";
 
-import { PermsContext } from "../config/Config";
 import { Themes } from "../config/Themes";
 import { UserDataContext } from "../config/UserDataManager";
 import { vh, vw } from "../config/Toolbox";
 import { eventEmitter } from "../config/Main";
-import SwipeNavWrapper from "../components/SwipeNavWrapper";
 
 const SETTINGS_ICON = require("../../assets/media/settingsWheel.png");
 
