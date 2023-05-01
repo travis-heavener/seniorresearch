@@ -12,6 +12,9 @@ import SignupScreen from "./src/screens/SignupScreen";
 import { handleAppLoad } from "./src/config/Main";
 import { PermsContext, showDebugLogs } from "./src/config/Config";
 import SwipeNavigator from "./src/screens/SwipeNavigator";
+import { useFonts } from "expo-font";
+import { Alata_400Regular } from "@expo-google-fonts/alata";
+import { JosefinSans_400Regular, JosefinSans_400Regular_Italic, JosefinSans_500Medium, JosefinSans_600SemiBold, JosefinSans_700Bold } from "@expo-google-fonts/josefin-sans";
 const LOADING_IMG = require("./assets/splash.png");
 
 const Stack = createStackNavigator();
@@ -29,6 +32,12 @@ const App = () => {
 
     const userContext = React.useContext(UserDataContext);
     const permsContext = React.useContext(PermsContext);
+    const [fontsLoaded] = useFonts({
+        Alata_400Regular,
+        JosefinSans_400Regular, JosefinSans_400Regular_Italic,
+        JosefinSans_500Medium, JosefinSans_600SemiBold,
+        JosefinSans_700Bold
+    });
 
     const debugLog = (...text) => {
         if (showDebugLogs)
@@ -47,7 +56,7 @@ const App = () => {
     }, []);
 
     // show loading screen while data waits to be loaded
-    if (hasLoaded) {
+    if (hasLoaded && fontsLoaded) {
         // start main function
         handleAppLoad(userContext, permsContext.permissions);
 
