@@ -29,6 +29,7 @@ const SignupScreen = (props) => {
         
         userContext.stats.setUsername( fieldText );
         userContext.stats.setIsNewUser( false );
+        userContext.setSelectedCard("daily");
 
         textInputRef.current.blur();
 

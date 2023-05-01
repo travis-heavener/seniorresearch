@@ -92,7 +92,7 @@ export const UserDataContext = React.createContext({
         custom2: null,
         custom3: null
     },
-    selectedCard: null,
+    selectedCard: "daily",
     setSelectedCard: function(n) {  this.selectedCard = n;  },
     
     selectedIcon: "Brown Panda",
