@@ -5,8 +5,9 @@ import ProfileScreen from "./ProfileScreen";
 import HomeScreen from "./HomeScreen";
 import TasksScreen from "./TasksScreen";
 import SettingsScreen from "./SettingsScreen";
-import { createContext, useContext, useRef } from "react";
+import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { useIsFocused } from "@react-navigation/native";
+import { useFocusEffect } from "@react-navigation/core";
 
 // touch margins
 const H_MARGIN = vw(25); // the borders that swipe navigation gestures are picked up by
@@ -62,7 +63,14 @@ const SwipeNavigator = (props) => {
     // keeping the position as a non-state variable prevents remounts, keeping children from excessive remounts
 	const position = useRef(new Animated.ValueXY()).current;
 
-    useIsFocused(); // remount on refocus
+    // child keys for mass remounts
+    const [childKeys, setChildKeys] = useState([0, 1, 2, 3, 4]);
+    const massRemount = () => setChildKeys(childKeys.map((val, i) => Math.random() - (10*i))); // remount all child screens
+    
+    // remount all screens on focus
+    useFocusEffect(
+        useCallback(massRemount, [props])
+    );
 
 	const panResponderRef = useRef(
 		PanResponder.create({
@@ -130,6 +138,10 @@ const SwipeNavigator = (props) => {
         // manually set position after animation (prevent navigator from not recognizing screen has changed)
         setTimeout(() => {
             navContext.setIsAnimating(false);
+
+            // remount all child screens on focusing home screen
+            if (navContext.focusedScreen == "center")
+                massRemount();
         }, ANIM_TIMING);
     };
 
@@ -197,22 +209,22 @@ const SwipeNavigator = (props) => {
 
 	return (
 		<View style={styles.absolute} {...panResponderRef.panHandlers}>
-			<HomeScreen {...{...props, navigate: navigate}} />
+			<HomeScreen {...{...props, navigate: navigate}} key={childKeys[0]} />
 
 			<OffsetWrapper offsetX={-vw(100)}>
-				<ProfileScreen {...{...props, navigate: navigate}} />
+				<ProfileScreen {...{...props, navigate: navigate}} key={childKeys[1]} />
 			</OffsetWrapper>
 			
 			<OffsetWrapper offsetX={vw(100)}>
-				<RewardsScreen {...{...props, navigate: navigate}} />
+				<RewardsScreen {...{...props, navigate: navigate}} key={childKeys[2]} />
 			</OffsetWrapper>
 
 			<OffsetWrapper offsetY={-vh(100)}>
-				<SettingsScreen {...{...props, navigate: navigate}} />
+				<SettingsScreen {...{...props, navigate: navigate}} key={childKeys[3]} />
 			</OffsetWrapper>
 
 			<OffsetWrapper offsetY={vh(100)}>
-				<TasksScreen {...{...props, navigate: navigate}} />
+				<TasksScreen {...{...props, navigate: navigate}} key={childKeys[4]} />
 			</OffsetWrapper>
 		</View>
 	)
