@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
         width: vw(100),
         height: vh(12.5),
         fontSize: vh(5),
-        fontWeight: "600",
+        fontFamily: "JosefinSans_600SemiBold",
         textDecorationLine: "underline",
         textDecorationStyle: "solid",
         textAlign: "center",
@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
         backgroundColor: "gold",
         
         fontSize: vh(1.75),
-        fontWeight: "600",
+        fontFamily: "Alata_400Regular",
         color: "#222",
         textAlign: "center",
         textAlignVertical: "center"

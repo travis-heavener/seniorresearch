@@ -37,7 +37,8 @@ const TextConfirmModal = (props) => {
             <View style={[styles.body, {backgroundColor: THEME.modalTop, borderColor: THEME.modalBorder}]}>
                 <View style={styles.top}>
                     <Text style={[styles.headerText, {color: THEME.modalText}]}>Reset User Data?</Text>
-                    <Text style={[styles.randomText, {color: THEME.modalText}]}>Enter the following to confirm:{ "\n" + randomText }</Text>
+                    <Text style={[styles.descText, {color: THEME.modalText}]}>Enter the following to confirm:</Text>
+                    <Text style={[styles.randomText, {color: THEME.modalText}]}>{ randomText }</Text>
                 </View>
                 <View style={[styles.bottom, {backgroundColor: THEME.modalBottom}]}>
                     <TextInput
@@ -82,11 +83,17 @@ const styles = StyleSheet.create({
         textAlign: "center",
         fontSize: vh(3),
         marginBottom: vh(1),
-        fontWeight: "500"
+        fontFamily: "JosefinSans_700Bold"
+    },
+    descText: {
+        textAlign: "center",
+        fontSize: vh(2),
+        fontFamily: "JosefinSans_400Regular"
     },
     randomText: {
         textAlign: "center",
-        fontSize: vh(2),
+        fontSize: vh(2.25),
+        letterSpacing: vw(0.25),
         fontWeight: "600"
     },
     bottom: {

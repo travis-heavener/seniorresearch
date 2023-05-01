@@ -66,8 +66,8 @@ const styles = StyleSheet.create({
     headerText: {
         textAlign: "center",
         fontSize: vh(3), // shrinks to fit anyways
-        fontWeight: "bold",
-        marginVertical: vh(1)
+        marginVertical: vh(1),
+        fontFamily: "JosefinSans_700Bold"
     },
 });
 

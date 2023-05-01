@@ -291,7 +291,7 @@ const styles = StyleSheet.create({
     userName: {
         marginLeft: "2.5%",
         fontSize: vh(3),
-        fontWeight: "600",
+        fontFamily: "JosefinSans_600SemiBold",
         textAlignVertical: "center"
     },
     userLevelContainer: {
@@ -306,7 +306,7 @@ const styles = StyleSheet.create({
         flex: 1,
         borderRadius: vw(100),
         fontSize: vh(1.75),
-        fontWeight: "600",
+        fontFamily: "Alata_400Regular",
         color: "#222",
         textAlign: "center",
         textAlignVertical: "center"
@@ -314,7 +314,7 @@ const styles = StyleSheet.create({
     xpBarSubtitle: {
         textAlign: "right",
         fontSize: vh(1.5),
-        fontWeight: "600"
+        fontFamily: "JosefinSans_600SemiBold"
     },
     statsView: {
         flex: 22, // from vh(24)
@@ -324,7 +324,7 @@ const styles = StyleSheet.create({
     statsHeader: {
         textAlign: "center",
         fontSize: vh(2.75),
-        fontWeight: "500",
+        fontFamily: "Alata_400Regular",
         textDecorationLine: "underline"
     },
     statsColumnView: {
@@ -351,14 +351,14 @@ const styles = StyleSheet.create({
     statsText: {
         flex: 1,
         fontSize: vh(1.75),
-        fontWeight: "500",
+        fontFamily: "JosefinSans_500Medium",
         textAlign: "left"
     },
     statsVariable: {
         maxWidth: "33%",
         minWidth: "25%",
         fontSize: vh(1.75),
-        fontWeight: "500",
+        fontFamily: "JosefinSans_500Medium",
         fontStyle: "italic",
         textAlign: "right"
     },
@@ -370,7 +370,7 @@ const styles = StyleSheet.create({
     themePickerHeader: {
         textAlign: "center",
         fontSize: vh(2.75),
-        fontWeight: "500",
+        fontFamily: "Alata_400Regular",
         textDecorationLine: "underline"
     },
     themePicker: {

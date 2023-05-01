@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
         flex: 1,
         borderRadius: vw(100),
         fontSize: vh(1.75),
-        fontWeight: "600",
+        fontFamily: "Alata_400Regular",
         color: "#222",
         textAlign: "center",
         textAlignVertical: "center"
@@ -64,14 +64,13 @@ const styles = StyleSheet.create({
         flex: 0.8,
         fontSize: vh(1.75),
         textAlign: "left",
-        fontWeight: "500"
+        fontFamily: "JosefinSans_600SemiBold"
     },
     labelTextLocked: {
         flex: 0.8,
         fontSize: vh(1.75),
         textAlign: "left",
-        fontStyle: "italic",
-        fontWeight: "400"
+        fontFamily: "JosefinSans_400Regular_Italic"
     },
     iconStyle: {
         width: vh(7) * 0.85, // 85% of height

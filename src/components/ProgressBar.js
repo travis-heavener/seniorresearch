@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
         marginHorizontal: "1.25%",
         textAlignVertical: "center",
         fontSize: vh(2),
-        fontWeight: "500",
+        fontFamily: "Alata_400Regular",
         fontStyle: "italic",
         color: "#f9f9f9"
     }

@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
     headerText: {
         textAlign: "center",
         fontSize: vh(4), // shrinks to fit anyways
-        fontWeight: "bold",
+        fontFamily: "JosefinSans_700Bold",
         marginVertical: vh(1)
     },
     body: {

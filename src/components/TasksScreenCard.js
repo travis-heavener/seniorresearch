@@ -256,7 +256,8 @@ const styles = StyleSheet.create({
     },
     selectButtonText: {
         textAlign: "center",
-        fontSize: vh(2.125)
+        fontSize: vh(2.125),
+        fontFamily: "JosefinSans_400Regular"
     },
     leftView: {
         flex: 0.6,
@@ -266,13 +267,14 @@ const styles = StyleSheet.create({
         maxWidth: "50%",
         fontSize: vh(8)/3.75,
         color: "#111",
+        fontFamily: "Alata_400Regular",
         textAlignVertical: "center"
     },
     seedText: {
         marginLeft: "1.5%",
         fontSize: vh(8)/4.25,
         color: "#444",
-        fontStyle: "italic",
+        fontFamily: "JosefinSans_400Regular_Italic",
         textAlignVertical: "center"
     },
     rightBtn: {

@@ -9,6 +9,8 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@expo-google-fonts/alata": "^0.2.3",
+    "@expo-google-fonts/josefin-sans": "^0.2.3",
     "@react-native-async-storage/async-storage": "~1.17.3",
     "@react-navigation/native": "^6.1.6",
     "@react-navigation/stack": "^6.3.16",
@@ -16,6 +18,7 @@
     "expo": "~47.0.3",
     "expo-cli": "^6.3.7",
     "expo-dev-client": "~2.0.1",
+    "expo-font": "^11.1.1",
     "expo-location": "~15.0.1",
     "expo-sensors": "~12.0.1",
     "react": "18.1.0",

@@ -139,8 +139,8 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: (vw(85) / 14.4), // (width / 1.2) = height, height / 12 = width / 14.4
-        fontWeight: "500",
-        textAlign: "center"
+        textAlign: "center",
+        fontFamily: "Alata_400Regular"
     },
     row: {
         flex: 1/5,

@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     desc: {
         flex: 0.825,
         fontSize: vh(1.875),
-        fontWeight: "500",
+        fontFamily: "Alata_400Regular",
         alignSelf: "center"
     },
     buttonContainer: {
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
         textAlignVertical: "center",
         textAlign: "center",
         fontSize: vh(2),
-        fontWeight: "600"
+        fontFamily: "JosefinSans_600SemiBold"
     }
 });
 

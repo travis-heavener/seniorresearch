@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
 	titleText: {
 		fontSize: vh(3.75),
 		textAlign: "center",
-		fontWeight: "bold",
+        fontFamily: "JosefinSans_700Bold",
 		marginBottom: vh(2)
 	}
 });

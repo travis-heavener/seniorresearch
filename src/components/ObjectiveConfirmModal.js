@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
     titleText: {
         flex: 0.425,
         fontSize: vh(3),
-        fontWeight: "600",
+        fontFamily: "JosefinSans_700Bold",
         textAlignVertical: "bottom",
         textAlign: "center"
     },
@@ -103,7 +103,8 @@ const styles = StyleSheet.create({
         flex: 0.425,
         fontSize: vh(2),
         textAlignVertical: "top",
-        textAlign: "center"
+        textAlign: "center",
+        fontFamily: "JosefinSans_400Regular"
     },
     buttonContainer: {
         flex: 1/3,
@@ -119,7 +120,7 @@ const styles = StyleSheet.create({
     buttonText: {
         flex: 1,
         textAlign: "center",
-        fontWeight: "600",
+        fontFamily: "JosefinSans_600SemiBold",
         color: "whitesmoke", // overridden where needed
         textAlignVertical: "center",
         fontSize: vh(1.875)

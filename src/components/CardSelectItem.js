@@ -50,9 +50,9 @@ const styles = StyleSheet.create({
     },
     titleText: {
 		marginHorizontal: vw(5),
-        fontSize: vh(3.25),
+        fontSize: vh(3),
         textAlign: "left",
-		fontStyle: "italic"
+        fontFamily: "JosefinSans_400Regular_Italic"
     },
     completionStats: {
         flex: 1,
@@ -60,8 +60,9 @@ const styles = StyleSheet.create({
         alignItems: "center"
     },
 	percentText: {
-		fontSize: vh(2.5),
-		textAlign: "center"
+		fontSize: vh(3),
+		textAlign: "center",
+        fontFamily: "JosefinSans_400Regular"
 	}
 });
 

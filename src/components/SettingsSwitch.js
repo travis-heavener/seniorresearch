@@ -16,7 +16,7 @@ const SettingsSwitch = (props) => {
         // trigger animation
         Animated.timing(toggleAnim, {
             toValue: !props.activityListener() + 0,
-            duration: 250,
+            duration: 200,
             useNativeDriver: false
         }).start();
         
@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     desc: {
         flex: 0.8,
         fontSize: vh(1.875),
-        fontWeight: "500",
+        fontFamily: "Alata_400Regular",
         alignSelf: "center"
     },
     switch: {

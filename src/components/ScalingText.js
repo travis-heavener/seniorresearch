@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
         maxHeight: vh(10/3), // twice the preset fontSize
         textAlignVertical: "center",
         fontSize: vh(5/3),
-        fontWeight: "500",
+        fontFamily: "JosefinSans_500Medium",
         textAlign: "center"
     }
 });
