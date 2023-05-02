@@ -51,7 +51,7 @@ const CardDisplayGrid = (props) => {
         
         for (let c = 0; c < 5; c++) {
             const obj = card.grid[r][c];
-            const onPress = obj.constructor.name == "FreeObjective" ? () => {} : () => setObjModalData({
+            const onPress = (obj.constructor.name == "FreeObjective") ? () => {} : () => setObjModalData({
                 isModalVisible: true,
                 obj: obj,
                 confirm: () => {
