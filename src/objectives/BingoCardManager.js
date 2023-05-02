@@ -196,7 +196,7 @@ export const createBingoCard = (currentUserContext, difficulty=-1, seed=null, ti
     // generate 5x5 grid (w/ free space in center)
     let grid = [ new Array(5), new Array(5), new Array(5), new Array(5), new Array(5) ];
     const args = [difficulty, currentUserContext, random.next];
-    const MAX_RANDOMS = 25, MAX_OCCURANCES = 2;
+    const MAX_RANDOMS = 25, MAX_OCCURANCES = 1;
 
     // generate free space
     grid[2][2] = new FreeObjective("free", ...args);
@@ -216,6 +216,7 @@ export const createBingoCard = (currentUserContext, difficulty=-1, seed=null, ti
     }
 
     // fill remaining tiles with explore objectives
+    const objCounts = {}; // store how many times an explore objective is displayed
     for (let r = 0; r < 5; r++) {
         for (let c = 0; c < 5; c++) {
             if (grid[r][c]) continue; // skip over already-filled tiles
@@ -224,13 +225,15 @@ export const createBingoCard = (currentUserContext, difficulty=-1, seed=null, ti
             let n = 0;
             let obj = new ExploreObjective("findSomething", ...args);
             
-            while (++n < MAX_RANDOMS && (
-                isInRow("ExploreObjective", pos, grid, obj.displayText)
-                || isInCol("ExploreObjective", pos, grid, obj.displayText)
-                || getObjFrequency(grid, obj.displayText) >= MAX_OCCURANCES
-            )) {
+            while (++n < MAX_RANDOMS && objCounts[obj.displayText] >= MAX_OCCURANCES) {
                 obj = new ExploreObjective("findSomething", ...args);
             };
+
+            // store how many times an explore objective is displayed
+            if (objCounts[obj.displayText])
+                objCounts[obj.displayText]++;
+            else
+                objCounts[obj.displayText] = 1;
             
             grid[r][c] = obj;
         }
