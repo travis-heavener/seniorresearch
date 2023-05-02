@@ -1,11 +1,10 @@
 import { useFocusEffect } from "@react-navigation/native";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { BackHandler, Pressable, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
-import { handleAppLoad, handleAppTick, stopAppTick } from "../config/Main";
+import { Settings } from "../config/Config";
+import { handleAppTick, stopAppTick } from "../config/Main";
 import { vh, vw } from "../config/Toolbox";
 import { UserDataContext } from "../config/UserDataManager";
-
-const MIN_LENGTH = 3, MAX_LENGTH = 14;
 
 const SignupScreen = (props) => {
     const userContext = useContext( UserDataContext );
@@ -22,7 +21,7 @@ const SignupScreen = (props) => {
     );
 
     const submit = () => {
-        if (fieldText.length < MIN_LENGTH || fieldText.length > MAX_LENGTH) {
+        if (fieldText.length < Settings.MIN_USERNAME_LEN || fieldText.length > Settings.MAX_USERNAME_LEN) {
             console.log("Invalid text");
             return;
         }
@@ -86,6 +85,7 @@ const styles = StyleSheet.create({
     headerText: {
         position: "absolute",
         top: vh(5),
+        fontFamily: "Alata_400Regular",
         fontSize: vh(5),
         textAlign: "center",
         fontWeight: "600",

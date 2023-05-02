@@ -5,7 +5,6 @@
 - Advanced battery saver??
   - Control various settings for each battery-saver-controlled part
     - Ex. battery saver setting for geolocation, pedometer/devicemotion, etc.
-- @expo-google-fonts?
 - Add titles to user profile
   - ie. "Novice", "Amateur" (gets flagged on school WiFi lol), "Champion", "Olympian"
 - Revisit card & objective random generation to improve performance (ie. generateEmptyPos method w/o a while loop)
@@ -19,7 +18,7 @@
   - It's an issue with the preview build (not following the same logic as the development build???)
 - Add debugLog & boolean value to Toolbox.js
   - Take argument about which file is printing to console (or obtain dynamically somehow)
-- Username change button (edit icon next to name w/ pop-up modal)
-- Font API: https://docs.expo.dev/versions/v48.0.0/sdk/font/#processfontfamilyfontfamily
+- Change font w/ theme?
+- Move user level gold bubble thing to its own component
 - Audio API: https://docs.expo.dev/versions/v48.0.0/sdk/audio/
 - Battery API: https://docs.expo.dev/versions/v48.0.0/sdk/battery/#isbatteryoptimizationenabledasync

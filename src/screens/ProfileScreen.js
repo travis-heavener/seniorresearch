@@ -9,9 +9,11 @@ import ProgressBar from "../components/ProgressBar";
 import { getUnlockedIcons, getUnlockedThemes, iconLookup } from "../config/RewardsManager";
 import { FlatList } from "react-native-gesture-handler";
 import { eventEmitter } from "../config/Main";
+import UsernameChangeModal from "../components/UsernameChangeModal";
 
 const CHECK_IMG = require("../../assets/media/check.png");
 const CARET_IMG = require("../../assets/media/caretDown.png");
+const TEXT_EDIT_IMG = require("../../assets/media/text_edit.png");
 
 const ProfileScreen = (props) => {
     const userContext = useContext( UserDataContext );
@@ -19,6 +21,8 @@ const ProfileScreen = (props) => {
 
     const [__remountStatus, __setRemountStatus] = useState(false);
     const remount = () => __setRemountStatus(!__remountStatus);
+
+    const [showNameModal, setShowNameModal] = useState(false);
 
     const ThemedText = (props) => <Text {...props} style={[props.style, {color: THEME.text}]}>{props.children}</Text>
 
@@ -106,9 +110,15 @@ const ProfileScreen = (props) => {
         return () => BackHandler.removeEventListener("hardwareBackPress", handleBack);
     }, [areIconsVisible]);
 
+    // username modal functions
+    const usernameModalReject = () => setShowNameModal(false);
+    const usernameModalConfirm = () => setShowNameModal(false);
+
     return (
         <View style={{flex: 1}}>
             <Pressable style={styles.absolute} onPress={() => props.navigate("Home")} />
+
+            <UsernameChangeModal isModalVisible={showNameModal} modalReject={usernameModalReject} modalConfirm={usernameModalConfirm} />
 
             {/* content itself */}
             <View style={[styles.body, {transform: [{translateX: 0}]}]}>
@@ -132,7 +142,9 @@ const ProfileScreen = (props) => {
                                 </Text>
                             </View>
                             <ThemedText style={styles.userName}>{ userContext.stats.username }</ThemedText>
-                            {/* TODO: add edit icon to change username */}
+                            <Pressable onPress={() => setShowNameModal(true)}>
+                                <Image style={styles.textEditIcon} source={TEXT_EDIT_IMG} />
+                            </Pressable>
                         </View>
                         {/* progress bar */}
                         <ProgressBar
@@ -207,6 +219,7 @@ const styles = StyleSheet.create({
         position: "absolute",
         width: vw(100),
         height: vh(75.26), // 75vh + bottom border width
+        top: vh(24.74),
         bottom: 0,
         flexDirection: "column",
         justifyContent: "flex-start",
@@ -217,11 +230,9 @@ const styles = StyleSheet.create({
         borderLeftWidth: vh(.26)
     },
     userInfoView: {
-        flex: 16, // from vh(16)
-        maxHeight: vh(16),
+        height: vh(16),
         paddingHorizontal: vw(10),
         flexDirection: "row"
-        // backgroundColor: "#f55"
     },
     profileImageWrap: {
         marginTop: -vh(5),
@@ -286,10 +297,11 @@ const styles = StyleSheet.create({
     },
     userNameContainer: {
         height: vh(4.5),
-        flexDirection: "row"
+        flexDirection: "row",
+        alignItems: "center"
     },
     userName: {
-        marginLeft: "2.5%",
+        marginHorizontal: "2.5%",
         fontSize: vh(3),
         fontFamily: "JosefinSans_600SemiBold",
         textAlignVertical: "center"
@@ -311,15 +323,17 @@ const styles = StyleSheet.create({
         textAlign: "center",
         textAlignVertical: "center"
     },
+    textEditIcon: {
+        height: vh(3.25),
+        aspectRatio: 1
+    },
     xpBarSubtitle: {
         textAlign: "right",
         fontSize: vh(1.5),
         fontFamily: "JosefinSans_600SemiBold"
     },
     statsView: {
-        flex: 22, // from vh(24)
-        maxHeight: vh(22)
-        // backgroundColor: "cornflowerblue"
+        height: vh(22)
     },
     statsHeader: {
         textAlign: "center",
@@ -363,9 +377,7 @@ const styles = StyleSheet.create({
         textAlign: "right"
     },
     themePickerView: {
-        flex: 37,
-        maxHeight: vh(37)
-        // backgroundColor: "lime"
+        height: vh(37)
     },
     themePickerHeader: {
         textAlign: "center",
