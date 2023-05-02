@@ -189,15 +189,15 @@ const SwipeNavigator = (props) => {
 		const transform = [
 			{
 				translateX: position.x.interpolate({
-					inputRange: [-vw(), 0, 2*vw()],
-					outputRange: [-vw() + offsetX, offsetX, 2*vw() + offsetX],
+					inputRange: [-vw(), 0, vw()],
+					outputRange: [-vw() + offsetX, offsetX, vw() + offsetX],
 					extrapolate: "clamp"
 				})
 			},
 			{
 				translateY: position.y.interpolate({
-					inputRange: [-vh(), 0, 2*vh()],
-					outputRange: [-vh() + offsetY, offsetY, 2*vh() + offsetY],
+					inputRange: [-vh(), 0, vh()],
+					outputRange: [-vh() + offsetY, offsetY, vh() + offsetY],
 					extrapolate: "clamp"
 				})
 			}
