@@ -3,7 +3,7 @@ import { Modal, Pressable, StyleSheet, Text, TextInput, View } from "react-nativ
 import { Settings } from "../config/Config";
 import { Themes } from "../config/Themes";
 import { vh, vw } from "../config/Toolbox";
-import { UserDataContext } from "../config/UserDataManager";
+import { exportUserData, UserDataContext } from "../config/UserDataManager";
 
 const UsernameChangeModal = (props) => {
     const { modalReject, modalConfirm } = props;
@@ -13,16 +13,16 @@ const UsernameChangeModal = (props) => {
     const [fieldText, setFieldText] = useState("Player");
     const textInputRef = useRef();
 
-    const submit = () => {
+    const submit = async () => {
         if (fieldText.length < Settings.MIN_USERNAME_LEN || fieldText.length > Settings.MAX_USERNAME_LEN) {
             console.log("Invalid text");
             return;
         }
         
         userContext.stats.setUsername( fieldText );
+        await exportUserData(userContext);
 
         textInputRef.current.blur();
-
         modalConfirm();
     };
 
