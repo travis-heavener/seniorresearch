@@ -26,7 +26,7 @@ const ObjectiveConfirmModal = (props) => {
             props.reject();
     };
 
-    let objText = (props.obj.constructor.name == "ExploreObjective" ? "Find a(n) " : "Walk ");
+    let objText = (props.obj.objType == "ExploreObjective" ? "Find a(n) " : "Walk ");
     objText += props.obj.toString(userContext); // the "toString" has the toTitleCase called within (see CardObjective.js)
 
     // for progress bar

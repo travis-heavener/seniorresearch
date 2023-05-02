@@ -6,6 +6,8 @@ export class CardObjective {
         this.difficulty = difficulty;
 
         this.isCompleted = false;
+
+        this.objType = "CardObjective";
     }
 
     exportToDisk() {
@@ -30,6 +32,7 @@ export class FreeObjective extends CardObjective {
         super(label, difficulty, userContext);
 
         this.isCompleted = true;
+        this.objType = "FreeObjective";
 
         this.completionCheck = () => true; // always completed bc it's a free space, duh
     }
@@ -50,6 +53,8 @@ export class FreeObjective extends CardObjective {
 export class DistanceObjective extends CardObjective {
     constructor(label, difficulty, userContext, random=Math.random) {
         super(label, difficulty, userContext);
+
+        this.objType = "DistanceObjective";
 
         // generate distance goal
         let max = 1000, min = 500; // NOTE: this scales based on difficulty, in meters
@@ -112,6 +117,8 @@ export class DistanceObjective extends CardObjective {
 export class StepsObjective extends CardObjective {
     constructor(label, difficulty, userContext, random=Math.random) {
         super(label, difficulty, userContext);
+        
+        this.objType = "StepsObjective";
 
         // generate step goal
         let max = 1500, min = 750; // NOTE: this scales based on difficulty (ie. normal -> min: 1875/max: 3750)
@@ -167,6 +174,8 @@ export class StepsObjective extends CardObjective {
 export class ExploreObjective extends CardObjective {
     constructor(label, difficulty, userContext, random=Math.random) {
         super(label, difficulty, userContext);
+
+        this.objType = "ExploreObjective";
 
 		this.completionCheck = () => this.isCompleted;
 
