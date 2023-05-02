@@ -50,7 +50,7 @@ const SignupScreen = (props) => {
 
                 <TextInput
                     ref={textInputRef}
-                    autoCapitalize="words" numberOfLines={1} keyboardType="default" maxLength={MAX_LENGTH}
+                    autoCapitalize="words" numberOfLines={1} keyboardType="default" maxLength={Settings.MAX_USERNAME_LEN}
                     style={styles.textInput} onChangeText={t => setFieldText(t)} value={fieldText} />
 
                 <TouchableOpacity style={styles.submitButton} activeOpacity={0.67} onPress={submit}>
@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
     submitButtonText: {
         flex: 1,
         fontSize: vh(3),
-        fontWeight: "600",
+        fontFamily: "JosefinSans_700Bold",
         color: "whitesmoke",
         textAlign: "center",
         textAlignVertical: "center"
