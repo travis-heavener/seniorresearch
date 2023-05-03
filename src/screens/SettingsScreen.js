@@ -88,7 +88,7 @@ const SettingsScreen = (props) => {
                     <CreditsModal isModalVisible={showCredits} confirm={() => setCreditsVisibility(false)} />
 
                     <TouchableOpacity activeOpacity={0.75} style={styles.footerButton} onPress={() => setTOSVisibility(true)}>
-                        <Text style={[styles.footerText, {color: THEME.text}]}>Terms of Service</Text>
+                        <Text style={[styles.footerText, {color: THEME.text}]}>Terms and Conditions</Text>
                     </TouchableOpacity>
                     <TouchableOpacity activeOpacity={0.75} style={styles.footerButton} onPress={() => setPPVisibility(true)}>
                         <Text style={[styles.footerText, {color: THEME.text}]}>Privacy Policy</Text>
