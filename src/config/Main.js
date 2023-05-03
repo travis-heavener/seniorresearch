@@ -1,7 +1,7 @@
 import EventEmitter from "eventemitter3";
 import { createBingoCard, DIFFICULTIES } from "../objectives/BingoCardManager";
 import { Settings, showDebugLogs, useLazyDevMode } from "./Config";
-import { restartDeviceMotion, restartLocation, restartPedometer } from "./SensorsManager";
+import { restartDeviceMotion, restartLocation, restartPedometer, stopAllSensors } from "./SensorsManager";
 import { generateDailySeed } from "./Toolbox";
 import { exportUserData } from "./UserDataManager";
 
@@ -56,6 +56,9 @@ export const stopAppTick = () => {
     debugLog("Stopping tick function");
     clearInterval(appTickInterval);
     appTickInterval = null;
+
+    // stop all sensor APIs
+    stopAllSensors();
 };
 
 export const handleAppTick = (userContext) => {

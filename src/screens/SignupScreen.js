@@ -3,13 +3,14 @@ import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { BackHandler, Pressable, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import PrivacyModal from "../components/PrivacyModal";
 import TermsModal from "../components/TermsModal";
-import { Settings } from "../config/Config";
-import { handleAppTick, stopAppTick } from "../config/Main";
+import { PermsContext, Settings } from "../config/Config";
+import { handleAppLoad, stopAppTick } from "../config/Main";
 import { vh, vw } from "../config/Toolbox";
 import { UserDataContext } from "../config/UserDataManager";
 
 const SignupScreen = (props) => {
     const userContext = useContext( UserDataContext );
+    const permsContext = useContext( PermsContext );
     const [showTOS, setTOSVisibility] = useState( false );
     const [showPP, setPPVisibility] = useState( false );
 
@@ -20,7 +21,6 @@ const SignupScreen = (props) => {
     useFocusEffect(
         useCallback(() => {
             stopAppTick();
-            return () => handleAppTick(userContext);
         }, [props])
     );
 
@@ -49,6 +49,8 @@ const SignupScreen = (props) => {
         userContext.stats.setHasAcceptedTOS( true );
         userContext.setSelectedCard("daily");
 
+        // restart game loop & sensors
+        handleAppLoad(userContext, permsContext.permissions);
         props.navigation.navigate("Main");
     };
 

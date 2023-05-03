@@ -9,6 +9,16 @@ let locationListener = null;
 let pedometerListener = null;
 let deviceMotionListener = null;
 
+export const stopLocation = () => locationListener?.remove(); // remove listener, if applicable
+export const stopPedometer = () => pedometerListener?.remove(); // remove listener, if applicable
+export const stopDeviceMotion = () => deviceMotionListener?.remove(); // remove listener, if applicable
+
+export const stopAllSensors = () => {
+    stopLocation();
+    stopPedometer();
+    stopDeviceMotion();
+};
+
 export const restartLocation = async (userContext) => {
     locationListener?.remove(); // remove listener, if applicable
 
