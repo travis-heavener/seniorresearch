@@ -1,4 +1,4 @@
-import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Linking, Modal, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { vh, vw } from "../config/Toolbox";
 
 const TermsModal = (props) => {
@@ -9,7 +9,7 @@ const TermsModal = (props) => {
     const UL = (props) => <View style={styles.ul}>{props.children}</View>
     const LI = (props) => <View><Text style={styles.p}>    • {props.children}{"\n"}</Text></View>
     const B = (props) => <Text style={[styles.p, {fontWeight: "800"}]}>{props.children}</Text>
-    const A = (props) => <Text style={[styles.p, {color: "blue"}]}>{props.children}</Text>
+    const A = (props) => <Text style={styles.a} onPress={() => Linking.openURL(props.href)}>{props.children}</Text>;
 
     return (
         <Modal
@@ -53,7 +53,7 @@ const TermsModal = (props) => {
                             <B>Service</B><P> refers to the Application.</P>
                         </LI>
                         <LI>
-                            <B>Terms and Conditions</B><P> (also referred as "Terms") mean these Terms and Conditions that form the entire agreement between You and the Company regarding the use of the Service. This Terms and Conditions agreement has been created with the help of the <A href="https://www.termsfeed.com/terms-conditions-generator/" target="_blank">TermsFeed Terms and Conditions Generator</A>.</P>
+                            <B>Terms and Conditions</B><P> (also referred as "Terms") mean these Terms and Conditions that form the entire agreement between You and the Company regarding the use of the Service. This Terms and Conditions agreement has been created with the help of the <A href="https://www.termsfeed.com/terms-conditions-generator/">TermsFeed Terms and Conditions Generator</A>.</P>
                         </LI>
                         <LI>
                             <B>Third-party Social Media Service</B><P> means any services or content (including data, information, products or services) provided by a third-party that may be displayed, included or made available by the Service.</P>
@@ -66,7 +66,7 @@ const TermsModal = (props) => {
                     <P>These are the Terms and Conditions governing the use of this Service and the agreement that operates between You and the Company. These Terms and Conditions set out the rights and obligations of all users regarding the use of the Service.</P>
                     <P>Your access to and use of the Service is conditioned on Your acceptance of and compliance with these Terms and Conditions. These Terms and Conditions apply to all visitors, users and others who access or use the Service.</P>
                     <P>By accessing or using the Service You agree to be bound by these Terms and Conditions. If You disagree with any part of these Terms and Conditions then You may not access the Service.</P>
-                    <P>You represent that you are over the age of 18. The Company does not permit those under 18 to use the Service.</P>
+                    <P>You represent that you are over the age of 13. The Company does not permit those under 13 to use the Service.</P>
                     <P>Your access to and use of the Service is also conditioned on Your acceptance of and compliance with the Privacy Policy of the Company. Our Privacy Policy describes Our policies and procedures on the collection, use and disclosure of Your personal information when You use the Application or the Website and tells You about Your privacy rights and how the law protects You. Please read Our Privacy Policy carefully before using Our Service.</P>
                     <H2>Links to Other Websites</H2>
                     <P>Our Service may contain links to third-party web sites or services that are not owned or controlled by the Company.</P>
@@ -192,6 +192,15 @@ const styles = StyleSheet.create({
         fontSize: vh(1.625),
         lineHeight: vh(2.125),
         color: "#111"
+    },
+    a: {
+        textAlign: "left",
+        fontFamily: "Arial",
+        fontWeight: "400",
+        fontSize: vh(1.625),
+        lineHeight: vh(2.125),
+        textDecorationLine: "underline",
+        color: "blue"
     },
     ul: {
         width: "100%",
