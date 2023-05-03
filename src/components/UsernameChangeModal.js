@@ -19,11 +19,12 @@ const UsernameChangeModal = (props) => {
             return;
         }
         
-        userContext.stats.setUsername( fieldText );
-        await exportUserData(userContext);
+        userContext.stats.setUsername( fieldText ); // store new username
+        setFieldText("Player"); // reset to default text
+        await exportUserData(userContext); // save data
 
-        textInputRef.current.blur();
-        modalConfirm();
+        textInputRef.current.blur(); // close keyboard
+        modalConfirm(); // close modal & handle confirmation
     };
 
     return (
