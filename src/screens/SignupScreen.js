@@ -1,6 +1,7 @@
 import { useFocusEffect } from "@react-navigation/native";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { BackHandler, Pressable, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import PrivacyModal from "../components/PrivacyModal";
 import TermsModal from "../components/TermsModal";
 import { Settings } from "../config/Config";
 import { handleAppTick, stopAppTick } from "../config/Main";
@@ -10,6 +11,7 @@ import { UserDataContext } from "../config/UserDataManager";
 const SignupScreen = (props) => {
     const userContext = useContext( UserDataContext );
     const [showTOS, setTOSVisibility] = useState( false );
+    const [showPP, setPPVisibility] = useState( false );
 
     const [fieldText, setFieldText] = useState("Player");
     const textInputRef = useRef();
@@ -36,6 +38,11 @@ const SignupScreen = (props) => {
 
     const confirmTOS = () => {
         setTOSVisibility(false);
+        setPPVisibility(true);
+    };
+
+    const confirmPP = () => {
+        setPPVisibility(false);
 
         userContext.stats.setUsername( fieldText );
         userContext.stats.setIsNewUser( false );
@@ -56,6 +63,7 @@ const SignupScreen = (props) => {
     return (
         <Pressable style={styles.body} onPress={() => textInputRef.current?.blur()}>
             <TermsModal isModalVisible={showTOS} confirm={confirmTOS} />
+            <PrivacyModal isModalVisible={showPP} lockout={true} confirm={confirmPP} />
 
             <View style={styles.signupBody}>
                 <Text style={styles.headerText}> Sign-Up </Text>
