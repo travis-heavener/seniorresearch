@@ -55,7 +55,7 @@ const SettingsScreen = (props) => {
         stopAppTick(); // this prevents other components from trying to update, causing an error
         hideResetModal(); // hide pop-up modal
         await clearUserData(userContext); // reset all data
-        eventEmitter.emit("navigate", "Signup"); // navigate to signup screen
+        props.navigate("Signup") // navigate to signup screen
     };
 
     return (
