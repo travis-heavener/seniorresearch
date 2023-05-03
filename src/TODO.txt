@@ -1,7 +1,5 @@
 - Move permissions stuff from Config.js to new PermissionsManager.js
   - Handle permission rejection
-- Make data exporting/saving **better**
-  - Encrypt data or something when saving to disk
 - Advanced battery saver??
   - Control various settings for each battery-saver-controlled part
     - Ex. battery saver setting for geolocation, pedometer/devicemotion, etc.
@@ -14,5 +12,7 @@
 - Change font w/ theme?
 - Keep screen from going to sleep during preview builds
 - Move user level gold bubble thing to its own component
+- Make an EventEmitter event to lockout the swipe navigation (ex. called by modals, TOS banner, etc.)
+- Make an EventEmitter to refresh card display (because remounting on return to home takes a sec after animation ends)
 - Audio API: https://docs.expo.dev/versions/v48.0.0/sdk/audio/
 - Battery API: https://docs.expo.dev/versions/v48.0.0/sdk/battery/#isbatteryoptimizationenabledasync

@@ -1,10 +1,29 @@
 import React from "react";
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Settings, showDebugLogs } from "./Config";
 import { DistanceObjective, ExploreObjective, FreeObjective, StepsObjective } from "../objectives/CardObjectives";
 import { BingoCard } from "../objectives/BingoCardManager";
+import * as SecureStore from "expo-secure-store";
+import { deflate, inflate } from "react-native-gzip";
 
-export const UserDataContext = React.createContext({
+/************* CONSTANTS *************/
+
+const keysWhitelist = {
+    "base": [
+        "timestamp", "selectedTheme", "selectedIcon", "selectedCard", "batterySaverStatus", "preferredUnits"
+    ],
+    "metadata": [
+        "steps", "distance"
+    ],
+    "stats": [
+        "xp", "level", "lifetimeBingos", "lifetimeCards", "dailySkips", "username", "isNewUser", "hasAcceptedTOS",
+    ]
+};
+
+const storageRoot = "com.heavener-sr.user-data";
+
+/************* *************/
+
+const generateContextDefaults = () => ({
     metadata: {
         steps: 0,
         setSteps: function(n) {  this.steps = n;  },
@@ -55,7 +74,6 @@ export const UserDataContext = React.createContext({
             let total = this.xp;
             for (let i = 1; i < this.level; i++)
                 total += Settings.XP_CONSTANTS.calculateLevelMax(i);
-            
             return total;
         },
 
@@ -90,10 +108,7 @@ export const UserDataContext = React.createContext({
     },
 
     cardSlots: {
-        daily: null,
-        custom1: null,
-        custom2: null,
-        custom3: null
+        daily: null, custom1: null, custom2: null, custom3: null
     },
     selectedCard: "daily",
     setSelectedCard: function(n) {  this.selectedCard = n;  },
@@ -118,6 +133,9 @@ export const UserDataContext = React.createContext({
     setPreferredUnits: function(n) {  this.preferredUnits = n;  }
 });
 
+// create a new context with default data
+export const UserDataContext = React.createContext(generateContextDefaults());
+
 /************* LOAD USER DATA FROM DISK, IF AVAILABLE *************/
 
 const createObjectiveFromData = (data, userContext) => {
@@ -139,53 +157,38 @@ const createObjectiveFromData = (data, userContext) => {
 };
 
 export const loadUserData = async (userContext) => {
-    let data = await AsyncStorage.getItem("com.heavener-sr.user-data");
-    
-    if (data == null) {
-        console.log("No user data saved to disk.");
-        return;
-    }
-    // else console.log("Loading user data...");
-
     // load in data
-    data = JSON.parse(data);
-    
-    userContext.setBatterySaverStatus(data.batterySaverStatus);
-    userContext.setPreferredUnits(data.preferredUnits);
-    userContext.setSelectedTheme(data.selectedTheme);
-    userContext.setSelectedIcon(data.selectedIcon);
-    userContext.setSelectedCard(data.selectedCard);
+    for (let prop of Object.keys(keysWhitelist)) {
+        const root = storageRoot + "." + (prop == "base" ? "" : prop + ".");
+        let keys = keysWhitelist[prop];
 
-    userContext.stats.setLifetimeSteps(data.metadata.steps);
-    userContext.stats.setLifetimeDistance(data.metadata.distance);
+        for (let key of keys) {
+            let saved = JSON.parse(await SecureStore.getItemAsync(root + key));
+            // console.log("Root:", root + key, "Saved:", saved);
 
-    userContext.stats.setXP(data.stats.xp);
-    userContext.stats.setLevel(data.stats.level);
-    userContext.stats.setUsername(data.stats.username);
-    userContext.stats.setIsNewUser(data.stats.isNewUser);
-    userContext.stats.setHasAcceptedTOS(data.stats.hasAcceptedTOS);
-
-    userContext.stats.dailySkips = data.stats.dailySkips;
-    userContext.timestamp = data.timestamp;
-
-    // load card data
-    for (let cardName in data.cardsData) {
-        let card = data.cardsData[cardName];
-        
-        if (card == null) {
-            userContext.cardSlots[cardName] = null;
-            continue;
+            if (saved === null) // skip loading this stat if there isn't anything saved
+                continue;
+            else if (prop == "base") // load data to userContext
+                userContext[key] = saved;
+            else
+                userContext[prop][key] = saved;
         }
-        
-        let grid = [];
+    }
 
-        for (let r = 0; r < 5; r++) {
-            grid.push([]);
-            for (let c = 0; c < 5; c++) {
-                let objective = createObjectiveFromData(card.grid[r][c], userContext);
-                grid[r].push( objective );
-            }
-        }
+    // load cards data
+    const cardNames = Object.keys(userContext.cardSlots);
+
+    for (let cardName of cardNames) {
+        const data = await SecureStore.getItemAsync(storageRoot + ".cards." + cardName);
+
+        if (data === null) continue; // skip if no data
+
+        let card = JSON.parse(await inflate(data)); // parse JSON and decompress (inflate) the data
+        let grid = [[], [], [], [], []];
+
+        for (let r = 0; r < 5; r++)
+            for (let c = 0; c < 5; c++)
+                grid[r].push( createObjectiveFromData(card.grid[r][c], userContext) );
 
         const cardObj = new BingoCard(grid, card.difficulty, card.randomSeed, card.timestamp, card.hasAwardedCompletion);
         cardObj.checkBingos(); // fills the __bingos object so that it doesn't automatically award user free xp on loading
@@ -194,49 +197,35 @@ export const loadUserData = async (userContext) => {
 };
 
 export const exportUserData = async (userContext) => {
-    // console.log("Saving user data...");
-    // ignore certain properties
-    const keysWhitelist = [
-        "metadata",
-            "steps", "distance",
-        "stats",
-            "xp", "level", "lifetimeBingos", "lifetimeCards", "dailySkips", "username", "isNewUser", "hasAcceptedTOS",
-        "timestamp", "selectedTheme", "selectedIcon", "selectedCard", "batterySaverStatus", "preferredUnits"
-    ];
+    // export generic data
+    for (let prop of Object.keys(keysWhitelist)) {
+        const root = storageRoot + "." + (prop == "base" ? "" : prop + ".");
+        let keys = keysWhitelist[prop];
 
-    // use JSON.stringify(obj, whitelistedKeysArr) as it neglects including functions automatically
-    // whitelistedKeysArr takes in keys that are to be included, others are omitted
-    // this also works for any level of the object -- for example, if d = {e: 1, f: 2, ...}
-    // and d is to be included but e and f arent, then d is saved as an empty object in the serialized string
-    // additionally, if e is included but d is not then neither is included bc the parent object is omitted
-    // so don't be an idiot and do this. be better
-    // - past travis (11:05 AM, 2-6-23)
+        for (let key of keys) {
+            // get existing value
+            let val = (prop == "base") ? userContext[key] : userContext[prop][key];
 
-    // JSON format data for exporting
-    let formatted = JSON.parse(JSON.stringify(userContext, keysWhitelist)); // remove unnecessary properties
-
-    // lifetime stats update
-    formatted.metadata.steps += userContext.stats.lifetimeSteps;
-    formatted.metadata.distance += userContext.stats.lifetimeDistance;
-
-    // export bingo cards
-    let cardsData = {};
-
-    for (let key in userContext.cardSlots) {
-        if (userContext.cardSlots[key] == null)
-            cardsData[key] = null;
-        else
-            cardsData[key] = userContext.cardSlots[key].exportToDisk(userContext);
+            // append lifetime stats to current stats to become the new lifetime stats
+            if (key == "steps")
+                val += userContext.stats.lifetimeSteps;
+            else if (key == "distance")
+                val += userContext.stats.lifetimeDistance;
+            
+            // console.log("Saving to:", root+key, "Val:", JSON.stringify(val));
+            // save value to storage
+            await SecureStore.setItemAsync(root + key, JSON.stringify(val));
+        }
     }
 
-    // merge together data
-    formatted.cardsData = cardsData;
-    
-    // save data
-    try {
-        await AsyncStorage.setItem("com.heavener-sr.user-data", JSON.stringify(formatted));
-    } catch (e) {
-        console.log(e);
+    // export active cards
+    for (let cardName in userContext.cardSlots) {
+        if (userContext.cardSlots[cardName]) {
+            let data = userContext.cardSlots[cardName].exportToDisk(userContext);
+            data = JSON.stringify(data); // stringify data
+            data = await deflate(data); // compress data
+            await SecureStore.setItemAsync(storageRoot + ".cards." + cardName, data);
+        }
     }
 };
 
@@ -244,39 +233,22 @@ export const exportUserData = async (userContext) => {
  * Literally deletes all user data, beware
  */
 export const clearUserData = async (userContext) => {
-    try {
-		await AsyncStorage.removeItem("com.heavener-sr.user-data");
+    // clear local data
+    for (let prop of Object.keys(keysWhitelist)) {
+        const root = storageRoot + "." + (prop == "base" ? "" : prop + ".");
         
-        if (showDebugLogs) console.log("[UserDataManager.js] Cleared async storage");
-	} catch (e) {
-		console.log(e);
-	}
+        for (let key of keysWhitelist[prop])
+            await SecureStore.deleteItemAsync(root + key);
+    }
 
-    userContext.metadata.setSteps(0);
-    userContext.stats.setLifetimeSteps(0);
-    userContext.metadata.setDistance(0);
-    userContext.stats.setLifetimeDistance(0);
-    userContext.metadata.setAcceleration({x: 0, y: 0, z: 0});
+    // clear local card data
+    for (let cardName of Object.keys(userContext.cardSlots))
+        await SecureStore.deleteItemAsync(storageRoot + ".cards." + cardName);
 
-    userContext.setSelectedTheme("base");
-    userContext.setSelectedIcon("Brown Panda");
-    userContext.setBatterySaverStatus(Settings.BATTERY_SAVER_OFF);
-    userContext.setPreferredUnits("Metric");
+    if (showDebugLogs) console.log("[UserDataManager.js] Cleared SecureStore");
 
-    userContext.stats.setXP( 0 );
-    userContext.stats.setLevel( 1 );
-    userContext.stats.setDailySkips( 0 );
-    userContext.stats.setIsNewUser( true );
-    userContext.stats.setHasAcceptedTOS( false );
-    userContext.stats.setUsername( "Player" );
-
-    userContext.cardSlots.daily = null;
-    userContext.cardSlots.custom1 = null;
-    userContext.cardSlots.custom2 = null;
-    userContext.cardSlots.custom3 = null;
-    userContext.selectedCard = null;
-
-    userContext.setTimestamp( Date.now() );
+    // reset user data
+    Object.assign(userContext, generateContextDefaults());
 
     if (showDebugLogs) console.log("[UserDataManager.js] User data cleared!");
 };
