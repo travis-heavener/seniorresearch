@@ -8,6 +8,7 @@ import { exportUserData, UserDataContext } from "../config/UserDataManager";
 import { vw, vh, generateDailySeed } from "../config/Toolbox";
 import Checkbox from "./Checkbox";
 import ScalingText from "./ScalingText";
+import { eventEmitter } from "../config/Main";
 
 // import images
 const MEDIA_ROOT = "../../assets/media/";
@@ -108,8 +109,10 @@ const TasksScreenCard = (props) => {
             userContext.cardSlots[props.cardName] = null;
             setContentOpen(false);
 
-            if (userContext.selectedCard == props.cardName)
-                userContext.setSelectedCard(null);
+            if (userContext.selectedCard == props.cardName) {
+                userContext.setSelectedCard(null); // remount home when switching selected cards
+                eventEmitter.emit("remountHome"); // remount home when switching selected cards
+            }
 
             exportUserData(userContext); // save data
             props.remount();
@@ -117,10 +120,12 @@ const TasksScreenCard = (props) => {
 
         const selectCard = () => {
             if (userContext.selectedCard == props.cardName) {
-                userContext.setSelectedCard(null);
+                userContext.setSelectedCard(null); // remount home when switching selected cards
+                eventEmitter.emit("remountHome"); // remount home when switching selected cards
                 setSelected(false);
             } else {
-                userContext.setSelectedCard(props.cardName);
+                userContext.setSelectedCard(props.cardName); // remount home when switching selected cards
+                eventEmitter.emit("remountHome"); // remount home when switching selected cards
                 setSelected(true);
             }
         };
