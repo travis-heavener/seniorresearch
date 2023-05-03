@@ -22,7 +22,7 @@ const HomeScreen = (props) => {
     // remount
     const [__remountStatus, __setRemountStatus] = useState(0);
     const remount = () => __setRemountStatus(Math.random());
-    
+
     // forces a remount on screen load
     useIsFocused();
 
@@ -56,8 +56,6 @@ const HomeScreen = (props) => {
 	return (
         <View style={styles.top}>
 			<BackgroundGradient />
-			{/* background blur -- https://github.com/Kureev/react-native-blur */}
-			{/* <BlurView blurAmount={3} blurType="light" style={[styles.absolute, {display: (isBlurred ? "flex" : "none")}]} /> */}
 
 			<View style={styles.header}>
 				<Pressable onPress={openSettings}>

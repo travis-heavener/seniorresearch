@@ -1,6 +1,7 @@
 import { useFocusEffect } from "@react-navigation/native";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { BackHandler, Pressable, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import TermsModal from "../components/TermsModal";
 import { Settings } from "../config/Config";
 import { handleAppTick, stopAppTick } from "../config/Main";
 import { vh, vw } from "../config/Toolbox";
@@ -8,6 +9,7 @@ import { UserDataContext } from "../config/UserDataManager";
 
 const SignupScreen = (props) => {
     const userContext = useContext( UserDataContext );
+    const [showTOS, setTOSVisibility] = useState( false );
 
     const [fieldText, setFieldText] = useState("Player");
     const textInputRef = useRef();
@@ -25,12 +27,20 @@ const SignupScreen = (props) => {
             console.log("Invalid text");
             return;
         }
-        
-        userContext.stats.setUsername( fieldText );
-        userContext.stats.setIsNewUser( false );
-        userContext.setSelectedCard("daily");
 
         textInputRef.current.blur();
+
+        // now check TOS
+        setTOSVisibility(true);
+    };
+
+    const confirmTOS = () => {
+        setTOSVisibility(false);
+
+        userContext.stats.setUsername( fieldText );
+        userContext.stats.setIsNewUser( false );
+        userContext.stats.setHasAcceptedTOS( true );
+        userContext.setSelectedCard("daily");
 
         props.navigation.navigate("Main");
     };
@@ -45,6 +55,8 @@ const SignupScreen = (props) => {
 
     return (
         <Pressable style={styles.body} onPress={() => textInputRef.current?.blur()}>
+            <TermsModal isModalVisible={showTOS} confirm={confirmTOS} />
+
             <View style={styles.signupBody}>
                 <Text style={styles.headerText}> Sign-Up </Text>
 

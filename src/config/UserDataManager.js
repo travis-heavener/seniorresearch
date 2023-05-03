@@ -62,6 +62,9 @@ export const UserDataContext = React.createContext({
         isNewUser: true,
         setIsNewUser: function(n) {  this.isNewUser = n;  },
 
+        hasAcceptedTOS: false,
+        setHasAcceptedTOS: function(n) {  this.hasAcceptedTOS = n; },
+
         username: "Player",
         setUsername: function(n) {  this.username = n;  },
 
@@ -160,6 +163,7 @@ export const loadUserData = async (userContext) => {
     userContext.stats.setLevel(data.stats.level);
     userContext.stats.setUsername(data.stats.username);
     userContext.stats.setIsNewUser(data.stats.isNewUser);
+    userContext.stats.setHasAcceptedTOS(data.stats.hasAcceptedTOS);
 
     userContext.stats.dailySkips = data.stats.dailySkips;
     userContext.timestamp = data.timestamp;
@@ -196,7 +200,7 @@ export const exportUserData = async (userContext) => {
         "metadata",
             "steps", "distance",
         "stats",
-            "xp", "level", "lifetimeBingos", "lifetimeCards", "dailySkips", "username", "isNewUser",
+            "xp", "level", "lifetimeBingos", "lifetimeCards", "dailySkips", "username", "isNewUser", "hasAcceptedTOS",
         "timestamp", "selectedTheme", "selectedIcon", "selectedCard", "batterySaverStatus", "preferredUnits"
     ];
 
@@ -263,6 +267,7 @@ export const clearUserData = async (userContext) => {
     userContext.stats.setLevel( 1 );
     userContext.stats.setDailySkips( 0 );
     userContext.stats.setIsNewUser( true );
+    userContext.stats.setHasAcceptedTOS( false );
     userContext.stats.setUsername( "Player" );
 
     userContext.cardSlots.daily = null;

@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { View, StyleSheet, Text, DevSettings, Pressable } from "react-native";
+import { View, StyleSheet, Text, DevSettings, Pressable, TouchableOpacity } from "react-native";
 
 // Pedometer + necessary Android permissions imports
 import SettingsSwitch from "../components/SettingsSwitch";
@@ -13,10 +13,17 @@ import SettingsButton from "../components/SettingsButton";
 import TextConfirmModal from "../components/TextConfirmModal";
 import { eventEmitter, restartAppTick, startAppTick, stopAppTick } from "../config/Main";
 import { restartLocation } from "../config/SensorsManager";
+import TermsModal from "../components/TermsModal";
 
 const SettingsScreen = (props) => {
     const userContext = useContext( UserDataContext );
     const THEME = Themes[ userContext.selectedTheme ].settings; // select theme
+
+    const [showTOS, setTOSVisibility] = useState(false);
+    const confirmTOS = () => {
+        setTOSVisibility(false);
+        userContext.stats.setHasAcceptedTOS(true);
+    };
     
     // used to refresh the display
     const [__remountStatus, __setRemountStatus] = useState(false);
@@ -69,8 +76,22 @@ const SettingsScreen = (props) => {
                     activityListener={() => false}
                     onPress={showResetModal}
                 />
+
+                <View style={styles.footer}>
+                    <TermsModal isModalVisible={showTOS} confirm={confirmTOS} />
+
+                    <TouchableOpacity activeOpacity={0.75} style={styles.footerButton} onPress={() => setTOSVisibility(true)}>
+                        <Text style={[styles.footerText, {color: THEME.text}]}>Terms of Service</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity activeOpacity={0.75} style={styles.footerButton} onPress={() => setTOSVisibility(true)}>
+                        <Text style={[styles.footerText, {color: THEME.text}]}>Privacy Policy</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity activeOpacity={0.75} style={styles.footerButton} onPress={() => setTOSVisibility(true)}>
+                        <Text style={[styles.footerText, {color: THEME.text}]}>Credits</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
-            <View style={[styles.dropdownBubble, {borderColor: THEME.primaryAccent}]} />
+            {/* <View style={[styles.dropdownBubble, {borderColor: THEME.primaryAccent}]} /> */}
 
             <TextConfirmModal isModalVisible={isResetModalShown} confirm={resetUserData} reject={hideResetModal} />
 		</View>
@@ -116,6 +137,26 @@ const styles = StyleSheet.create({
         borderBottomRightRadius: vw(5),
         borderWidth: vh(1),
         borderTopWidth: 0
+    },
+    footer: {
+        position: "absolute",
+        bottom: vh(0.33),
+        width: "100%",
+        height: vh(3.5),
+        paddingHorizontal: vw(2),
+        flexDirection: "row",
+        justifyContent: "space-evenly"
+    },
+    footerButton: {
+        width: null,
+        height: "100%",
+        paddingHorizontal: vw(2)
+    },
+    footerText: {
+        flex: 1,
+        textAlignVertical: "center",
+        fontFamily: "Alata_400Regular",
+        fontSize: vh(1.75)
     }
 });
 
