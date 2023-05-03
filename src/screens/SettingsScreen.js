@@ -14,15 +14,20 @@ import TextConfirmModal from "../components/TextConfirmModal";
 import { eventEmitter, restartAppTick, startAppTick, stopAppTick } from "../config/Main";
 import { restartLocation } from "../config/SensorsManager";
 import TermsModal from "../components/TermsModal";
+import PrivacyModal from "../components/PrivacyModal";
+import CreditsModal from "../components/CreditsModal";
 
 const SettingsScreen = (props) => {
     const userContext = useContext( UserDataContext );
     const THEME = Themes[ userContext.selectedTheme ].settings; // select theme
 
+    // credits, privacy policy, and TOS modal controls
+    const [showPP, setPPVisibility] = useState(false);
+    const [showCredits, setCreditsVisibility] = useState(false);
     const [showTOS, setTOSVisibility] = useState(false);
     const confirmTOS = () => {
         setTOSVisibility(false);
-        userContext.stats.setHasAcceptedTOS(true);
+        userContext.stats.setHasAcceptedTOS(true); // despite the user having to confirm TOS to use the app, it couldn't hurt to have this
     };
     
     // used to refresh the display
@@ -79,14 +84,16 @@ const SettingsScreen = (props) => {
 
                 <View style={styles.footer}>
                     <TermsModal isModalVisible={showTOS} confirm={confirmTOS} />
+                    <PrivacyModal isModalVisible={showPP} confirm={() => setPPVisibility(false)} />
+                    <CreditsModal isModalVisible={showCredits} confirm={() => setCreditsVisibility(false)} />
 
                     <TouchableOpacity activeOpacity={0.75} style={styles.footerButton} onPress={() => setTOSVisibility(true)}>
                         <Text style={[styles.footerText, {color: THEME.text}]}>Terms of Service</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity activeOpacity={0.75} style={styles.footerButton} onPress={() => setTOSVisibility(true)}>
+                    <TouchableOpacity activeOpacity={0.75} style={styles.footerButton} onPress={() => setPPVisibility(true)}>
                         <Text style={[styles.footerText, {color: THEME.text}]}>Privacy Policy</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity activeOpacity={0.75} style={styles.footerButton} onPress={() => setTOSVisibility(true)}>
+                    <TouchableOpacity activeOpacity={0.75} style={styles.footerButton} onPress={() => setCreditsVisibility(true)}>
                         <Text style={[styles.footerText, {color: THEME.text}]}>Credits</Text>
                     </TouchableOpacity>
                 </View>

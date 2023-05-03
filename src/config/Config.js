@@ -7,6 +7,7 @@ import * as Location from "expo-location";
 
 export const showDebugLogs = false;
 export const useLazyDevMode = false;
+export const contactEmail = "travis.heavener@gmail.com";
 
 /* ======= settings ======= */
 
