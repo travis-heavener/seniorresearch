@@ -111,14 +111,21 @@ const ProfileScreen = (props) => {
     }, [areIconsVisible]);
 
     // username modal functions
-    const usernameModalReject = () => setShowNameModal(false);
-    const usernameModalConfirm = () => setShowNameModal(false);
+    const closeUsernameModal = () => {
+        props.unfreezeGestures();
+        setShowNameModal(false);
+    };
+    // username modal functions
+    const showUsernameModal = () => {
+        props.freezeGestures();
+        setShowNameModal(true);
+    };
 
     return (
         <View style={{flex: 1}}>
             <Pressable style={styles.absolute} onPress={() => props.navigate("Home")} />
 
-            <UsernameChangeModal isModalVisible={showNameModal} modalReject={usernameModalReject} modalConfirm={usernameModalConfirm} />
+            <UsernameChangeModal isModalVisible={showNameModal} modalReject={closeUsernameModal} modalConfirm={closeUsernameModal} />
 
             {/* content itself */}
             <View style={[styles.body, {transform: [{translateX: 0}]}]}>
@@ -142,7 +149,7 @@ const ProfileScreen = (props) => {
                                 </Text>
                             </View>
                             <ThemedText style={styles.userName}>{ userContext.stats.username }</ThemedText>
-                            <Pressable onPress={() => setShowNameModal(true)}>
+                            <Pressable onPress={showUsernameModal}>
                                 <Image style={styles.textEditIcon} source={TEXT_EDIT_IMG} />
                             </Pressable>
                         </View>

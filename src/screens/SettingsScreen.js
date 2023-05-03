@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { View, StyleSheet, Text, DevSettings, Pressable, TouchableOpacity } from "react-native";
 
 // Pedometer + necessary Android permissions imports
@@ -37,6 +37,14 @@ const SettingsScreen = (props) => {
     const [isResetModalShown, setResetModalVisibility] = useState(false);
     const hideResetModal = () => setResetModalVisibility(false);
     const showResetModal = () => setResetModalVisibility(true);
+
+    // disable swipe gestures when modals appear and vice versa
+    const toggleGestures = (cond) => cond ? props.freezeGestures() : props.unfreezeGestures();
+
+    useEffect(() => toggleGestures(showPP), [showPP]);
+    useEffect(() => toggleGestures(showCredits), [showCredits]);
+    useEffect(() => toggleGestures(showTOS), [showTOS]);
+    useEffect(() => toggleGestures(isResetModalShown), [isResetModalShown]);
 
     const toggleBatterySaver = () => {
         userContext.toggleBatterySaver();

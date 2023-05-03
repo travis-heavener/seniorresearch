@@ -51,17 +51,23 @@ const CardDisplayGrid = (props) => {
         
         for (let c = 0; c < 5; c++) {
             const obj = card.grid[r][c];
-            const onPress = (obj.objType == "FreeObjective") ? () => {} : () => setObjModalData({
-                isModalVisible: true,
-                obj: obj,
-                confirm: () => {
-                    if (obj.triggerPlayerCompletion) obj.triggerPlayerCompletion(); // trigger player completion, if available
-                    card.runCompletionChecks(userContext); // check for bingo completions
-                    exportUserData(userContext); // export data because saving data is important
-                    closeObjModal(); // close the modal & remount
-                },
-                reject: () => closeObjModal() // just close the modal
-            });
+            const onPress = (obj.objType == "FreeObjective") ? () => {} : () => {
+                setObjModalData({
+                    isModalVisible: true, obj: obj,
+                    confirm: () => {
+                        if (obj.triggerPlayerCompletion) obj.triggerPlayerCompletion(); // trigger player completion, if available
+                        card.runCompletionChecks(userContext); // check for bingo completions
+                        exportUserData(userContext); // export data because saving data is important
+                        closeObjModal(); // close the modal & remount
+                        props.unfreezeGestures(); // unfreeze swipe gestures
+                    },
+                    reject: () => {
+                        closeObjModal() // just close the modal
+                        props.unfreezeGestures(); // unfreeze swipe gestures
+                    }
+                });
+                props.freezeGestures(); // freeze gestures
+            };
 
             row.push(
                 <CardDisplayTile key={c} onPress={onPress} row={r} col={c} obj={obj} />

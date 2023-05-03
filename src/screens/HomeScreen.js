@@ -36,10 +36,6 @@ const HomeScreen = (props) => {
                     remount();
                 });
 
-                // navigation listener
-                eventEmitter.removeAllListeners("navigate"); // remove existing listeners
-                eventEmitter.addListener("navigate", name => props.navigate(name) );
-
                 // send users back to signup if they somehow skip it
                 if (userContext.stats.isNewUser)
                     props.navigate("Signup");
@@ -67,7 +63,7 @@ const HomeScreen = (props) => {
 			</View>
 
 			<View style={styles.body}>
-				<CardDisplayGrid />
+				<CardDisplayGrid freezeGestures={props.freezeGestures} unfreezeGestures={props.unfreezeGestures} />
 			</View>
 
 			<View style={styles.bottomButtons}>

@@ -210,24 +210,31 @@ const SwipeNavigator = (props) => {
 		);
 	};
 
+    const opts = {
+        ...props,
+        freezeGestures: () => navContext.setIsAnimating(true),
+        unfreezeGestures: () => navContext.setIsAnimating(false),
+        navigate: navigate
+    };
+
 	return (
 		<View style={styles.absolute} {...panResponderRef.panHandlers}>
-			<HomeScreen {...{...props, navigate: navigate}} key={childKeys[0]} />
+			<HomeScreen {...opts} key={childKeys[0]} />
 
 			<OffsetWrapper offsetX={-vw(100)}>
-				<ProfileScreen {...{...props, navigate: navigate}} key={childKeys[1]} />
+				<ProfileScreen {...opts} key={childKeys[1]} />
 			</OffsetWrapper>
 			
 			<OffsetWrapper offsetX={vw(100)}>
-				<RewardsScreen {...{...props, navigate: navigate}} key={childKeys[2]} />
+				<RewardsScreen {...opts} key={childKeys[2]} />
 			</OffsetWrapper>
 
 			<OffsetWrapper offsetY={-vh(100)}>
-				<SettingsScreen {...{...props, navigate: navigate}} key={childKeys[3]} />
+				<SettingsScreen {...opts} key={childKeys[3]} />
 			</OffsetWrapper>
 
 			<OffsetWrapper offsetY={vh(100)}>
-				<TasksScreen {...{...props, navigate: navigate}} key={childKeys[4]} />
+				<TasksScreen {...opts} key={childKeys[4]} />
 			</OffsetWrapper>
 		</View>
 	)
