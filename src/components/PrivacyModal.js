@@ -15,13 +15,15 @@ const PrivacyModal = (props) => {
         return ( <UL>{entries}</UL> );
     };
 
+    const isLocked = (props.lockout) ? props.lockout : false;
+
     return (
         <Modal
             transparent={true}
-            onRequestClose={props.confirm}
+            onRequestClose={isLocked ? () => {} : props.confirm}
             visible={props.isModalVisible}
         >
-            <Pressable style={styles.absolute} onPress={props.confirm} />
+            <Pressable style={styles.absolute} onPress={isLocked ? () => {} : props.confirm} />
 
             <ScrollView style={styles.body} overScrollMode="never" showsVerticalScrollIndicator={false}>
                 <View style={styles.textContainer}>
