@@ -59,7 +59,6 @@ const styles = StyleSheet.create({
         textAlignVertical: "center",
         fontSize: vh(2),
         fontFamily: "Alata_400Regular",
-        fontStyle: "italic",
         color: "#f9f9f9"
     }
 });
