@@ -1,4 +1,4 @@
-import { Animated, BackHandler, PanResponder, StyleSheet, View } from "react-native"
+import { Animated, BackHandler, Modal, PanResponder, StyleSheet, View } from "react-native"
 import { vh, vw } from "../config/Toolbox";
 import RewardsScreen from "./RewardsScreen";
 import ProfileScreen from "./ProfileScreen";
@@ -8,6 +8,7 @@ import SettingsScreen from "./SettingsScreen";
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { useIsFocused } from "@react-navigation/native";
 import { useFocusEffect } from "@react-navigation/core";
+import DevNoteModal from "../components/DevNoteModal";
 
 // touch margins
 const H_MARGIN = vw(25); // the borders that swipe navigation gestures are picked up by
@@ -67,6 +68,9 @@ const SwipeNavigator = (props) => {
     const [childKeys, setChildKeys] = useState([0, 1, 2, 3, 4]);
     const massRemount = () => setChildKeys(childKeys.map((val, i) => Math.random() - (10*i))); // remount all child screens
     
+    // developer note modal
+    const [showDevNote, setDevNoteVisibility] = useState(true);
+
     // runs on screen focus
     useFocusEffect(
         useCallback(() => {
@@ -234,6 +238,8 @@ const SwipeNavigator = (props) => {
 
 	return (
 		<View style={styles.absolute} {...panResponderRef.panHandlers}>
+            <DevNoteModal isModalVisible={showDevNote} close={() => setDevNoteVisibility(false)} />
+
 			<HomeScreen {...opts} key={childKeys[0]} />
 
 			<OffsetWrapper offsetX={-vw(100)}>
