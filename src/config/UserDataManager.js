@@ -76,6 +76,13 @@ const generateContextDefaults = () => ({
                 total += Settings.XP_CONSTANTS.calculateLevelMax(i);
             return total;
         },
+        getLevelTitle: function() {
+            let title = "<Title>";
+            for (let i = 0; i < Settings.XP_CONSTANTS.levelTitles.length; i++)
+                if (this.level >= Settings.XP_CONSTANTS.levelTitles[i].lvl)
+                    title = Settings.XP_CONSTANTS.levelTitles[0].title;
+            return title;
+        },
 
         isNewUser: true,
         setIsNewUser: function(n) {  this.isNewUser = n;  },

@@ -158,7 +158,10 @@ const ProfileScreen = (props) => {
                             width={vw(43)} height="33%"
                             min={0} max={maxXP} current={currentXP} readout={readoutXP}
                         />
-                        <ThemedText style={styles.xpBarSubtitle}>{maxXP} XP</ThemedText>
+                        <View style={styles.xpBarSubtitle}>
+                            <ThemedText style={[styles.xpBarText, {textAlign: "left"}]}>{userContext.stats.getLevelTitle()}</ThemedText>
+                            <ThemedText style={[styles.xpBarText, {textAlign: "right"}]}>{maxXP} XP</ThemedText>
+                        </View>
                     </View>
                 </View>
                 <View style={[styles.statsView, {backgroundColor: THEME.stats}]}>
@@ -335,7 +338,12 @@ const styles = StyleSheet.create({
         aspectRatio: 1
     },
     xpBarSubtitle: {
-        textAlign: "right",
+        width: vw(43), // same as ProgressBar
+        paddingHorizontal: vw(2),
+        flexDirection: "row",
+        justifyContent: "space-between"
+    },
+    xpBarText: {
         fontSize: vh(1.5),
         fontFamily: "JosefinSans_600SemiBold"
     },

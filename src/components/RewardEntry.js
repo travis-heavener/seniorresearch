@@ -4,6 +4,8 @@ import { Themes } from "../config/Themes";
 import { toTitleCase, vh, vw } from "../config/Toolbox";
 import { UserDataContext } from "../config/UserDataManager";
 
+const TITLE_IMG = require("../../assets/media/text_edit.png");
+
 const RewardEntry = (props) => {
     const userContext = useContext( UserDataContext );
     const THEME = Themes[ userContext.selectedTheme ].rewards;
@@ -11,7 +13,8 @@ const RewardEntry = (props) => {
     
     const isUnlocked = userContext.stats.level >= reqs.level;
     const labelText = reqs.type == "theme" ? toTitleCase(reqs.id) + " Theme" :
-        reqs.type == "icon" ? reqs.label + " Icon" : "null";
+        reqs.type == "icon" ? reqs.label + " Icon" :
+        reqs.type == "title" ? "\"" + reqs.label + "\" Title" : "null";
 
     const labelTextStyle = isUnlocked
         ? {...styles.labelTextUnlocked, color: THEME.unlockedText}
@@ -26,6 +29,7 @@ const RewardEntry = (props) => {
             {
                 reqs.type == "icon" ? <Image style={styles.iconStyle} source={reqs.img} />
                 : reqs.type == "theme" ? <View style={[styles.iconStyle, {backgroundColor: reqs.iconColor, borderWidth: vh(0.2)}]} />
+                : reqs.type == "title" ? <Image style={styles.iconStyle} source={TITLE_IMG} />
                 : null
             }
         </View>

@@ -16,6 +16,15 @@ export const rewardsList = [
     {level: 17, type: "icon", label: "Pink Panda",      img: require(iconPath + "pink_panda.png")},
     {level: 25, type: "icon", label: "Red Panda",       img: require(iconPath + "red_panda.png")},
     {level: 30, type: "icon", label: "Yellow Panda",    img: require(iconPath + "yellow_panda.png")}, // MAX LEVEL
+
+    /* titles */
+    {level: 1 , type: "title", label: "Trainee"},
+    {level: 5 , type: "title", label: "Novice"},
+    {level: 10, type: "title", label: "Rookie"},
+    {level: 15, type: "title", label: "Trainer"},
+    {level: 20, type: "title", label: "Champion"},
+    {level: 25, type: "title", label: "Olympian"},
+    {level: 30, type: "title", label: "Legend"},
 ];
 
 export const getUnlockedThemes = (level) => {
