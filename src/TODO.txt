@@ -5,14 +5,11 @@
     - Ex. battery saver setting for geolocation, pedometer/devicemotion, etc.
 - Add titles to user profile
   - ie. "Novice", "Amateur" (gets flagged on school WiFi lol), "Champion", "Olympian"
-- Revisit card & objective random generation to improve performance (ie. generateEmptyPos method w/o a while loop)
-  - Measure how long it takes to generate a card to see if more random iterations can be added
 - Add debugLog & boolean value to Toolbox.js
   - Take argument about which file is printing to console (or obtain dynamically somehow)
 - Change font w/ theme?
 - Keep screen from going to sleep during preview builds
 - Move user level gold bubble thing to its own component
-- Make an EventEmitter event to lockout the swipe navigation (ex. called by modals, TOS banner, etc.)
-- Make an EventEmitter to refresh card display (because remounting on return to home takes a sec after animation ends)
+- Add an "Are you sure you want to close BinGo" modal when hitting back arrow on home screen
 - Audio API: https://docs.expo.dev/versions/v48.0.0/sdk/audio/
 - Battery API: https://docs.expo.dev/versions/v48.0.0/sdk/battery/#isbatteryoptimizationenabledasync
