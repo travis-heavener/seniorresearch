@@ -46,16 +46,7 @@ export const Settings = {
         levelIncrement: 50, // xp increment per level
         calculateLevelMax: function(level) {
             return level * this.levelIncrement + this.levelBase;
-        },
-        levelTitles: [
-            {lvl: 0, title: "Trainee"}, // levels 0+ and so on
-            {lvl: 5, title: "Novice"},
-            {lvl: 10, title: "Rookie"},
-            {lvl: 15, title: "Trainer"},
-            {lvl: 20, title: "Champion"},
-            {lvl: 25, title: "Olympian"},
-            {lvl: 30, title: "Legend"}
-        ]
+        }
     },
 	LOCATION_NOISE_THRESH: 25, // in meters, widest accuracy radius of geolocation calls, limits noise
     MAX_GRADIENT_SPEED: 1, // max speed recognized by gradient before it maxes the color

@@ -4,6 +4,7 @@ import { DistanceObjective, ExploreObjective, FreeObjective, StepsObjective } fr
 import { BingoCard } from "../objectives/BingoCardManager";
 import * as SecureStore from "expo-secure-store";
 import { deflate, inflate } from "react-native-gzip";
+import { getAllTitles } from "./RewardsManager";
 
 /************* CONSTANTS *************/
 
@@ -77,10 +78,11 @@ const generateContextDefaults = () => ({
             return total;
         },
         getLevelTitle: function() {
+            const titles = getAllTitles();
             let title = "<Title>";
-            for (let i = 0; i < Settings.XP_CONSTANTS.levelTitles.length; i++)
-                if (this.level >= Settings.XP_CONSTANTS.levelTitles[i].lvl)
-                    title = Settings.XP_CONSTANTS.levelTitles[0].title;
+            for (let t of titles)
+                if (this.level >= t.level)
+                    title = t.title;
             return title;
         },
 

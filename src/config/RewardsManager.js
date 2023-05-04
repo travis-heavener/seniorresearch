@@ -64,3 +64,11 @@ export const iconLookup = (label) => {
     
     return {img: null}; // if nothing else is found
 };
+
+export const getAllTitles = () => {
+    const titles = [];
+    for (let reward of rewardsList)
+        if (reward.type === "title")
+            titles.push( {level: reward.level, title: reward.label} );
+    return titles;
+};
