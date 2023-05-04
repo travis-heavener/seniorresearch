@@ -1,4 +1,4 @@
-import { Animated, PanResponder, StyleSheet, View } from "react-native"
+import { Animated, BackHandler, PanResponder, StyleSheet, View } from "react-native"
 import { vh, vw } from "../config/Toolbox";
 import RewardsScreen from "./RewardsScreen";
 import ProfileScreen from "./ProfileScreen";
@@ -67,9 +67,23 @@ const SwipeNavigator = (props) => {
     const [childKeys, setChildKeys] = useState([0, 1, 2, 3, 4]);
     const massRemount = () => setChildKeys(childKeys.map((val, i) => Math.random() - (10*i))); // remount all child screens
     
-    // remount all screens on focus
+    // runs on screen focus
     useFocusEffect(
-        useCallback(massRemount, [props])
+        useCallback(() => {
+            massRemount(); // remount all screens on screen focus
+
+            const handleBack = () => {
+                if (navContext.focusedScreen == "center") {
+                    return false; // close app and run default
+                } else {
+                    animateNav("center", true); // return home and prevent default
+                    return true;
+                }
+            };
+    
+            BackHandler.addEventListener("hardwareBackPress", handleBack);
+            return () => BackHandler.removeEventListener("hardwareBackPress", handleBack);
+        } ,[props])
     );
 
 	const panResponderRef = useRef(
@@ -210,6 +224,7 @@ const SwipeNavigator = (props) => {
 		);
 	};
 
+    // screen options
     const opts = {
         ...props,
         freezeGestures: () => navContext.setIsAnimating(true),
