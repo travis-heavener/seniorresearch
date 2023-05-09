@@ -134,20 +134,15 @@ const SwipeNavigator = (props) => {
                 if (navContext.isAnimating) return; // prevent screen gestures while another screen is animating
 
                 const {x0, y0, dx, dy} = gestureState;
-
 				let dir = getSwipeOrigin(x0, y0); // determine direction of swipe
 
                 // handle offset due to focused screen
                 const offset = navContext.getOffset();
                 
                 // translate screen, if not already swiping past screen
-                if (
-                    (dir == "left" && navContext.focusedScreen != "left") || (dir == "right" && navContext.focusedScreen != "right")
-                ) {
+                if ((dir == "left" && navContext.focusedScreen != "left") || (dir == "right" && navContext.focusedScreen != "right")) {
                     position.setValue({x: dx + offset.x, y: offset.y});
-                } else if (
-                    (dir == "top" && navContext.focusedScreen != "top") || (dir == "bottom" && navContext.focusedScreen != "bottom")
-                ) {
+                } else if ((dir == "top" && navContext.focusedScreen != "top") || (dir == "bottom" && navContext.focusedScreen != "bottom")) {
 					position.setValue({x: offset.x, y: dy + offset.y});
                 }
 			},
@@ -193,8 +188,8 @@ const SwipeNavigator = (props) => {
             navContext.setIsAnimating(false);
 
             // remount screen that is being focused
-            if (shouldRemount)
-                remountScreen(navContext.focusedScreen);
+            if (shouldRemount && navContext.focusedScreen == "center")
+                massRemount();
         }, ANIM_TIMING);
     };
 
