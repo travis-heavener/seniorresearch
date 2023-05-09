@@ -12,11 +12,11 @@ const keysWhitelist = {
     "base": [
         "timestamp", "selectedTheme", "selectedIcon", "selectedCard", "batterySaverStatus", "preferredUnits"
     ],
-    "metadata": [
-        "steps", "distance"
-    ],
+    // "metadata": [
+    //     "steps", "distance"
+    // ],
     "stats": [
-        "xp", "level", "lifetimeBingos", "lifetimeCards", "dailySkips", "username", "isNewUser", "hasAcceptedTOS",
+        "xp", "level", "lifetimeSteps", "lifetimeDistance", "lifetimeBingos", "lifetimeCards", "dailySkips", "username", "isNewUser", "hasAcceptedTOS",
     ]
 };
 
@@ -216,10 +216,12 @@ export const exportUserData = async (userContext) => {
             let val = (prop == "base") ? userContext[key] : userContext[prop][key];
 
             // append lifetime stats to current stats to become the new lifetime stats
-            if (key == "steps")
-                val += userContext.stats.lifetimeSteps;
-            else if (key == "distance")
-                val += userContext.stats.lifetimeDistance;
+            if (key == "steps" || key == "distance") continue; // skip saving basic steps/distance
+
+            if (key == "lifetimeSteps")
+                val += userContext.metadata.steps;
+            else if (key == "lifetimeDistance")
+                val += userContext.metadata.distance;
             
             // console.log("Saving to:", root+key, "Val:", JSON.stringify(val));
             // save value to storage
