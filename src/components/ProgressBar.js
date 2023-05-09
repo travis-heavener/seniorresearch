@@ -44,7 +44,7 @@ const ProgressBar = (props) => {
     // listen to any changes via event listener
     useEffect(() => {
         const func = (_data) => {
-            if (props.eventName == "remountProfile") {
+            if (props.eventName == "remountProfile" || props.eventName == "remountRewards") {
                 if (_data.progressBar) {
                     const newData = _data.progressBar;
                     setData({
