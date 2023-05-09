@@ -102,10 +102,19 @@ export const handleAppTick = async (userContext, navContext) => {
 
     // re-render focused screen
     const focusedScreen = navContext.getFocusedScreenName();
-    if (focusedScreen == "Home")
+    if (focusedScreen == "Home") {
         eventEmitter.emit("remountHome");
-    else if (focusedScreen == "Profile") {
+    } else if (focusedScreen == "Profile") {
         eventEmitter.emit("remountProfile", {
+            progressBar: (lastStats.getTotalXP() === userContext.stats.getTotalXP()) ? null : {
+                current: userContext.stats.xp,
+                readout: userContext.stats.xp + " XP",
+                max: Settings.XP_CONSTANTS.calculateLevelMax(userContext.stats.level),
+                min: 0
+            }
+        });
+    } else if (focusedScreen == "Rewards") {
+        eventEmitter.emit("remountRewards", {
             progressBar: (lastStats.getTotalXP() === userContext.stats.getTotalXP()) ? null : {
                 current: userContext.stats.xp,
                 readout: userContext.stats.xp + " XP",

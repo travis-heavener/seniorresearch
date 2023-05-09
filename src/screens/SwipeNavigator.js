@@ -1,25 +1,31 @@
-import { Animated, BackHandler, Modal, PanResponder, StyleSheet, View } from "react-native"
+import { Animated, BackHandler, PanResponder, StyleSheet, View } from "react-native"
 import { vh, vw } from "../config/Toolbox";
 import RewardsScreen from "./RewardsScreen";
 import ProfileScreen from "./ProfileScreen";
 import HomeScreen from "./HomeScreen";
 import TasksScreen from "./TasksScreen";
 import SettingsScreen from "./SettingsScreen";
-import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
-import { useIsFocused } from "@react-navigation/native";
+import { createContext, useCallback, useContext, useRef, useState } from "react";
 import { useFocusEffect } from "@react-navigation/core";
 import DevNoteModal from "../components/DevNoteModal";
+import { eventEmitter } from "../config/Main";
 
 // touch margins
 const H_MARGIN = vw(25); // the borders that swipe navigation gestures are picked up by
 const V_MARGIN = vh(40); // the borders that swipe navigation gestures are picked up by
-const SWIPE_THRESH = 25; // n% of vw/vh must be swiped across to switch to next screen on release
+const SWIPE_THRESH = 15; // n% of vw/vh must be swiped across to switch to next screen on release
 const TOUCH_THRESH = 10; // px, how much displacement a swipe should be considered by
-const ANIM_TIMING = 125; // ms, how long animations should be when using navigate function
+const ANIM_TIMING = 100; // ms, how long animations should be when using navigate function
 
-
-const NavContext = createContext({
+export const NavContext = createContext({
     focusedScreen: "center",
+    getFocusedScreenName: function() {
+        return (this.focusedScreen == "center") ? "Home" :
+            (this.focusedScreen == "left") ? "Profile" :
+            (this.focusedScreen == "right") ? "Rewards" :
+            (this.focusedScreen == "top") ? "Settings" :
+            (this.focusedScreen == "bottom") ? "Tasks" : "";
+    },
     setFocusedScreen: function(s) {
         if (
             (this.focusedScreen == "left" && s == "right") ||
@@ -65,9 +71,24 @@ const SwipeNavigator = (props) => {
 	const position = useRef(new Animated.ValueXY()).current;
 
     // child keys for mass remounts
-    const [childKeys, setChildKeys] = useState([0, 1, 2, 3, 4]);
-    const massRemount = () => setChildKeys(childKeys.map((val, i) => Math.random() - (10*i))); // remount all child screens
-    
+    const [masterKey, setMasterKey] = useState(Math.random());
+    const [homeKey, setHomeKey] = useState(Math.random());
+    const [profileKey, setProfileKey] = useState(Math.random());
+    const [rewardsKey, setRewardsKey] = useState(Math.random());
+    const [settingsKey, setSettingsKey] = useState(Math.random());
+    const [tasksKey, setTasksKey] = useState(Math.random());
+
+    const remountScreen = (name) => {
+        if (name == "center") setHomeKey(Math.random());
+        if (name == "left") setProfileKey(Math.random());
+        if (name == "right") setRewardsKey(Math.random());
+        if (name == "top") setSettingsKey(Math.random());
+        if (name == "bottom") setTasksKey(Math.random());
+    };
+    const massRemount = () => {
+        setMasterKey(Math.random());
+    };
+
     // developer note modal
     const [showDevNote, setDevNoteVisibility] = useState(true);
 
@@ -86,8 +107,19 @@ const SwipeNavigator = (props) => {
             };
     
             BackHandler.addEventListener("hardwareBackPress", handleBack);
+
+            // add screen remount listeners
+            const screenNames = ["Home", "Profile", "Settings", "Rewards", "Tasks"];
+            for (let screenName of screenNames) {
+                eventEmitter.removeAllListeners("nav.remount." + screenName.toLowerCase());
+                eventEmitter.addListener(
+                    "nav.remount." + screenName.toLowerCase(),
+                    () => remountScreen(navContext.screenMap[screenName])
+                );
+            }
+
             return () => BackHandler.removeEventListener("hardwareBackPress", handleBack);
-        } ,[props])
+        }, [props])
     );
 
 	const panResponderRef = useRef(
@@ -149,7 +181,7 @@ const SwipeNavigator = (props) => {
         // navigate normally to screen
         if (screenPos) navContext.setFocusedScreen(screenPos);
         navContext.setIsAnimating(true); // lock animations
-
+        
         Animated.timing(position, {
             toValue: navContext.getOffset(),
             duration: ANIM_TIMING,
@@ -160,9 +192,9 @@ const SwipeNavigator = (props) => {
         setTimeout(() => {
             navContext.setIsAnimating(false);
 
-            // remount all child screens on focusing home screen
-            if (navContext.focusedScreen == "center" && shouldRemount)
-                massRemount();
+            // remount screen that is being focused
+            if (shouldRemount)
+                remountScreen(navContext.focusedScreen);
         }, ANIM_TIMING);
     };
 
@@ -233,29 +265,31 @@ const SwipeNavigator = (props) => {
         ...props,
         freezeGestures: () => navContext.setIsAnimating(true),
         unfreezeGestures: () => navContext.setIsAnimating(false),
-        navigate: navigate
+        navigate: navigate,
+        getFocusedScreen: () => navContext.focusedScreen,
+        navContext: navContext
     };
 
 	return (
-		<View style={styles.absolute} {...panResponderRef.panHandlers}>
+		<View style={styles.absolute} {...panResponderRef.panHandlers} key={masterKey}>
             <DevNoteModal isModalVisible={showDevNote} close={() => setDevNoteVisibility(false)} />
 
-			<HomeScreen {...opts} key={childKeys[0]} />
+			<HomeScreen {...opts} key={homeKey} />
 
 			<OffsetWrapper offsetX={-vw(100)}>
-				<ProfileScreen {...opts} key={childKeys[1]} />
+				<ProfileScreen {...opts} key={profileKey} />
 			</OffsetWrapper>
 			
 			<OffsetWrapper offsetX={vw(100)}>
-				<RewardsScreen {...opts} key={childKeys[2]} />
+				<RewardsScreen {...opts} key={rewardsKey} />
 			</OffsetWrapper>
 
 			<OffsetWrapper offsetY={-vh(100)}>
-				<SettingsScreen {...opts} key={childKeys[3]} />
+				<SettingsScreen {...opts} key={settingsKey} />
 			</OffsetWrapper>
 
 			<OffsetWrapper offsetY={vh(100)}>
-				<TasksScreen {...opts} key={childKeys[4]} />
+				<TasksScreen {...opts} key={tasksKey} />
 			</OffsetWrapper>
 		</View>
 	)

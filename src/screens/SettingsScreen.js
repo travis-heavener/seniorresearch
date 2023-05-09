@@ -19,6 +19,7 @@ import CreditsModal from "../components/CreditsModal";
 
 const SettingsScreen = (props) => {
     const userContext = useContext( UserDataContext );
+    const { navContext } = props;
     const THEME = Themes[ userContext.selectedTheme ].settings; // select theme
 
     // credits, privacy policy, and TOS modal controls
@@ -49,7 +50,7 @@ const SettingsScreen = (props) => {
     const toggleBatterySaver = () => {
         userContext.toggleBatterySaver();
         restartLocation(userContext);
-        restartAppTick(userContext);
+        restartAppTick(userContext, navContext);
         forceRemount();
     };
 

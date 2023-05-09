@@ -1,9 +1,10 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native"
 import { FlatList } from "react-native-gesture-handler";
 import ProgressBar from "../components/ProgressBar";
 import RewardEntry from "../components/RewardEntry";
 import { Settings } from "../config/Config";
+import { eventEmitter } from "../config/Main";
 import { rewardsList } from "../config/RewardsManager";
 import { Themes } from "../config/Themes";
 import { vh, vw } from "../config/Toolbox";
@@ -20,6 +21,18 @@ const RewardsScreen = (props) => {
     const currentXP = userContext.stats.xp;
     const readoutXP = currentXP + " XP";
     const maxXP = Settings.XP_CONSTANTS.calculateLevelMax(userContext.stats.level);
+
+    // remount
+    const [__remountStatus, __setRemountStatus] = useState(0);
+    const remount = () => __setRemountStatus(Math.random());
+
+    // listen to remounts
+    useEffect(() => {
+        const func = (_data) => remount();
+
+        eventEmitter.addListener("remountRewards", func);
+        return () => eventEmitter.removeListener("remountRewards", func);
+    }, [props]);
     
     return (
         <View style={[styles.top, {backgroundColor: THEME.background}]}>
@@ -38,6 +51,7 @@ const RewardsScreen = (props) => {
             <View style={[styles.progressContainer, {backgroundColor: THEME.entryBackground, borderColor: THEME.borderColor}]}>
                 <Text style={styles.userXPBubble}>{userContext.stats.level}</Text>
                 <ProgressBar
+                    eventName="remountRewards"
                     width={vw(43)} height={vh(4)}
                     min={0} max={maxXP} current={currentXP} readout={readoutXP}
                 />
