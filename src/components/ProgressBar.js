@@ -23,6 +23,7 @@ const ProgressBar = (props) => {
         outputRange: [-props.width, 0]
     });
 
+    // update percentage when props OR data change (from event listener)
     useEffect(() => {
         Animated.timing(percentageAnim, {
             toValue: data.percentage,
@@ -31,7 +32,16 @@ const ProgressBar = (props) => {
         }).start();
     }, [props, data]);
 
-    // listen to any changes
+    // update progress when props change
+    useEffect(() => {
+        setData({
+            max: props.max, min: props.min,
+            current: props.current, readout: props.readout,
+            percentage: Math.max(0, Math.min(props.current / (props.max - props.min) * 100, 100))
+        });
+    }, [props]);
+
+    // listen to any changes via event listener
     useEffect(() => {
         const func = (_data) => {
             if (props.eventName == "remountProfile") {
