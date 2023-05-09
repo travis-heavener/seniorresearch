@@ -67,22 +67,13 @@ export const handleAppTick = async (userContext, navContext) => {
     // cache last snapshot of userContext
     const lastStats = Object.assign({}, userContext.stats);
 
-    // send user back to signup if they manage to skip the signup screen
-    if (userContext.stats.isNewUser) {
-        debugLog("Navigating to signup screen...");
-        eventEmitter.emit("navigate", "Signup");
-    }
-
     // update timestamp
     const {lastTimestamp, currentTimestamp} = userContext.setTimestamp( Date.now() ); // returns old & current
     const lastDate = new Date(lastTimestamp), currentDate = new Date(currentTimestamp);
 
-    // verify that daily card is not null (create one if it is)
-    // OR the date has changed (create a new daily card based on this date)
-    if (userContext.cardSlots.daily == null || lastDate.getDate() !== currentDate.getDate()) {
-        const seed = generateDailySeed(); // create seed from Date obj
-        userContext.cardSlots.daily = createBingoCard(userContext, DIFFICULTIES.NORMAL, seed);
-    }
+    // verify that daily card is not null (create one if it is) OR the date has changed (create a new daily card based on this date)
+    if (userContext.cardSlots.daily == null || lastDate.getDate() !== currentDate.getDate())
+        userContext.cardSlots.daily = createBingoCard(userContext, DIFFICULTIES.NORMAL, generateDailySeed()); // create seed from Date obj
 
     // check cards
     for (let card of Object.values(userContext.cardSlots))
@@ -110,7 +101,8 @@ export const handleAppTick = async (userContext, navContext) => {
                 current: userContext.stats.xp,
                 readout: userContext.stats.xp + " XP",
                 max: Settings.XP_CONSTANTS.calculateLevelMax(userContext.stats.level),
-                min: 0
+                min: 0,
+                level: userContext.stats.level
             }
         });
     } else if (focusedScreen == "Rewards") {

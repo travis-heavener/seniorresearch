@@ -8,8 +8,8 @@ import * as Location from "expo-location";
 export const showDebugLogs = false;
 export const useLazyDevMode = {
     xp: false,
-    steps: true,
-    gps: true
+    steps: false,
+    gps: false
 };
 export const contactEmail = "travis.heavener@gmail.com";
 
