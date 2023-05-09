@@ -5,7 +5,7 @@ const CHECK_IMG = require("../../assets/media/check.png");
 
 const Checkbox = (props) => {
     return (
-        <View style={styles.parent}>
+        <View style={[styles.parent, props.style]}>
             <Image source={CHECK_IMG} style={[styles.check, {opacity: (0+props.isChecked)}]} />
         </View>
     );
@@ -17,7 +17,8 @@ const styles = StyleSheet.create({
         aspectRatio: 1,
 		marginLeft: vw(1.5),
 		borderColor: "black",
-		borderWidth: 1.5
+		borderWidth: vh(0.2),
+        borderRadius: vh(0.625)
     },
     check: {
 		width: "100%",

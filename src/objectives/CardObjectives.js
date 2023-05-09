@@ -180,16 +180,27 @@ export class ExploreObjective extends CardObjective {
 		this.completionCheck = () => this.isCompleted;
 
         // handle player-triggered completion events
-        this.triggerPlayerCompletion = () => this.isCompleted = true; // when triggered, objective is checked
+        this.triggerPlayerCompletion = () => {
+            this.targetsFound++; // add to the total number found
+            this.isCompleted = (this.targetCount == this.targetsFound); // mark true if all objectives have been found
+        };
+
+        this.targetCount = 1; // how many of this objective MUST be found
+        this.targetsFound = 0; // how many of this objective HAVE been found
 
         // declare objectives
         const randomObjPool = {
             easy: [
                 { name: "sign", variants: ["stop", "yield", "crosswalk", "railroad", "school zone"] },
+                { name: "street nameplate", count: 5 },
                 { name: "tree", variants: ["tall", "short"] },
                 { name: "car", variants: ["red", "green", "yellow", "blue", "gray", "white", "black"] },
                 { name: "bush" },
                 { name: "pond" },
+                { name: "dog", count: 3 },
+                { name: "cat", count: 3 },
+                { name: "trash can", count: 5 },
+                { name: "fire hydrant" }
             ],
             normal: [
                 { name: "school bus" },
@@ -204,7 +215,8 @@ export class ExploreObjective extends CardObjective {
                 { name: "public bus" },
                 { name: "train" },
                 { name: "limousine" },
-                { name: "helicopter" }
+                { name: "helicopter" },
+                { name: "statue" },
             ]
         };
 
@@ -223,6 +235,7 @@ export class ExploreObjective extends CardObjective {
         const randomVariant = randomType.variants ? randomFromArr( randomType.variants ) : null;
 
         this.displayText = (randomVariant ? randomVariant + " " : "") + randomType.name;
+        this.targetCount = randomType.count ?? 1;
     }
 
 	exportToDisk(userContext) {
@@ -231,7 +244,9 @@ export class ExploreObjective extends CardObjective {
 
             // class specifics
             isCompleted: this.isCompleted,
-            displayText: this.displayText
+            displayText: this.displayText,
+            targetCount: this.targetCount,
+            targetsFound: this.targetsFound
         };
 	}
 
@@ -239,6 +254,8 @@ export class ExploreObjective extends CardObjective {
         super.loadFromDisk(data);
 		this.isCompleted = data.isCompleted;
         this.displayText = data.displayText;
+        this.targetCount = data.targetCount;
+        this.targetsFound = data.targetsFound;
 	}
 
     toString() {
