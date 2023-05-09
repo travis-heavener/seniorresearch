@@ -23,8 +23,15 @@ const CardDisplayGrid = (props) => {
     useIsFocused();
 
     // card selection modal
-    const selectCard = () => setModalVisibility(true);
-    const modalOff = () => setModalVisibility(false);
+    const selectCard = () => {
+        setModalVisibility(true);
+        props.freezeGestures();
+    };
+
+    const modalOff = () => {
+        setModalVisibility(false);
+        props.unfreezeGestures();
+    };
     
     // get card data
     const cardName = userContext.selectedCard;

@@ -66,7 +66,7 @@ const ProgressBar = (props) => {
     }, [props]);
 
     return (
-        <View style={[styles.top, {width: props.width, height: props.height}]}>
+        <View style={[styles.top, {width: props.width, height: props.height}, props.style]}>
             <Animated.View style={[styles.blob, {transform: [{translateX: xTranslation}], backgroundColor: THEME.progressBarColor}]}>
                 <Text numberOfLines={1} adjustsFontSizeToFit={true} style={styles.readout}>{ data.readout }</Text>
             </Animated.View>
