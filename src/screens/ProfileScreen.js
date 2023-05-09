@@ -68,7 +68,6 @@ const ProfileScreen = (props) => {
     }, [props]);
 
     // xp stuff
-    const [userLevel, setUserLevel] = useState(userContext.stats.level);
     const [maxXP, setMaxXP] = useState(Settings.XP_CONSTANTS.calculateLevelMax(userContext.stats.level));
     const currentXP = userContext.stats.xp;
     const readoutXP = currentXP + " XP";
