@@ -193,18 +193,18 @@ export class ExploreObjective extends CardObjective {
             easy: [
                 { name: "sign", variants: ["stop", "yield", "crosswalk", "railroad", "school zone"] },
                 { name: "street name", count: 5 },
-                { name: "tree", variants: ["tall", "short"] },
+                { name: "tree", variants: ["tall", "short"], count: 3 },
                 { name: "car", variants: ["red", "green", "yellow", "blue", "gray", "white", "black"] },
-                { name: "bush" },
+                { name: "bush", count: 5 },
                 { name: "pond" },
                 { name: "dog", count: 3 },
                 { name: "cat", count: 3 },
                 { name: "trash can", count: 5 },
-                { name: "fire hydrant" }
+                { name: "fire hydrant", count: 2 }
             ],
             normal: [
                 { name: "school bus" },
-                { name: "flower bed" },
+                { name: "flower bed", count: 3 },
                 { name: "bicycle" },
                 { name: "motorcycle" },
                 { name: "skateboard" },
