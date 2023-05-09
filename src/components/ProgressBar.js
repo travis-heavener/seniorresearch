@@ -1,5 +1,8 @@
-import { useContext, useEffect, useRef } from "react";
+import { useFocusEffect } from "@react-navigation/core";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { StyleSheet, Text, View, Animated } from "react-native"
+import { Settings } from "../config/Config";
+import { eventEmitter } from "../config/Main";
 import { Themes } from "../config/Themes";
 import { vh, vw } from "../config/Toolbox";
 import { UserDataContext } from "../config/UserDataManager";
@@ -8,9 +11,10 @@ const ProgressBar = (props) => {
     const userContext = useContext( UserDataContext );
     const THEME = Themes[ userContext.selectedTheme ].misc;
 
-    const {max, min, current} = props;
-    let percentage = current / (max - min) * 100; // 0 being at min & 100 being at max
-    percentage = Math.max(0, Math.min(percentage, 100)); // clamp between 0 and 100
+    const [data, setData] = useState({
+        max: props.max, min: props.min, current: props.current, readout: props.readout,
+        percentage: Math.max(0, Math.min(props.current / (props.max - props.min) * 100, 100))
+    });
     
     // runs on a re-render
     const percentageAnim = useRef(new Animated.Value(0)).current;
@@ -21,16 +25,40 @@ const ProgressBar = (props) => {
 
     useEffect(() => {
         Animated.timing(percentageAnim, {
-            toValue: percentage,
+            toValue: data.percentage,
             duration: 250,
             useNativeDriver: true
         }).start();
+    }, [props, data]);
+
+    // listen to any changes
+    useEffect(() => {
+        const func = (_data) => {
+            if (props.eventName == "remountProfile") {
+                if (_data.progressBar) {
+                    const newData = _data.progressBar;
+                    setData({
+                        max: newData.max, min: newData.min,
+                        current: newData.current, readout: newData.readout,
+                        percentage: Math.max(0, Math.min(newData.current / (newData.max - newData.min) * 100, 100))
+                    });
+                }
+            }
+        };
+
+        if (props.eventName)
+            eventEmitter.addListener(props.eventName, func)
+
+        return () => {
+            if (props.eventName)
+                eventEmitter.removeListener(props.eventName, func);
+        };
     }, [props]);
 
     return (
         <View style={[styles.top, {width: props.width, height: props.height}]}>
             <Animated.View style={[styles.blob, {transform: [{translateX: xTranslation}], backgroundColor: THEME.progressBarColor}]}>
-                <Text numberOfLines={1} adjustsFontSizeToFit={true} style={styles.readout}>{ props.readout }</Text>
+                <Text numberOfLines={1} adjustsFontSizeToFit={true} style={styles.readout}>{ data.readout }</Text>
             </Animated.View>
         </View>
     )

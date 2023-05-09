@@ -10,6 +10,7 @@ import { getUnlockedIcons, getUnlockedThemes, iconLookup } from "../config/Rewar
 import { FlatList } from "react-native-gesture-handler";
 import { eventEmitter } from "../config/Main";
 import UsernameChangeModal from "../components/UsernameChangeModal";
+import ProfileStat from "../components/ProfileStat";
 
 const CHECK_IMG = require("../../assets/media/check.png");
 const CARET_IMG = require("../../assets/media/caretDown.png");
@@ -24,38 +25,7 @@ const ProfileScreen = (props) => {
 
     const [showNameModal, setShowNameModal] = useState(false);
 
-    const ThemedText = (props) => <Text {...props} style={[props.style, {color: THEME.text}]}>{props.children}</Text>
-
-    const generateStat = (name) => {
-        const md = userContext.metadata, st = userContext.stats;
-        let text = "";
-        let val = "";
-
-        if (name == "steps") {
-            val = formatCommas( st.lifetimeSteps + md.steps );
-            text = "Steps";
-        } else if (name == "distance") {
-            val = ((st.lifetimeDistance + md.distance)/1000).toFixed(1);
-            val = formatCommas(val) + "km";
-            text = "Traveled";
-        } else if (name == "cards") {
-            val = st.lifetimeCards;
-            text = "Cards Completed";
-        } else if (name == "bingos") {
-            val = st.lifetimeBingos;
-            text = "Bingos";
-        } else if (name == "xp") {
-            val = st.getTotalXP();
-            text = "Total XP";
-        }
-
-        return (
-            <View style={styles.singleStatView}>
-                <ThemedText adjustsFontSizeToFit={true} numberOfLines={1} style={styles.statsText}>{text}:</ThemedText>
-                <ThemedText adjustsFontSizeToFit={true} numberOfLines={1} style={styles.statsVariable}>{val}</ThemedText>
-            </View>
-        )
-    };
+    const ThemedText = (props) => <Text {...props} style={[props.style, {color: THEME.text}]}>{props.children}</Text>;
 
     const generateThemeIcon = (theme) => {
         const onPress = () => {
@@ -86,10 +56,21 @@ const ProfileScreen = (props) => {
         )
     };
 
+    // handle event listeners
+    useEffect(() => {
+        const func = ({progressBar}) => (progressBar !== null) ? setMaxXP(progressBar.max) : null;
+
+        eventEmitter.addListener("remountProfile", func)
+
+        return () => {
+            eventEmitter.removeListener("remountProfile", func);
+        };
+    }, [props]);
+
     // xp stuff
     const currentXP = userContext.stats.xp;
     const readoutXP = currentXP + " XP";
-    const maxXP = Settings.XP_CONSTANTS.calculateLevelMax(userContext.stats.level);
+    const [maxXP, setMaxXP] = useState(Settings.XP_CONSTANTS.calculateLevelMax(userContext.stats.level));
 
     // for auto-scrolling to selected theme (if not on screen)
     const initialThemeIndex = getUnlockedThemes(userContext.stats.level).map(t => t.id).indexOf(userContext.selectedTheme);
@@ -155,6 +136,7 @@ const ProfileScreen = (props) => {
                         </View>
                         {/* progress bar */}
                         <ProgressBar
+                            eventName="remountProfile"
                             width={vw(43)} height="33%"
                             min={0} max={maxXP} current={currentXP} readout={readoutXP}
                         />
@@ -169,13 +151,13 @@ const ProfileScreen = (props) => {
 
                     <View style={styles.statsColumnView}>
                         <View style={[styles.statsColumn, {backgroundColor: THEME.statsColumn, borderColor: THEME.statsBorder}]}>
-                            { generateStat("steps") }
-                            { generateStat("distance") }
+                            <ProfileStat name="steps" />
+                            <ProfileStat name="distance" />
                         </View>
                         <View style={[styles.statsColumn, {backgroundColor: THEME.statsColumn, borderColor: THEME.statsBorder}]}>
-                            { generateStat("cards") }
-                            { generateStat("bingos") }
-                            { generateStat("xp") }
+                            <ProfileStat name="cards" />
+                            <ProfileStat name="bingos" />
+                            <ProfileStat name="xp" />
                         </View>
                     </View>
                 </View>
@@ -369,27 +351,6 @@ const styles = StyleSheet.create({
         backgroundColor: "white",
         borderWidth: vh(0.26),
         borderRadius: vw(3)
-    },
-    singleStatView: {
-        width: "100%",
-        height: vh(4),
-        alignItems: "center",
-        justifyContent: "space-between",
-        flexDirection: "row"
-    },
-    statsText: {
-        flex: 1,
-        fontSize: vh(1.75),
-        fontFamily: "JosefinSans_500Medium",
-        textAlign: "left"
-    },
-    statsVariable: {
-        maxWidth: "33%",
-        minWidth: "25%",
-        fontSize: vh(1.75),
-        fontFamily: "JosefinSans_500Medium",
-        fontStyle: "italic",
-        textAlign: "right"
     },
     themePickerView: {
         height: vh(37)

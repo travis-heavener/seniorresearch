@@ -16,7 +16,7 @@ const debugLog = (...text) => {
 
 /************************************/
 
-export const handleAppLoad = async (userContext, perms) => {
+export const handleAppLoad = async (userContext, perms, navContext) => {
     debugLog("Start-up functions run now");
 
     // start pedometer
@@ -33,20 +33,20 @@ export const handleAppLoad = async (userContext, perms) => {
     restartLocation(userContext);
 
     // initialize app tick function
-    restartAppTick(userContext);
+    restartAppTick(userContext, navContext);
 };
 
 let appTickInterval = null;
-export const restartAppTick = (userContext) => {
+export const restartAppTick = (userContext, navContext) => {
     debugLog("Starting new tick function");
     if (appTickInterval != null)
         clearInterval(appTickInterval);
     
     // initial call to load in immediately
-    handleAppTick(userContext);
+    handleAppTick(userContext, navContext);
     appTickInterval = setInterval(
         () => {
-            handleAppTick(userContext);
+            handleAppTick(userContext, navContext);
         },
         Settings.sensorUpdateIntervals[ userContext.batterySaverStatus ].taskCompletionCheck
     );
@@ -61,8 +61,11 @@ export const stopAppTick = () => {
     stopAllSensors();
 };
 
-export const handleAppTick = (userContext) => {
+export const handleAppTick = async (userContext, navContext) => {
     debugLog("Game tick elapsed", (new Date()).toTimeString());
+
+    // cache last snapshot of userContext
+    const lastStats = Object.assign({}, userContext.stats);
 
     // send user back to signup if they manage to skip the signup screen
     if (userContext.stats.isNewUser) {
@@ -86,15 +89,29 @@ export const handleAppTick = (userContext) => {
         card?.runCompletionChecks(userContext);
 
     // for lazy developers ONLY
-    if (useLazyDevMode) {
-        userContext.metadata.addDistance(1000);
-        // userContext.metadata.setSteps(userContext.metadata.steps + 1000);
+    if (useLazyDevMode.xp)
         userContext.stats.setXP(23250); // 23,250 is max for 30 levels
-    }
+        // userContext.stats.setXP( Math.floor(Math.random() * 10000) ); // random xp
+    if (useLazyDevMode.steps)
+        userContext.metadata.setSteps(userContext.metadata.steps + 1000);
+    if (useLazyDevMode.gps)
+        userContext.metadata.addDistance(1000);
 
     // export data
-    exportUserData(userContext);
+    await exportUserData(userContext);
 
-    // re-render card display
-    eventEmitter.emit("remountHome"); // for some reason, keeping this at the end of the methods makes the card grid update properly
+    // re-render focused screen
+    const focusedScreen = navContext.getFocusedScreenName();
+    if (focusedScreen == "Home")
+        eventEmitter.emit("remountHome");
+    else if (focusedScreen == "Profile") {
+        eventEmitter.emit("remountProfile", {
+            progressBar: (lastStats.getTotalXP() === userContext.stats.getTotalXP()) ? null : {
+                current: userContext.stats.xp,
+                readout: userContext.stats.xp + " XP",
+                max: Settings.XP_CONSTANTS.calculateLevelMax(userContext.stats.level),
+                min: 0
+            }
+        });
+    }
 };
