@@ -192,7 +192,7 @@ export class ExploreObjective extends CardObjective {
         const randomObjPool = {
             easy: [
                 { name: "sign", variants: ["stop", "yield", "crosswalk", "railroad", "school zone"] },
-                { name: "street nameplate", count: 5 },
+                { name: "street name", count: 5 },
                 { name: "tree", variants: ["tall", "short"] },
                 { name: "car", variants: ["red", "green", "yellow", "blue", "gray", "white", "black"] },
                 { name: "bush" },
@@ -234,7 +234,7 @@ export class ExploreObjective extends CardObjective {
         const randomType = randomFromArr( objPool );
         const randomVariant = randomType.variants ? randomFromArr( randomType.variants ) : null;
 
-        this.displayText = (randomVariant ? randomVariant + " " : "") + randomType.name;
+        this.displayText = (randomVariant ? randomVariant + " " : "") + randomType.name + (randomType.count > 1 ? " (" + randomType.count + ")" : "");
         this.targetCount = randomType.count ?? 1;
     }
 
