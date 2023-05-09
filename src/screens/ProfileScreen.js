@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { BackHandler, Image, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Settings } from "../config/Config";
 import { Themes } from "../config/Themes";
-import { formatCommas, vh, vw } from "../config/Toolbox";
+import { vh, vw } from "../config/Toolbox";
 import { exportUserData, UserDataContext } from "../config/UserDataManager";
 
 import ProgressBar from "../components/ProgressBar";
@@ -68,9 +68,10 @@ const ProfileScreen = (props) => {
     }, [props]);
 
     // xp stuff
+    const [userLevel, setUserLevel] = useState(userContext.stats.level);
+    const [maxXP, setMaxXP] = useState(Settings.XP_CONSTANTS.calculateLevelMax(userContext.stats.level));
     const currentXP = userContext.stats.xp;
     const readoutXP = currentXP + " XP";
-    const [maxXP, setMaxXP] = useState(Settings.XP_CONSTANTS.calculateLevelMax(userContext.stats.level));
 
     // for auto-scrolling to selected theme (if not on screen)
     const initialThemeIndex = getUnlockedThemes(userContext.stats.level).map(t => t.id).indexOf(userContext.selectedTheme);
