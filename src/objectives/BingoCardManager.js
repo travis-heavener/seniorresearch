@@ -28,7 +28,7 @@ export class BingoCard {
                     card.completionCheck(userContext);
             
             const newBingos = this.checkBingos(); // record which rows/cols/diags have bingos
-
+            
             // handle if a new bingo appears
             const handleNewBingo = () => {
                 const multiplier = this.difficulty == DIFFICULTIES.EASY ? 1
@@ -45,12 +45,16 @@ export class BingoCard {
                 // handle if card is completed
                 if ( this.checkIsCompleted() && !this.hasAwardedCompletion ) {
                     userContext.stats.addXP( XP_CONSTANTS.completion * multiplier );
+                    userContext.stats.addCard();
                     this.hasAwardedCompletion = true;
                     console.log("Board completion!");
                 }
 
                 // make sure this card knows there's been a bingo
                 this.hasFirstBingo = true;
+
+                // add to completed bingos stat
+                userContext.stats.addBingo();
             };
 
             for (let r = 0; r < 5; r++)

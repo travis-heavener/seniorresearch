@@ -76,8 +76,9 @@ export const handleAppTick = async (userContext, navContext) => {
         userContext.cardSlots.daily = createBingoCard(userContext, DIFFICULTIES.NORMAL, generateDailySeed()); // create seed from Date obj
 
     // check cards
-    for (let card of Object.values(userContext.cardSlots))
+    for (let card of Object.values(userContext.cardSlots)) {
         card?.runCompletionChecks(userContext);
+    }
 
     // for lazy developers ONLY
     if (useLazyDevMode.xp)

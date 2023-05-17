@@ -100,7 +100,9 @@ const generateContextDefaults = () => ({
         addDailySkips: function(n) {  this.dailySkips += n;  },
 
         lifetimeBingos: 0,
+        addBingo: function() {  this.lifetimeBingos++;  },
         lifetimeCards: 0,
+        addCard: function() {  this.lifetimeCards++;  },
         
         lifetimeSteps: 0,
         setLifetimeSteps: function(n) { this.lifetimeSteps = n; },
