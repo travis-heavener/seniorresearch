@@ -7,10 +7,12 @@ import { PermsContext, Settings } from "../config/Config";
 import { handleAppLoad, stopAppTick } from "../config/Main";
 import { vh, vw } from "../config/Toolbox";
 import { UserDataContext } from "../config/UserDataManager";
+import { NavContext } from "./SwipeNavigator";
 
 const SignupScreen = (props) => {
     const userContext = useContext( UserDataContext );
     const permsContext = useContext( PermsContext );
+    const navContext = useContext( NavContext );
     const [showTOS, setTOSVisibility] = useState( false );
     const [showPP, setPPVisibility] = useState( false );
 
@@ -50,7 +52,7 @@ const SignupScreen = (props) => {
         userContext.setSelectedCard("daily");
 
         // restart game loop & sensors
-        handleAppLoad(userContext, permsContext.permissions);
+        handleAppLoad(userContext, permsContext.permissions, navContext);
         props.navigation.navigate("Main");
     };
 
