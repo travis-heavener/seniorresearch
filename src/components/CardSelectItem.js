@@ -1,11 +1,14 @@
 import { useContext } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Themes } from "../config/Themes";
 import { vh, vw } from "../config/Toolbox";
 import { UserDataContext } from "../config/UserDataManager";
 import { DIFFICULTIES } from "../objectives/BingoCardManager";
 
 const CardSelectItem = (props) => {
     const userContext = useContext( UserDataContext );
+    const THEME = Themes[ userContext.selectedTheme ].cards; // select theme
+
     const { cardName } = props;
 
 	const close = () => {
@@ -15,12 +18,13 @@ const CardSelectItem = (props) => {
 
     const card = userContext.cardSlots[cardName];
     const diff = (card.difficulty == DIFFICULTIES.EASY) ? "Easy" : (card.difficulty == DIFFICULTIES.NORMAL) ? "Normal" : "Hard";
+    const diffColor = THEME[diff.toLowerCase()];
     const title = (cardName == "daily" ? "Daily" : diff) + " Card";
     
 	const completionPercent = card.getCompletionPercent();
 
 	return (
-        <TouchableOpacity style={styles.top} activeOpacity={1} onPress={close}>
+        <TouchableOpacity style={[styles.top, {backgroundColor: diffColor}]} activeOpacity={1} onPress={close}>
             <View style={styles.main}>
                 <Text style={styles.titleText}>{ title }</Text>
             </View>

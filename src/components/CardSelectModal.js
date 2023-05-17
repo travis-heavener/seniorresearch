@@ -1,11 +1,13 @@
 import { useContext } from "react";
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Themes } from "../config/Themes";
 import { vh, vw } from "../config/Toolbox";
 import { UserDataContext } from "../config/UserDataManager";
 import CardSelectItem from "./CardSelectItem";
 
 const CardSelectModal = (props) => {
     const userContext = useContext( UserDataContext );
+    const THEME = Themes[ userContext.selectedTheme ].cards; // select theme
 
     const close = () => {
         // console.log("Close requested");
@@ -32,7 +34,7 @@ const CardSelectModal = (props) => {
         >
             <TouchableOpacity style={styles.background} onPress={close} activeOpacity={1} />
             <View style={styles.top}>
-				<Text style={styles.titleText}>Select a Card</Text>
+				<Text style={[styles.titleText, {color: THEME.labelText}]}>Select a Card</Text>
                 { generateCardSelectors() }
 				
             </View>

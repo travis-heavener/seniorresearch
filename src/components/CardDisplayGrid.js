@@ -41,7 +41,7 @@ const CardDisplayGrid = (props) => {
     if (userContext.selectedCard == null || card == null) {
         return (
             <TouchableOpacity style={styles.nullTop} activeOpacity={2/3} onPress={selectCard}>
-                <Text style={styles.selectCardText}>+</Text>
+                <Text style={[styles.selectCardText, {color: THEME.labelText}]}>+</Text>
                 <CardSelectModal isModalVisible={isModalVisible} off={modalOff} />
             </TouchableOpacity>
         );
