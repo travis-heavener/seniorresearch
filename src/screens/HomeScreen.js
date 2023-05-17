@@ -67,9 +67,9 @@ const HomeScreen = (props) => {
 			</View>
 
 			<View style={styles.bottomButtons}>
-				<HomeScreenButton type="Profile" flex={.75} onPress={openProfile} />
-				<HomeScreenButton type="Tasks" flex={.95} onPress={openTasks} />
-				<HomeScreenButton type="Rewards" flex={.75} onPress={openRewards} />
+				<HomeScreenButton type="Profile" flex={.85} onPress={openProfile} />
+				<HomeScreenButton type="Tasks" flex={1} onPress={openTasks} />
+				<HomeScreenButton type="Rewards" flex={.85} onPress={openRewards} />
 			</View>
 		</View>
 	);
@@ -87,7 +87,10 @@ const styles = StyleSheet.create({
         height: vh(100)
     },
     header: {
-        flex: 0.1,
+        position: "absolute",
+        top: vh(1.25),
+        width: vw(100),
+        height: vh(10.25),
         paddingHorizontal: "2.5%",
         flexDirection: "row",
         justifyContent: "space-between",
@@ -97,20 +100,26 @@ const styles = StyleSheet.create({
         aspectRatio: 1
     },
     settingsIcon: {
-        height: "87.5%",
+        height: "95%",
         marginHorizontal: "5%",
         marginTop: "5%",
         marginBottom: "12.5%",
         aspectRatio: 1
     },
     body: {
-        flex: 0.75,
+        position: "absolute",
+        top: vh(14), // halfway
+        width: vw(100),
+        height: vh(70),
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center"
     },
     bottomButtons: {
-        flex: .15,
+        position: "absolute",
+        bottom: vh(2.75),
+        width: vw(100),
+        height: vh(15),
         flexDirection: "row",
         justifyContent: "space-evenly",
         alignItems: "center"
