@@ -75,6 +75,10 @@ export class DistanceObjective extends CardObjective {
         };
     }
 
+    getCompletionPercent(userContext) {
+        return Math.min(this.getStatus(userContext) / this.distanceGoal * 100, 100);
+    }
+
     getStatus(userContext) {
         return this.distanceGoal - this.savedDistanceRemaining - this.startingDistance + userContext.metadata.distance;
     }
@@ -137,6 +141,10 @@ export class StepsObjective extends CardObjective {
             this.isCompleted = (userContext.metadata.steps - this.startingSteps) >= this.savedStepsRemaining;
             return this.isCompleted;
         };
+    }
+
+    getCompletionPercent(userContext) {
+        return Math.min(this.getStatus(userContext) / this.stepGoal * 100, 100);
     }
 
     getStatus(userContext) {
