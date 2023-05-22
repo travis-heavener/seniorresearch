@@ -37,6 +37,10 @@ export const restartLocation = async (userContext) => {
 export const restartPedometer = (userContext) => {
     pedometerListener?.remove(); // remove listener, if applicable
 
+    // set current steps to lifetime steps (b/c pedometer overwrites existing steps when reinitialized)
+    userContext.stats.lifetimeSteps += userContext.metadata.steps;
+    userContext.metadata.setSteps(0);
+
     pedometerListener = Pedometer.watchStepCount(({steps}) => {
         userContext.metadata.setSteps(steps);
     });

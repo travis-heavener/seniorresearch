@@ -11,12 +11,13 @@ import { clearUserData, UserDataContext } from "../config/UserDataManager";
 import { vh, vw } from "../config/Toolbox";
 import SettingsButton from "../components/SettingsButton";
 import TextConfirmModal from "../components/TextConfirmModal";
-import { eventEmitter, restartAppTick, startAppTick, stopAppTick } from "../config/Main";
-import { restartLocation } from "../config/SensorsManager";
+import { eventEmitter, restartAppTick, stopAppTick } from "../config/Main";
+import { restartLocation, restartPedometer, restartDeviceMotion, stopAllSensors } from "../config/SensorsManager";
 import TermsModal from "../components/TermsModal";
 import PrivacyModal from "../components/PrivacyModal";
 import CreditsModal from "../components/CreditsModal";
 import { useFocusEffect } from "@react-navigation/native";
+import PauseModal from "../components/PauseModal";
 
 const SettingsScreen = (props) => {
     const userContext = useContext( UserDataContext );
@@ -39,6 +40,24 @@ const SettingsScreen = (props) => {
     const [isResetModalShown, setResetModalVisibility] = useState(false);
     const hideResetModal = () => setResetModalVisibility(false);
     const showResetModal = () => setResetModalVisibility(true);
+
+    const [isPauseModalShown, setPauseModalVisibility] = useState(false);
+    const hidePauseModal = () => {
+        setPauseModalVisibility(false);
+
+        // start sensors & main game loop
+        restartPedometer(userContext);
+        restartDeviceMotion(userContext);
+        restartLocation(userContext);
+        restartAppTick(userContext, navContext);
+    };
+    const showPauseModal = () => {
+        setPauseModalVisibility(true);
+        
+        // stop sensors & main game loop
+        stopAllSensors();
+        stopAppTick();
+    };
 
     // on screen focus
     useFocusEffect(
@@ -99,11 +118,8 @@ const SettingsScreen = (props) => {
                     activityListener={() => userContext.preferredUnits == "Metric"}
                     toggle={toggleUnits}
                 />
-                <SettingsButton
-                    text="Reset User Data"
-                    activityListener={() => false}
-                    onPress={showResetModal}
-                />
+                <SettingsButton text="Pause Game" onPress={showPauseModal} />
+                <SettingsButton text="Reset User Data" onPress={showResetModal} />
 
                 <View style={styles.footer}>
                     <TermsModal isModalVisible={showTOS} confirm={confirmTOS} />
@@ -124,6 +140,7 @@ const SettingsScreen = (props) => {
             {/* <View style={[styles.dropdownBubble, {borderColor: THEME.primaryAccent}]} /> */}
 
             <TextConfirmModal isModalVisible={isResetModalShown} confirm={resetUserData} reject={hideResetModal} />
+            <PauseModal isModalVisible={isPauseModalShown} close={hidePauseModal} />
 		</View>
 	);
 };

@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     desc: {
         flex: 0.8,
         fontSize: vh(1.875),
-        fontFamily: "Alata_400Regular",
+        fontFamily: "JosefinSans_400Regular",
         alignSelf: "center"
     },
     switch: {

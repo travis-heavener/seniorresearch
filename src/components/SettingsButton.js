@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { TouchableOpacity, StyleSheet, Text, View } from "react-native";
 import { Themes } from "../config/Themes";
 import { vh, vw } from "../config/Toolbox";
 import { UserDataContext } from "../config/UserDataManager";
@@ -11,15 +11,9 @@ const SettingsButton = (props) => {
 
     return (
         <View style={[styles.body, {borderBottomColor: THEME.primaryAccent}]}>
-            <Text style={[styles.desc, {color: THEME.text}]}>{props.text}</Text>
-            <View style={styles.buttonContainer}>
-                <TouchableOpacity
-                    style={[styles.button, {backgroundColor: MISC_THEME.switchColor, borderColor: MISC_THEME.switchBorderColor}]}
-                    onPress={props.onPress} activeOpacity={0.8}
-                >
-                    <Text style={[styles.buttonText, {color: MISC_THEME.buttonText}]}>GO</Text>
-                </TouchableOpacity>
-            </View>
+            <TouchableOpacity activeOpacity={0.67} onPress={props.onPress}>
+                <Text style={[styles.desc, {color: MISC_THEME.switchColor}]}>{props.text}</Text>
+            </TouchableOpacity>
         </View>
     )
 };
@@ -33,9 +27,10 @@ const styles = StyleSheet.create({
         borderBottomWidth: vh(0.26)
     },
     desc: {
-        flex: 0.825,
+        flex: 1,
         fontSize: vh(1.875),
-        fontFamily: "Alata_400Regular",
+        textAlignVertical: "center",
+        fontFamily: "JosefinSans_700Bold",
         alignSelf: "center"
     },
     buttonContainer: {
