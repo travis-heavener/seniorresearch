@@ -10,6 +10,7 @@ const TextConfirmModal = (props) => {
     const {reject, confirm, isModalVisible} = props;
     const userContext = useContext( UserDataContext );
     const THEME = Themes[ userContext.selectedTheme ].settings; // select theme
+    const MISC_THEME = Themes[ userContext.selectedTheme ].misc; // select theme
 
     const [fieldText, setFieldText] = useState("");
     const [randomText, setRandomText] = useState(generateRandomString(STRING_LENGTH));
@@ -45,7 +46,7 @@ const TextConfirmModal = (props) => {
                         autoCapitalize="characters" numberOfLines={1} keyboardType="default" maxLength={STRING_LENGTH}
                         style={styles.textInput} onChangeText={t => setFieldText(t)} value={fieldText} 
                     />
-                    <Pressable style={[styles.submitButton, {backgroundColor: THEME.modalConfirm}]} onPress={submit}>
+                    <Pressable style={[styles.submitButton, {backgroundColor: MISC_THEME.switchColor, borderColor: MISC_THEME.switchBorderColor}]} onPress={submit}>
                         <Text style={styles.submitText}>Submit</Text>
                     </Pressable>
                 </View>
@@ -117,6 +118,7 @@ const styles = StyleSheet.create({
     submitButton: {
         flex: 0.25,
         height: vh(5.25),
+        borderWidth: vh(0.26),
         borderRadius: vh(1)
     },
     submitText: {
