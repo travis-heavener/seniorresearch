@@ -26,14 +26,9 @@ export const handleAppLoad = async (userContext, perms, navContext) => {
         debugLog("Missing pedometer permissions");
     }
 
-    // start accelerometer
-    restartDeviceMotion(userContext);
-
-    // start location polling
-    restartLocation(userContext);
-
-    // initialize app tick function
-    restartAppTick(userContext, navContext);
+    restartDeviceMotion(userContext); // start accelerometer
+    restartLocation(userContext); // start location polling
+    restartAppTick(userContext, navContext); // initialize app tick function
 };
 
 let appTickInterval = null;
