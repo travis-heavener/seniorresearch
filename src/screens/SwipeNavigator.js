@@ -209,15 +209,11 @@ const SwipeNavigator = (props) => {
 
             if (shouldRemount && navContext.focusedScreen == "center") { // custom remount home
                 // soft remount all (soft meaning not remounting the entire screen from this navigator)
-                const time = Date.now();
-                
                 eventEmitter.emit("remountHome");
                 eventEmitter.emit("remountTasks");
                 eventEmitter.emit("remountSettings");
                 eventEmitter.emit("remountProfile", xpBarData);
                 eventEmitter.emit("remountRewards", xpBarData);
-
-                console.log(Date.now() - time, "ms");
             } else if (shouldRemount && navContext.focusedScreen == "left")
                 eventEmitter.emit("remountProfile", xpBarData);
             else if (shouldRemount && navContext.focusedScreen == "right")
