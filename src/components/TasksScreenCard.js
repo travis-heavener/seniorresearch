@@ -138,8 +138,8 @@ const TasksScreenCard = (props) => {
                 >
                     <View style={styles.leftView}>
                         {/* <Text style={styles.titleText}>{ (props.cardName == "daily") ? "Daily" : "Custom" } Card</Text> */}
-                        <Text style={styles.titleText}>{ (props.cardName == "daily") ? "Daily" : difficulty } Card</Text>
-                        <Text style={styles.seedText}>#{ seed?.toString().padStart(6, "0") }</Text>
+                        <Text style={[styles.titleText, {color: THEME.text}]}>{ (props.cardName == "daily") ? "Daily" : difficulty } Card</Text>
+                        <Text style={[styles.seedText, {color: THEME.seedText}]}>#{ seed?.toString().padStart(6, "0") }</Text>
                     </View>
                     <View style={styles.rightView}>
                         {
@@ -278,7 +278,6 @@ const styles = StyleSheet.create({
     seedText: {
         marginLeft: "1.5%",
         fontSize: vh(8)/4.25,
-        color: "#444",
         fontFamily: "JosefinSans_400Regular_Italic",
         textAlignVertical: "center"
     },

@@ -13,7 +13,8 @@ export const Themes = {
         },
         tasks: {
             primary: "#f7bcbc", primaryAccent: "#fad9d9",
-            secondary: "#e3a6a6", secondaryAccent: "#d39696"
+            secondary: "#e3a6a6", secondaryAccent: "#d39696",
+            text: "#111", seedText: "#444"
         },
         cards: {
             checkedTile: "#63e06e", uncheckedTile: "#e8dbcc",
@@ -52,8 +53,9 @@ export const Themes = {
             modalConfirm: "#c7891e"
         },
         tasks: {
-            primary: "#f7bcbc", primaryAccent: "#fad9d9",
-            secondary: "#e3a6a6", secondaryAccent: "#d39696"
+            primary: "#595959", primaryAccent: "#707070",
+            secondary: "#424242", secondaryAccent: "#333",
+            text: "#f0f0f0", seedText: "#aaa"
         },
         cards: {
             checkedTile: "#44c24f", uncheckedTile: "#383838",
@@ -93,7 +95,8 @@ export const Themes = {
         },
         tasks: {
             primary: "#9cd69e", primaryAccent: "#c0f0c1",
-            secondary: "#6cb86e", secondaryAccent: "#509452"
+            secondary: "#6cb86e", secondaryAccent: "#509452",
+            text: "#111", seedText: "#444"
         },
         cards: {
             checkedTile: "#63e06e", uncheckedTile: "#c1e3c1",
@@ -133,7 +136,8 @@ export const Themes = {
         },
         tasks: {
             primary: "#f7bfb5", primaryAccent: "#f7d6d0",
-            secondary: "#d47d70", secondaryAccent: "#b86558"
+            secondary: "#d47d70", secondaryAccent: "#b86558",
+            text: "#500", seedText: "#444"
         },
         cards: {
             checkedTile: "#de897a", uncheckedTile: "#f7d6d0",
@@ -173,7 +177,8 @@ export const Themes = {
         },
         tasks: {
             primary: "#f79688", primaryAccent: "#fab8af",
-            secondary: "#cc5e4e", secondaryAccent: "#a14032"
+            secondary: "#cc5e4e", secondaryAccent: "#a14032",
+            text: "#400", seedText: "#444"
         },
         cards: {
             checkedTile: "#e8644d", uncheckedTile: "#fcc7bd",
@@ -213,7 +218,8 @@ export const Themes = {
         },
         tasks: {
             primary: "#fce66f", primaryAccent: "#faeda5",
-            secondary: "#f0cb0a", secondaryAccent: "#ccad06"
+            secondary: "#f0cb0a", secondaryAccent: "#ccad06",
+            text: "#330", seedText: "#444"
         },
         cards: {
             checkedTile: "#e8c710", uncheckedTile: "#fcf5ca",
