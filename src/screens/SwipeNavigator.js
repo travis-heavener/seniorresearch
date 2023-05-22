@@ -9,6 +9,8 @@ import { createContext, useCallback, useContext, useRef, useState } from "react"
 import { useFocusEffect } from "@react-navigation/core";
 import DevNoteModal from "../components/DevNoteModal";
 import { eventEmitter } from "../config/Main";
+import { UserDataContext } from "../config/UserDataManager";
+import { Settings } from "../config/Config";
 
 // touch margins
 const H_MARGIN = vw(25); // the borders that swipe navigation gestures are picked up by
@@ -67,6 +69,7 @@ export const NavContext = createContext({
 
 const SwipeNavigator = (props) => {
     const navContext = useContext( NavContext );
+    const userContext = useContext( UserDataContext );
     // keeping the position as a non-state variable prevents remounts, keeping children from excessive remounts
 	const position = useRef(new Animated.ValueXY()).current;
 
@@ -188,8 +191,26 @@ const SwipeNavigator = (props) => {
             navContext.setIsAnimating(false);
 
             // remount screen that is being focused
-            if (shouldRemount && navContext.focusedScreen == "center")
-                massRemount();
+            const xpBarData = {
+                progressBar: {
+                    current: userContext.stats.xp,
+                    readout: userContext.stats.xp + " XP",
+                    max: Settings.XP_CONSTANTS.calculateLevelMax(userContext.stats.level),
+                    min: 0
+                }
+            };
+
+            if (shouldRemount && navContext.focusedScreen == "center") { // custom remount home
+                // soft remount all (soft meaning not remounting the entire screen from this navigator)
+                eventEmitter.emit("remountHome");
+                eventEmitter.emit("remountTasks");
+                eventEmitter.emit("remountSettings");
+                eventEmitter.emit("remountProfile", xpBarData);
+                eventEmitter.emit("remountRewards", xpBarData);
+            } else if (shouldRemount && navContext.focusedScreen == "left")
+                eventEmitter.emit("remountProfile", xpBarData);
+            else if (shouldRemount && navContext.focusedScreen == "right")
+                eventEmitter.emit("remountRewards", xpBarData);
         }, ANIM_TIMING);
     };
 

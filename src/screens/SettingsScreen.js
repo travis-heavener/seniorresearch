@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, useCallback } from "react";
 import { View, StyleSheet, Text, DevSettings, Pressable, TouchableOpacity } from "react-native";
 
 // Pedometer + necessary Android permissions imports
@@ -16,11 +16,12 @@ import { restartLocation } from "../config/SensorsManager";
 import TermsModal from "../components/TermsModal";
 import PrivacyModal from "../components/PrivacyModal";
 import CreditsModal from "../components/CreditsModal";
+import { useFocusEffect } from "@react-navigation/native";
 
 const SettingsScreen = (props) => {
     const userContext = useContext( UserDataContext );
     const { navContext } = props;
-    const THEME = Themes[ userContext.selectedTheme ].settings; // select theme
+    const [THEME, setTheme] = useState( Themes[ userContext.selectedTheme ].settings ); // select theme
 
     // credits, privacy policy, and TOS modal controls
     const [showPP, setPPVisibility] = useState(false);
@@ -38,6 +39,19 @@ const SettingsScreen = (props) => {
     const [isResetModalShown, setResetModalVisibility] = useState(false);
     const hideResetModal = () => setResetModalVisibility(false);
     const showResetModal = () => setResetModalVisibility(true);
+
+    // on screen focus
+    useFocusEffect(
+        useCallback(
+            () => {
+                // event emitters
+                eventEmitter.removeAllListeners("remountSettings"); // remove existing listeners
+                eventEmitter.addListener("remountSettings", () => { // add new listener
+                    setTheme( Themes[ userContext.selectedTheme ].settings );
+                });
+            }, [props]
+        )
+    );
 
     // disable swipe gestures when modals appear and vice versa
     const toggleGestures = (cond) => cond ? props.freezeGestures() : props.unfreezeGestures();

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useCallback } from "react";
 import { View, StyleSheet, Text, Pressable } from "react-native";
 
 import { Themes } from "../config/Themes";
@@ -9,14 +9,29 @@ import TasksScreenCard from "../components/TasksScreenCard";
 // import { FlatList } from "react-native-gesture-handler"; // for using the scroll feature
 import { FlatList } from "react-native"; // for using without the scroll (works due to max height of cards when focused)
 import { vw, vh } from "../config/Toolbox";
+import { useFocusEffect } from "@react-navigation/native";
+import { eventEmitter } from "../config/Main";
 
 const TasksScreen = (props) => {
     const userContext = useContext( UserDataContext );
     
-    const THEME = Themes[ userContext.selectedTheme ].tasks; // select theme
+    const [THEME, setTheme] = useState( Themes[ userContext.selectedTheme ].tasks ); // select theme
     
     const [__remountStatus, __setRemountStatus] = useState(false);
     const forceRemount = () => __setRemountStatus(!__remountStatus);
+
+    // on screen focus
+    useFocusEffect(
+        useCallback(
+            () => {
+                // event emitters
+                eventEmitter.removeAllListeners("remountTasks"); // remove existing listeners
+                eventEmitter.addListener("remountTasks", () => { // add new listener
+                    setTheme( Themes[ userContext.selectedTheme ].tasks );
+                });
+            }, [props]
+        )
+    );
 
     const [focusedCard, setFocusedCard] = useState(null);
     
