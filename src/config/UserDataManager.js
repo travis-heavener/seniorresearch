@@ -149,6 +149,11 @@ export const UserDataContext = React.createContext(generateContextDefaults());
 
 /************* LOAD USER DATA FROM DISK, IF AVAILABLE *************/
 
+// Locally store what's saved to the disk in memory.
+// This prevents the value from having to be read again when checking for
+// redundancies as this takes equal time as just saving everything
+const cachedFromDisk = {};
+
 const createObjectiveFromData = (data, userContext) => {
     let obj = null;
 
@@ -208,6 +213,8 @@ export const loadUserData = async (userContext) => {
 };
 
 export const exportUserData = async (userContext) => {
+    const startTime = Date.now();
+
     // export generic data
     for (let prop of Object.keys(keysWhitelist)) {
         const root = storageRoot + "." + (prop == "base" ? "" : prop + ".");
@@ -226,8 +233,12 @@ export const exportUserData = async (userContext) => {
                 val += userContext.metadata.distance;
             
             // console.log("Saving to:", root+key, "Val:", JSON.stringify(val));
-            // save value to storage
-            await SecureStore.setItemAsync(root + key, JSON.stringify(val));
+            
+            // get existing value to check for any changes
+            if (cachedFromDisk[root+key] != val) {
+                await SecureStore.setItemAsync(root + key, JSON.stringify(val)); // save value to storage
+                cachedFromDisk[root+key] = val; // store previous value (instead of reading from disk again)
+            }
         }
     }
 
@@ -237,9 +248,18 @@ export const exportUserData = async (userContext) => {
             let data = userContext.cardSlots[cardName].exportToDisk(userContext);
             data = JSON.stringify(data); // stringify data
             data = await deflate(data); // compress data
-            await SecureStore.setItemAsync(storageRoot + ".cards." + cardName, data);
+
+            // store only things that have changed
+            if (cachedFromDisk[storageRoot + ".cards." + cardName] !== data) {
+                await SecureStore.setItemAsync(storageRoot + ".cards." + cardName, data); // save value to storage
+                cachedFromDisk[storageRoot + ".cards." + cardName] = data; // store previous value
+            }
         }
     }
+
+    // timestamp measurements
+    if (showDebugLogs)
+        console.log("[UserDataManager.js] Exporting data elapsed", (Date.now() - startTime) + "ms");
 };
 
 /**
