@@ -1,11 +1,11 @@
 import { Linking, Modal, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-import { contactEmail } from "../config/Config";
+import { appVersion, contactEmail } from "../config/Config";
 import { vh, vw } from "../config/Toolbox";
 
 const CreditsModal = (props) => {
     const H1 = (props) => <Text style={styles.h1}>{props.children}</Text>
     const H2 = (props) => <Text style={styles.h2}>{props.children}</Text>
-    const P = (props) => <Text style={styles.p}>{props.children}</Text>
+    const P = (props) => <Text style={[styles.p, props.style]}>{props.children}</Text>
     const UL = (props) => <View style={styles.ul}>{props.children}</View>
     const LI = (props) => <View style={styles.li}><Text style={styles.p}>    • {props.children}</Text></View>
     const A = (props) => <Text style={styles.a} onPress={() => Linking.openURL(props.href)}>{props.children}</Text>;
@@ -26,6 +26,8 @@ const CreditsModal = (props) => {
             <ScrollView style={styles.body} overScrollMode="never" showsVerticalScrollIndicator={false}>
                 <View style={styles.textContainer}>
                     <H1>Credits</H1>
+
+                    <P style={{textAlign: "center"}}>Version: {appVersion}</P>
 
                     <H2>Developers</H2>
                     { generateUL("Travis Heavener") }

@@ -12,6 +12,7 @@ export const useLazyDevMode = {
     gps: false
 };
 export const contactEmail = "travis.heavener@gmail.com";
+export const appVersion = "1.0.6-pr";
 
 /* ======= settings ======= */
 
