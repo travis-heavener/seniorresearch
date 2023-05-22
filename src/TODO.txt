@@ -1,3 +1,5 @@
+** Move Changelog to GitHub pages account (b/c it's getting long) **
+
 - Move permissions stuff from Config.js to new PermissionsManager.js
   - Handle permission rejection
 - Advanced battery saver??
@@ -8,9 +10,11 @@
 - Change font w/ theme?
 - Keep screen from going to sleep during preview builds
 - Move user level gold bubble thing to its own component
-- Move each screen to its own folder (for tidiness)
-- IMPROVE PERFORMANCE (prob a lot of remounts)
-- Add pause feature with a big overlay
 - Add an "Are you sure you want to close BinGo" modal when hitting back arrow on home screen
+- Background activity monitoring opt-in
+- Make themes integration more dynamic
+  - Maybe have a formatted text component
+  - Or maybe make each property so that instead of {color: THEME.modalText} it's just THEME.modalText where the modalText is {color: "blah"}
+  - Yes do this first one above, future Travis ^^^^
 - Audio API: https://docs.expo.dev/versions/v48.0.0/sdk/audio/
 - Battery API: https://docs.expo.dev/versions/v48.0.0/sdk/battery/#isbatteryoptimizationenabledasync
