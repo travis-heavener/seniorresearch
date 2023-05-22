@@ -16,5 +16,7 @@
   - Maybe have a formatted text component
   - Or maybe make each property so that instead of {color: THEME.modalText} it's just THEME.modalText where the modalText is {color: "blah"}
   - Yes do this first one above, future Travis ^^^^
+- Close focused card on Tasks Screen when leaving screen
+  - Also make the unfocusing animation more smooth (really just revamp the animations)
 - Audio API: https://docs.expo.dev/versions/v48.0.0/sdk/audio/
 - Battery API: https://docs.expo.dev/versions/v48.0.0/sdk/battery/#isbatteryoptimizationenabledasync

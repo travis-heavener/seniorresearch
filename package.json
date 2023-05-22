@@ -15,6 +15,7 @@
     "@expo/prebuild-config": "^5.0.5",
     "@react-navigation/native": "^6.1.6",
     "@react-navigation/stack": "^6.3.16",
+    "eas-cli": "^3.1.1",
     "eventemitter3": "^5.0.1",
     "expo": "~47.0.3",
     "expo-dev-client": "~2.0.1",
