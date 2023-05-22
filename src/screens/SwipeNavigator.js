@@ -140,8 +140,10 @@ const SwipeNavigator = (props) => {
                 const offset = navContext.getOffset();
                 
                 // translate screen, if not already swiping past screen
-                if ((dir == "left" && navContext.focusedScreen != "left") || (dir == "right" && navContext.focusedScreen != "right")) {
-                    position.setValue({x: dx + offset.x, y: offset.y});
+                if ((dir == "left" && navContext.focusedScreen != "left")) {
+                    position.setValue({x: Math.max(dx, 0) + offset.x, y: offset.y}); // min/max prevent swiping the other direction
+                } else if (dir == "right" && navContext.focusedScreen != "right") {
+                    position.setValue({x: Math.min(dx, 0) + offset.x, y: offset.y}); // min/max prevent swiping the other direction
                 } else if ((dir == "top" && navContext.focusedScreen != "top")) {
 					position.setValue({
                         x: offset.x,
@@ -207,11 +209,15 @@ const SwipeNavigator = (props) => {
 
             if (shouldRemount && navContext.focusedScreen == "center") { // custom remount home
                 // soft remount all (soft meaning not remounting the entire screen from this navigator)
+                const time = Date.now();
+                
                 eventEmitter.emit("remountHome");
                 eventEmitter.emit("remountTasks");
                 eventEmitter.emit("remountSettings");
                 eventEmitter.emit("remountProfile", xpBarData);
                 eventEmitter.emit("remountRewards", xpBarData);
+
+                console.log(Date.now() - time, "ms");
             } else if (shouldRemount && navContext.focusedScreen == "left")
                 eventEmitter.emit("remountProfile", xpBarData);
             else if (shouldRemount && navContext.focusedScreen == "right")
@@ -293,7 +299,10 @@ const SwipeNavigator = (props) => {
 
 	return (
 		<View style={styles.absolute} {...panResponderRef.panHandlers} key={masterKey}>
-            <DevNoteModal />
+            <DevNoteModal
+                freezeGestures={() => navContext.setIsAnimating(true)}
+                unfreezeGestures={() => navContext.setIsAnimating(false)}
+            />
 
 			<HomeScreen {...opts} key={homeKey} />
 

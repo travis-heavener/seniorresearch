@@ -1,5 +1,5 @@
 import { useFocusEffect } from "@react-navigation/native";
-import { useCallback, useContext, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
 import { eventEmitter } from "../../config/Main";
 import { Themes } from "../../config/Themes";
@@ -11,13 +11,27 @@ const DevNoteModal = (props) => {
     const THEME = Themes[ userContext.selectedTheme ].settings;
 
     // toggle visibility with eventEmitters (faster than remounting from swipe navigator; avoid this in the future)
-    const [isVisible, setVisible] = useState(true);
+    const [isVisible, setVisible] = useState(false);
+    
+    const show = () => {
+        // console.log("Showing");
+        props.freezeGestures();
+        setVisible(true);
+    };
+
+    const hide = () => {
+        // console.log("Hiding");
+        props.unfreezeGestures();
+        setVisible(false);
+    };
 
     // toggle listeners
     useFocusEffect(
         useCallback(() => {
             eventEmitter.removeAllListeners("toggleDevNote");
-            eventEmitter.addListener("toggleDevNote", () => setVisible(!isVisible));
+            eventEmitter.addListener("toggleDevNote", () => isVisible ? hide() : show());
+
+            show(); // show on focus
         }, [props])
     );
 
@@ -25,18 +39,18 @@ const DevNoteModal = (props) => {
         <Modal
             transparent={true}
             visible={isVisible}
-            onRequestClose={() => setVisible(false)}
+            onRequestClose={hide}
         >
-            <Pressable style={styles.absolute} onPress={() => setVisible(false)} />
+            <Pressable style={styles.absolute} onPress={hide} onTouchStart={props.freezeGestures}/>
 
-            <View style={[styles.body, {borderColor: THEME.modalBorder, backgroundColor: THEME.modalTop}]}>
+            <View style={[styles.body, {borderColor: THEME.modalBorder, backgroundColor: THEME.modalTop}]} onTouchStart={props.freezeGestures}>
                 <Text style={[styles.header, {color: THEME.modalText}]}>Dev's Note</Text>
                 <Text style={[styles.bodyText, {color: THEME.modalText}]}>
                     Exercise caution during use.{"\n"}
                     Pay attention to your surroundings and respect the privacy of others.{"\n"}
                     Do not play while operating a vehicle.
                 </Text>
-                <Pressable style={[styles.button, {backgroundColor: THEME.modalConfirm}]} onPress={() => setVisible(false)}>
+                <Pressable style={[styles.button, {backgroundColor: THEME.modalConfirm}]} onPress={hide}>
                     <Text style={[styles.buttonText, {color: THEME.modalText}]}>Dismiss</Text>
                 </Pressable>
             </View>
