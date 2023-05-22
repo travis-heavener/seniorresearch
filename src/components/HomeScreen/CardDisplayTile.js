@@ -1,5 +1,7 @@
-import { useContext, useRef } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import { useCallback, useContext, useRef, useState } from "react";
 import { Animated, Easing, Pressable, StyleSheet, View } from "react-native";
+import { eventEmitter } from "../../config/Main";
 import { Themes } from "../../config/Themes";
 import { vh, vw } from "../../config/Toolbox";
 import { UserDataContext } from "../../config/UserDataManager";
@@ -9,6 +11,10 @@ const CardDisplayTile = (props) => {
     const userContext = useContext( UserDataContext );
     const THEME = Themes[ userContext.selectedTheme ].cards;
     const { onPress, row, col, obj } = props;
+
+    // animation state values
+    const [__remountStatus, __setRemountStatus] = useState(Math.random());
+    const remount = () => __setRemountStatus(Math.random());
 
     const blobWidthRaw = useRef(
         new Animated.Value(
@@ -37,6 +43,24 @@ const CardDisplayTile = (props) => {
         transform: [{translateX: blobWidth}],
         backgroundColor: THEME.checkedTile
     } : {display: "none"};
+
+    // listen for changes
+    useFocusEffect(
+        useCallback(
+            () => {
+                // event emitters
+                const checkerFunc = ({remountGrid}) => {
+                    if (remountGrid[row][col]) remount()
+                };
+
+                eventEmitter.addListener("remountCardGrid", checkerFunc);
+
+                return () => {
+                    eventEmitter.removeListener("remountCardGrid", checkerFunc)
+                };
+            }, [props]
+        )
+    );
 
     return (
         <Pressable
