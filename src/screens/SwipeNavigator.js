@@ -92,9 +92,6 @@ const SwipeNavigator = (props) => {
         setMasterKey(Math.random());
     };
 
-    // developer note modal
-    const [showDevNote, setDevNoteVisibility] = useState(true);
-
     // runs on screen focus
     useFocusEffect(
         useCallback(() => {
@@ -288,7 +285,7 @@ const SwipeNavigator = (props) => {
 
 	return (
 		<View style={styles.absolute} {...panResponderRef.panHandlers} key={masterKey}>
-            <DevNoteModal isModalVisible={showDevNote} close={() => setDevNoteVisibility(false)} />
+            <DevNoteModal />
 
 			<HomeScreen {...opts} key={homeKey} />
 
