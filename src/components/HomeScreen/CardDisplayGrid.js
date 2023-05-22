@@ -1,10 +1,10 @@
 import { useIsFocused } from "@react-navigation/native";
 import { useContext, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { Themes } from "../config/Themes";
-import { vw, vh } from "../config/Toolbox";
-import { exportUserData, UserDataContext } from "../config/UserDataManager";
-import { DIFFICULTIES } from "../objectives/BingoCardManager";
+import { Themes } from "../../config/Themes";
+import { vw, vh } from "../../config/Toolbox";
+import { exportUserData, UserDataContext } from "../../config/UserDataManager";
+import { DIFFICULTIES } from "../../objectives/BingoCardManager";
 import CardDisplayTile from "./CardDisplayTile";
 import CardSelectModal from "./CardSelectModal";
 import ObjectiveConfirmModal from "./ObjectiveConfirmModal";

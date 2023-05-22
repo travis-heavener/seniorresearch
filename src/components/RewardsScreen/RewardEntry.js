@@ -1,10 +1,10 @@
 import { useContext } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
-import { Themes } from "../config/Themes";
-import { toTitleCase, vh, vw } from "../config/Toolbox";
-import { UserDataContext } from "../config/UserDataManager";
+import { Themes } from "../../config/Themes";
+import { toTitleCase, vh, vw } from "../../config/Toolbox";
+import { UserDataContext } from "../../config/UserDataManager";
 
-const TITLE_IMG = require("../../assets/media/text_edit.png");
+const TITLE_IMG = require("../../../assets/media/text_edit.png");
 
 const RewardEntry = (props) => {
     const userContext = useContext( UserDataContext );

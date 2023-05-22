@@ -1,17 +1,17 @@
 import React, { useState, useContext, useEffect, useRef } from "react";
 import { View, StyleSheet, Text, TouchableOpacity, Image, Animated } from "react-native";
-import { createBingoCard, DIFFICULTIES } from "../objectives/BingoCardManager";
-import { Themes } from "../config/Themes";
-import { exportUserData, UserDataContext } from "../config/UserDataManager";
+import { createBingoCard, DIFFICULTIES } from "../../objectives/BingoCardManager";
+import { Themes } from "../../config/Themes";
+import { exportUserData, UserDataContext } from "../../config/UserDataManager";
 
 // viewport height function to make life easier
-import { vw, vh, generateDailySeed } from "../config/Toolbox";
-import Checkbox from "./Checkbox";
-import ScalingText from "./ScalingText";
-import { eventEmitter } from "../config/Main";
+import { vw, vh, generateDailySeed } from "../../config/Toolbox";
+import Checkbox from "../Checkbox";
+import ScalingText from "../ScalingText";
+import { eventEmitter } from "../../config/Main";
 
 // import images
-const MEDIA_ROOT = "../../assets/media/";
+const MEDIA_ROOT = "../../../assets/media/";
 const CARET_SRC = require(MEDIA_ROOT + "caretDown.png");
 
 const TasksScreenCard = (props) => {

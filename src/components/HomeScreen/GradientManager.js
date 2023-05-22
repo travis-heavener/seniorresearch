@@ -1,4 +1,4 @@
-import { Settings } from "../config/Config";
+import { Settings } from "../../config/Config";
 
 const STEP_COUNT = 100; // number of steps in a gradient
 

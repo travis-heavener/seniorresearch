@@ -1,9 +1,9 @@
 import { useContext } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { Themes } from "../config/Themes";
-import { vh, vw } from "../config/Toolbox";
-import { UserDataContext } from "../config/UserDataManager";
-import { DIFFICULTIES } from "../objectives/BingoCardManager";
+import { Themes } from "../../config/Themes";
+import { vh, vw } from "../../config/Toolbox";
+import { UserDataContext } from "../../config/UserDataManager";
+import { DIFFICULTIES } from "../../objectives/BingoCardManager";
 
 const CardSelectItem = (props) => {
     const userContext = useContext( UserDataContext );

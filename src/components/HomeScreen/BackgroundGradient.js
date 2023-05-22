@@ -1,10 +1,10 @@
 import { useFocusEffect } from "@react-navigation/native";
 import { useCallback, useContext, useRef } from "react";
 import { Animated, StyleSheet } from "react-native";
-import { Settings } from "../config/Config";
-import { Themes } from "../config/Themes";
-import { vh, vw } from "../config/Toolbox";
-import { UserDataContext } from "../config/UserDataManager";
+import { Settings } from "../../config/Config";
+import { Themes } from "../../config/Themes";
+import { vh, vw } from "../../config/Toolbox";
+import { UserDataContext } from "../../config/UserDataManager";
 import { calculateToColor, generateAnimGradient } from "./GradientManager";
 
 const BackgroundGradient = (props) => {

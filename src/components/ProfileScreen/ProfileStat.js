@@ -1,10 +1,10 @@
 import { useFocusEffect, useIsFocused } from "@react-navigation/core";
 import { useCallback, useContext, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { eventEmitter } from "../config/Main";
-import { Themes } from "../config/Themes";
-import { formatCommas, vh, vw } from "../config/Toolbox";
-import { UserDataContext } from "../config/UserDataManager";
+import { eventEmitter } from "../../config/Main";
+import { Themes } from "../../config/Themes";
+import { formatCommas, vh, vw } from "../../config/Toolbox";
+import { UserDataContext } from "../../config/UserDataManager";
 
 const ProfileStat = (props) => {
     const { name } = props;

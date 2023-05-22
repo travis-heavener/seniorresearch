@@ -1,10 +1,10 @@
 import { useFocusEffect } from "@react-navigation/native";
 import { useCallback, useContext, useState } from "react";
 import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
-import { eventEmitter } from "../config/Main";
-import { Themes } from "../config/Themes";
-import { vh, vw } from "../config/Toolbox";
-import { UserDataContext } from "../config/UserDataManager";
+import { eventEmitter } from "../../config/Main";
+import { Themes } from "../../config/Themes";
+import { vh, vw } from "../../config/Toolbox";
+import { UserDataContext } from "../../config/UserDataManager";
 
 const DevNoteModal = (props) => {
     const userContext = useContext( UserDataContext );

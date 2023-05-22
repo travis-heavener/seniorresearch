@@ -1,8 +1,8 @@
 import { useContext, useEffect, useState } from "react";
 import { View, Modal, StyleSheet, Text, Pressable, TextInput, BackHandler } from "react-native";
-import { Themes } from "../config/Themes";
-import { generateRandomString, vh, vw } from "../config/Toolbox";
-import { UserDataContext } from "../config/UserDataManager";
+import { Themes } from "../../config/Themes";
+import { generateRandomString, vh, vw } from "../../config/Toolbox";
+import { UserDataContext } from "../../config/UserDataManager";
 
 const STRING_LENGTH = 6;
 

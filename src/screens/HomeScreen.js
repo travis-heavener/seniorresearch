@@ -3,10 +3,10 @@ import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 import { View, StyleSheet, Pressable, Image } from "react-native";
 
 // components & modals
-import HomeScreenButton from "../components/HomeScreenButton";
-import CompassWidget from "../components/CompassWidget";
-import CardDisplayGrid from "../components/CardDisplayGrid";
-import BackgroundGradient from "../components/BackgroundGradient";
+import HomeScreenButton from "../components/HomeScreen/HomeScreenButton";
+import CompassWidget from "../components/HomeScreen/CompassWidget";
+import CardDisplayGrid from "../components/HomeScreen/CardDisplayGrid";
+import BackgroundGradient from "../components/HomeScreen/BackgroundGradient";
 
 import { Themes } from "../config/Themes";
 import { UserDataContext } from "../config/UserDataManager";

@@ -2,22 +2,22 @@ import React, { useState, useContext, useEffect, useCallback } from "react";
 import { View, StyleSheet, Text, DevSettings, Pressable, TouchableOpacity } from "react-native";
 
 // Pedometer + necessary Android permissions imports
-import SettingsSwitch from "../components/SettingsSwitch";
+import SettingsSwitch from "../components/SettingsScreen/SettingsSwitch";
 
 import { Themes } from "../config/Themes";
 import { clearUserData, UserDataContext } from "../config/UserDataManager";
 
 // viewport height function to make life easier
 import { vh, vw } from "../config/Toolbox";
-import SettingsButton from "../components/SettingsButton";
-import TextConfirmModal from "../components/TextConfirmModal";
+import SettingsButton from "../components/SettingsScreen/SettingsButton";
+import TextConfirmModal from "../components/SettingsScreen/TextConfirmModal";
 import { eventEmitter, restartAppTick, stopAppTick } from "../config/Main";
 import { restartLocation, restartPedometer, restartDeviceMotion, stopAllSensors } from "../config/SensorsManager";
-import TermsModal from "../components/TermsModal";
-import PrivacyModal from "../components/PrivacyModal";
-import CreditsModal from "../components/CreditsModal";
+import TermsModal from "../components/SignupScreen/TermsModal";
+import PrivacyModal from "../components/SignupScreen/PrivacyModal";
+import CreditsModal from "../components/SignupScreen/CreditsModal";
 import { useFocusEffect } from "@react-navigation/native";
-import PauseModal from "../components/PauseModal";
+import PauseModal from "../components/SettingsScreen/PauseModal";
 
 const SettingsScreen = (props) => {
     const userContext = useContext( UserDataContext );

@@ -9,8 +9,8 @@ import ProgressBar from "../components/ProgressBar";
 import { getUnlockedIcons, getUnlockedThemes, iconLookup } from "../config/RewardsManager";
 import { FlatList } from "react-native-gesture-handler";
 import { eventEmitter } from "../config/Main";
-import UsernameChangeModal from "../components/UsernameChangeModal";
-import ProfileStat from "../components/ProfileStat";
+import UsernameChangeModal from "../components/ProfileScreen/UsernameChangeModal";
+import ProfileStat from "../components/ProfileScreen/ProfileStat";
 
 const CHECK_IMG = require("../../assets/media/check.png");
 const CARET_IMG = require("../../assets/media/caretDown.png");

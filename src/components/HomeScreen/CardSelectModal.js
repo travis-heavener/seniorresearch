@@ -1,8 +1,8 @@
 import { useContext } from "react";
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { Themes } from "../config/Themes";
-import { vh, vw } from "../config/Toolbox";
-import { UserDataContext } from "../config/UserDataManager";
+import { Themes } from "../../config/Themes";
+import { vh, vw } from "../../config/Toolbox";
+import { UserDataContext } from "../../config/UserDataManager";
 import CardSelectItem from "./CardSelectItem";
 
 const CardSelectModal = (props) => {

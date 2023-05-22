@@ -1,11 +1,11 @@
 import { useContext, useState } from "react";
 import { Modal, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { eventEmitter } from "../config/Main";
-import { Themes } from "../config/Themes";
-import { vh, vw } from "../config/Toolbox";
-import { UserDataContext } from "../config/UserDataManager";
-import Checkbox from "./Checkbox";
-import ProgressBar from "./ProgressBar";
+import { eventEmitter } from "../../config/Main";
+import { Themes } from "../../config/Themes";
+import { vh, vw } from "../../config/Toolbox";
+import { UserDataContext } from "../../config/UserDataManager";
+import Checkbox from "../Checkbox";
+import ProgressBar from "../ProgressBar";
 
 const ObjectiveConfirmModal = (props) => {
     const userContext = useContext( UserDataContext );

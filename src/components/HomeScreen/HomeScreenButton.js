@@ -1,12 +1,12 @@
 import React from "react";
 import { View, StyleSheet, Text, TouchableOpacity, Image } from "react-native";
-import { vh } from "../config/Toolbox";
+import { vh } from "../../config/Toolbox";
 
 /* add require statements for preloaded image lookup (DON'T PASS IMG THRU PROPS, PASS TYPE) */
 
-const PROFILE_SRC = require("../../assets/media/profile_icon.png");
-const TASKS_SRC = require("../../assets/media/tasks_icon.png");
-const REWARDS_SRC = require("../../assets/media/rewards_icon.png");
+const PROFILE_SRC = require("../../../assets/media/profile_icon.png");
+const TASKS_SRC = require("../../../assets/media/tasks_icon.png");
+const REWARDS_SRC = require("../../../assets/media/rewards_icon.png");
 
 const HomeScreenButton = (props) => {
     const size = (props.flex * 100);

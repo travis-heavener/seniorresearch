@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native"
 import { FlatList } from "react-native-gesture-handler";
 import ProgressBar from "../components/ProgressBar";
-import RewardEntry from "../components/RewardEntry";
+import RewardEntry from "../components/RewardsScreen/RewardEntry";
 import { Settings } from "../config/Config";
 import { eventEmitter } from "../config/Main";
 import { rewardsList } from "../config/RewardsManager";

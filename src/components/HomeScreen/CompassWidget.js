@@ -2,14 +2,14 @@ import React, { useEffect, useRef, useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { StyleSheet, ImageBackground, Image, Text, Animated, View, Easing } from "react-native";
 
-import { Settings } from "../config/Config";
+import { Settings } from "../../config/Config";
 
 // configure magnetometer updates
 import { DeviceMotion } from "expo-sensors";
-import { UserDataContext } from "../config/UserDataManager";
+import { UserDataContext } from "../../config/UserDataManager";
 
 // import images
-const MEDIA_ROOT = "../../assets/media/";
+const MEDIA_ROOT = "../../../assets/media/";
 const WRAPPER_LIGHT_SRC = require(MEDIA_ROOT + "compassWrapperLight.png");
 const WRAPPER_DARK_SRC = require(MEDIA_ROOT + "compassWrapperDark.png");
 const NEEDLE_SRC = require(MEDIA_ROOT + "needle.png");

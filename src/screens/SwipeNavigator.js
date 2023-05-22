@@ -7,7 +7,7 @@ import TasksScreen from "./TasksScreen";
 import SettingsScreen from "./SettingsScreen";
 import { createContext, useCallback, useContext, useRef, useState } from "react";
 import { useFocusEffect } from "@react-navigation/core";
-import DevNoteModal from "../components/DevNoteModal";
+import DevNoteModal from "../components/SignupScreen/DevNoteModal";
 import { eventEmitter } from "../config/Main";
 import { UserDataContext } from "../config/UserDataManager";
 import { Settings } from "../config/Config";

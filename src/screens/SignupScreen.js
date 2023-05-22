@@ -1,8 +1,8 @@
 import { useFocusEffect } from "@react-navigation/native";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { BackHandler, Pressable, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
-import PrivacyModal from "../components/PrivacyModal";
-import TermsModal from "../components/TermsModal";
+import PrivacyModal from "../components/SignupScreen/PrivacyModal";
+import TermsModal from "../components/SignupScreen/TermsModal";
 import { PermsContext, Settings } from "../config/Config";
 import { handleAppLoad, stopAppTick } from "../config/Main";
 import { vh, vw } from "../config/Toolbox";

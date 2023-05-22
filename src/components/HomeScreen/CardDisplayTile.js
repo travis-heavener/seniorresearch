@@ -1,9 +1,9 @@
 import { useContext, useRef } from "react";
 import { Animated, Easing, Pressable, StyleSheet, View } from "react-native";
-import { Themes } from "../config/Themes";
-import { vh, vw } from "../config/Toolbox";
-import { UserDataContext } from "../config/UserDataManager";
-import ScalingText from "./ScalingText";
+import { Themes } from "../../config/Themes";
+import { vh, vw } from "../../config/Toolbox";
+import { UserDataContext } from "../../config/UserDataManager";
+import ScalingText from "../ScalingText";
 
 const CardDisplayTile = (props) => {
     const userContext = useContext( UserDataContext );

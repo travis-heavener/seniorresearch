@@ -4,7 +4,7 @@ import { View, StyleSheet, Text, Pressable } from "react-native";
 import { Themes } from "../config/Themes";
 import { UserDataContext } from "../config/UserDataManager";
 
-import TasksScreenCard from "../components/TasksScreenCard";
+import TasksScreenCard from "../components/TasksScreen/TasksScreenCard";
 
 // import { FlatList } from "react-native-gesture-handler"; // for using the scroll feature
 import { FlatList } from "react-native"; // for using without the scroll (works due to max height of cards when focused)

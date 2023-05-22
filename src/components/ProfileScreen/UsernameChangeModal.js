@@ -1,9 +1,9 @@
 import { useContext, useRef, useState } from "react";
 import { Modal, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
-import { Settings } from "../config/Config";
-import { Themes } from "../config/Themes";
-import { vh, vw } from "../config/Toolbox";
-import { exportUserData, UserDataContext } from "../config/UserDataManager";
+import { Settings } from "../../config/Config";
+import { Themes } from "../../config/Themes";
+import { vh, vw } from "../../config/Toolbox";
+import { exportUserData, UserDataContext } from "../../config/UserDataManager";
 
 const UsernameChangeModal = (props) => {
     const { modalReject, modalConfirm } = props;

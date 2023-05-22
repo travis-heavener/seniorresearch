@@ -1,6 +1,6 @@
 import { Linking, Modal, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-import { contactEmail } from "../config/Config";
-import { vh, vw } from "../config/Toolbox";
+import { contactEmail } from "../../config/Config";
+import { vh, vw } from "../../config/Toolbox";
 
 const PrivacyModal = (props) => {
     const H1 = (props) => <Text style={styles.h1}>{props.children}</Text>

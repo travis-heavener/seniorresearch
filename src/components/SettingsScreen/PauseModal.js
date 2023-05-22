@@ -1,8 +1,8 @@
 import { useContext } from "react";
 import { Modal, Pressable, StyleSheet, Text, View } from "react-native"
-import { Themes } from "../config/Themes";
-import { vh, vw } from "../config/Toolbox";
-import { UserDataContext } from "../config/UserDataManager";
+import { Themes } from "../../config/Themes";
+import { vh, vw } from "../../config/Toolbox";
+import { UserDataContext } from "../../config/UserDataManager";
 
 const PauseModal = (props) => {
     const userContext = useContext( UserDataContext );
