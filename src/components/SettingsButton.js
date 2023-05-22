@@ -7,12 +7,11 @@ import { UserDataContext } from "../config/UserDataManager";
 const SettingsButton = (props) => {
     const userContext = useContext( UserDataContext );
     const THEME = Themes[ userContext.selectedTheme ].settings; // select theme
-    const MISC_THEME = Themes[ userContext.selectedTheme ].misc; // select theme
 
     return (
         <View style={[styles.body, {borderBottomColor: THEME.primaryAccent}]}>
             <TouchableOpacity activeOpacity={0.67} onPress={props.onPress}>
-                <Text style={[styles.desc, {color: MISC_THEME.switchColor}]}>{props.text}</Text>
+                <Text style={[styles.desc, {color: THEME.textButtonColor}]}>{props.text}</Text>
             </TouchableOpacity>
         </View>
     )

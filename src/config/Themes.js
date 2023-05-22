@@ -9,7 +9,7 @@ export const Themes = {
             secondary: "#e4e4e4", secondaryAccent: "#d6d6d6",
             text: "#031c0a", modalText: "#222",
             modalBorder: "#333", modalTop: "#eee", modalBottom: "#ddd",
-            modalConfirm: "cornflowerblue"
+            modalConfirm: "cornflowerblue", textButtonColor: "#6194e6"
         },
         tasks: {
             primary: "#f7bcbc", primaryAccent: "#fad9d9",
@@ -50,7 +50,7 @@ export const Themes = {
             secondary: "#2f2f2f", secondaryAccent: "#252525",
             text: "#f5f5f5", modalText: "#f5f5f5",
             modalBorder: "#080808", modalTop: "#333", modalBottom: "#444",
-            modalConfirm: "#c7891e"
+            modalConfirm: "#c7891e", textButtonColor: "#c7891e"
         },
         tasks: {
             primary: "#595959", primaryAccent: "#707070",
@@ -91,7 +91,7 @@ export const Themes = {
             secondary: "#188c1b", secondaryAccent: "#117314",
             text: "#031c0a", modalText: "#222",
             modalBorder: "#333", modalTop: "#eee", modalBottom: "#ddd",
-            modalConfirm: "#11c217"
+            modalConfirm: "#11c217", textButtonColor: "#08780c"
         },
         tasks: {
             primary: "#9cd69e", primaryAccent: "#c0f0c1",
@@ -132,7 +132,7 @@ export const Themes = {
             secondary: "#d68f85", secondaryAccent: "#b56d62",
             text: "#031c0a", modalText: "#222",
             modalBorder: "#333", modalTop: "#eee", modalBottom: "#ddd",
-            modalConfirm: "#e08779"
+            modalConfirm: "#e08779", textButtonColor: "#914b40"
         },
         tasks: {
             primary: "#f7bfb5", primaryAccent: "#f7d6d0",
@@ -173,7 +173,7 @@ export const Themes = {
             secondary: "#cf4444", secondaryAccent: "#b33737",
             text: "#031c0a", modalText: "#222",
             modalBorder: "#333", modalTop: "#eee", modalBottom: "#ddd",
-            modalConfirm: "#d43535"
+            modalConfirm: "#d43535", textButtonColor: "#9e1c1c"
         },
         tasks: {
             primary: "#f79688", primaryAccent: "#fab8af",
@@ -214,7 +214,7 @@ export const Themes = {
             secondary: "#e8c915", secondaryAccent: "#c2a608",
             text: "#333", modalText: "#222",
             modalBorder: "#333", modalTop: "#eee", modalBottom: "#ddd",
-            modalConfirm: "#e8cb2c"
+            modalConfirm: "#e8cb2c", textButtonColor: "#806d04"
         },
         tasks: {
             primary: "#fce66f", primaryAccent: "#faeda5",
