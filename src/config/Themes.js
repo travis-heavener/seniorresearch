@@ -59,7 +59,7 @@ export const Themes = {
         },
         cards: {
             checkedTile: "#44c24f", uncheckedTile: "#383838",
-            easy: "#44cc3f", normal: "#d6ae47", hard: "#c45147",
+            easy: "#32b32d", normal: "#ba9536", hard: "#9e332b",
             labelText: "#e7e7e7"
         },
         cardDisplay: {
