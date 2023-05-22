@@ -55,7 +55,7 @@ export const Themes = {
         tasks: {
             primary: "#595959", primaryAccent: "#707070",
             secondary: "#424242", secondaryAccent: "#333",
-            text: "#f0f0f0", seedText: "#aaa"
+            text: "#f0f0f0", seedText: "#d7d7d7"
         },
         cards: {
             checkedTile: "#44c24f", uncheckedTile: "#383838",
