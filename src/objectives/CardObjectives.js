@@ -80,7 +80,7 @@ export class DistanceObjective extends CardObjective {
     }
 
     getStatus(userContext) {
-        return this.distanceGoal - this.savedDistanceRemaining - this.startingDistance + userContext.metadata.distance;
+        return Math.min(this.distanceGoal, this.distanceGoal - this.savedDistanceRemaining - this.startingDistance + userContext.metadata.distance);
     }
 
     getStatusString(userContext) {
@@ -148,7 +148,7 @@ export class StepsObjective extends CardObjective {
     }
 
     getStatus(userContext) {
-        return this.stepGoal - this.savedStepsRemaining - this.startingSteps + userContext.metadata.steps;
+        return Math.min(this.stepGoal, this.stepGoal - this.savedStepsRemaining - this.startingSteps + userContext.metadata.steps);
     }
 
     getStatusString(userContext) {
