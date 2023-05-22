@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: vw(3),
         paddingTop: vh(2),
         paddingBottom: vh(7), // more bottom padding to adjust text positioning
-        borderWidth: vh(0.26),
+        borderWidth: vh(0.52),
         borderRadius: vh(5),
         justifyContent: "space-evenly"
     },
