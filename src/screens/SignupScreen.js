@@ -66,7 +66,7 @@ const SignupScreen = (props) => {
 
     return (
         <Pressable style={styles.body} onPress={() => textInputRef.current?.blur()}>
-            <TermsModal isModalVisible={showTOS} confirm={confirmTOS} />
+            <TermsModal isModalVisible={showTOS} lockout={true} confirm={confirmTOS} />
             <PrivacyModal isModalVisible={showPP} lockout={true} confirm={confirmPP} />
 
             <View style={styles.signupBody}>

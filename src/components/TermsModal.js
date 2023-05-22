@@ -17,13 +17,15 @@ const TermsModal = (props) => {
         return ( <UL>{entries}</UL> );
     };
 
+    const isLocked = (props.lockout) ? props.lockout : false;
+
     return (
         <Modal
             transparent={true}
             onRequestClose={() => {}} // NO SKIPPING TOS :)
             visible={props.isModalVisible}
         >
-            <View style={styles.absolute} />
+            <Pressable style={styles.absolute} onPress={isLocked ? () => {} : props.confirm} />
 
             <ScrollView style={styles.body} overScrollMode="never" showsVerticalScrollIndicator={false}>
                 <View style={styles.textContainer}>
