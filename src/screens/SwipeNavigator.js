@@ -142,8 +142,16 @@ const SwipeNavigator = (props) => {
                 // translate screen, if not already swiping past screen
                 if ((dir == "left" && navContext.focusedScreen != "left") || (dir == "right" && navContext.focusedScreen != "right")) {
                     position.setValue({x: dx + offset.x, y: offset.y});
-                } else if ((dir == "top" && navContext.focusedScreen != "top") || (dir == "bottom" && navContext.focusedScreen != "bottom")) {
-					position.setValue({x: offset.x, y: dy + offset.y});
+                } else if ((dir == "top" && navContext.focusedScreen != "top")) {
+					position.setValue({
+                        x: offset.x,
+                        y: dy + offset.y + (navContext.focusedScreen == "center" ? vh(100-65.5) : 0) // add offset based on height of screen
+                    });
+                } else if (dir == "bottom" && navContext.focusedScreen != "bottom") {
+					position.setValue({
+                        x: offset.x,
+                        y: dy + offset.y - (navContext.focusedScreen == "center" ? vh(100-80) : 0) // add offset based on height of screen
+                    });
                 }
 			},
 			onPanResponderRelease: (e, gestureState) => { // handle panResponder release

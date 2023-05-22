@@ -40,9 +40,9 @@ const TasksScreen = (props) => {
             <Pressable style={styles.absolute} onPress={() => props.navigate("Home")} />
             
             <View style={[styles.body, {backgroundColor: THEME.primaryAccent}]}>
-            <View style={[styles.header, {backgroundColor: THEME.secondary, borderColor: THEME.secondaryAccent}]}>
-                <Text style={[styles.headerText, {color: THEME.text}]}>Active Cards</Text>
-            </View>
+                <View style={[styles.header, {backgroundColor: THEME.secondary, borderColor: THEME.secondaryAccent}]}>
+                    <Text style={[styles.headerText, {color: THEME.text}]}>Active Cards</Text>
+                </View>
             <FlatList
                 data={Object.keys(userContext.cardSlots)}
                 renderItem={
